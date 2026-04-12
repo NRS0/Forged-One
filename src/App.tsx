@@ -144,13 +144,12 @@ const Hero = () => {
         muted
         loop
         playsInline
-        className="absolute inset-0 w-full h-full object-cover opacity-30 pointer-events-none"
+        className="absolute inset-0 w-full h-full object-cover pointer-events-none"
       >
         <source src="https://imglink.cc/cdn/yilKLu3tUf.mp4" type="video/mp4" />
       </video>
 
-      {/* ambient glow */}
-      <div className="absolute top-[30%] left-1/2 -translate-x-1/2 w-[50vw] h-[30vw] rounded-full bg-accent/3 blur-[200px] pointer-events-none" />
+      {/* ambient glow removed */}
 
       <motion.div style={{ opacity }} className="relative z-10">
         {/* eyebrow */}
@@ -208,7 +207,13 @@ const Hero = () => {
         </motion.div>
 
         {/* stats + CTA row */}
-        <motion.div style={{ y: y2 }} className="mt-20 grid grid-cols-2 md:grid-cols-12 gap-8 border-t border-line pt-10">
+        <motion.div 
+          style={{ y: y2 }} 
+          className="mt-20 grid grid-cols-2 md:grid-cols-12 gap-8 border-t border-line pt-10 relative"
+        >
+          {/* full-width gradient overlay for visibility */}
+          <div className="absolute top-0 bottom-[-100vh] left-[-100vw] right-[-100vw] -z-10 bg-linear-to-b from-main via-main/90 to-main opacity-95" />
+          
           {[
             { n: "3X", label: "Increase in efficiency" },
             { n: "75%", label: "Boost sales outreach" },
@@ -245,7 +250,7 @@ const Hero = () => {
         style={{ opacity: scrollIndicatorOpacity }}
         animate={{ y: [0, 10, 0] }} 
         transition={{ duration: 2.5, repeat: Infinity }}
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-secondary/15"
+        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-secondary/15 z-20"
       >
         <span className="text-[8px] uppercase tracking-[0.5em] font-mono">Scroll</span>
         <ArrowDown size={18} strokeWidth={1} />
