@@ -1,648 +1,687 @@
 /**
- * @license
- * SPDX-License-Identifier: Apache-2.0
+ * FORGED 1, AI for Business Leaders
+ * Redesigned: assertive minimalism inspired by missioncontrol.co
  */
 
-import { motion, useScroll, useTransform, useSpring, useMotionValue, AnimatePresence } from "motion/react";
-import { 
-  ArrowRight, 
-  ArrowUpRight,
-  Menu, 
-  X,
-  Plus,
-  ArrowDown,
-  ChevronRight,
-  Zap,
-  Shield,
-  Target,
-  Cpu
-} from "lucide-react";
+import { motion, useScroll, useTransform, AnimatePresence, useMotionValue, animate } from "motion/react";
+import { ArrowRight, ArrowDown, Plus } from "lucide-react";
 import { useState, useRef, useEffect, ReactNode } from "react";
 
-// --- Components ---
+/* ─────────────────────────────── UTILS ─────────────────────────────── */
 
-const Reveal = ({ children, width = "fit-content" }: { children: ReactNode, width?: "fit-content" | "100%" }) => {
+function useInView() {
+  const [inView, setInView] = useState(false);
   const ref = useRef(null);
-  return (
-    <div ref={ref} className="relative overflow-hidden" style={{ width }}>
-      <motion.div
-        initial={{ y: 75, opacity: 0 }}
-        whileInView={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
-        viewport={{ once: true }}
-      >
-        {children}
-      </motion.div>
-    </div>
-  );
-};
-
-const Modal = ({ isOpen, onClose, children }: { isOpen: boolean, onClose: () => void, children: ReactNode }) => {
-  if (!isOpen) return null;
-
-  return (
-    <AnimatePresence>
-      <motion.div 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="fixed inset-0 z-[10000] flex items-center justify-center p-8 md:p-12"
-      >
-        <div 
-          className="absolute inset-0 bg-bg/90 backdrop-blur-sm cursor-pointer" 
-          onClick={onClose}
-        />
-        <motion.div 
-          initial={{ scale: 0, rotate: -15, opacity: 0 }}
-          animate={{ scale: 1, rotate: 0, opacity: 1 }}
-          exit={{ scale: 0, rotate: 15, opacity: 0 }}
-          transition={{ 
-            type: "spring", 
-            damping: 25, 
-            stiffness: 120,
-            duration: 0.6
-          }}
-          className="relative bg-paper w-full max-w-2xl p-16 md:p-24 rounded-[3.5rem] border-[12px] border-bg/5 z-10 overflow-hidden shadow-2xl"
-        >
-          <button 
-            onClick={onClose}
-            className="absolute top-10 right-10 text-bg/40 hover:text-accent transition-colors z-20"
-          >
-            <X size={28} />
-          </button>
-          <div className="relative z-10 h-full flex flex-col justify-center text-center">
-            {children}
-          </div>
-        </motion.div>
-      </motion.div>
-    </AnimatePresence>
-  );
-};
-
-const CustomCursor = () => {
-  const mouseX = useMotionValue(-100);
-  const mouseY = useMotionValue(-100);
-  const [isHovering, setIsHovering] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
-
-  const dotConfig = { damping: 30, stiffness: 250 };
-  const ringConfig = { damping: 20, stiffness: 100 };
-
-  const dotX = useSpring(mouseX, dotConfig);
-  const dotY = useSpring(mouseY, dotConfig);
-  const ringX = useSpring(mouseX, ringConfig);
-  const ringY = useSpring(mouseY, ringConfig);
 
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!isVisible) setIsVisible(true);
-      mouseX.set(e.clientX);
-      mouseY.set(e.clientY);
-
-      const target = e.target as HTMLElement;
-      const isInteractive = target.closest('a, button, [role="button"]');
-      setIsHovering(!!isInteractive);
-    };
-
-    const handleMouseLeave = () => setIsVisible(false);
-    const handleMouseEnter = () => setIsVisible(true);
-
-    window.addEventListener("mousemove", handleMouseMove);
-    document.addEventListener("mouseleave", handleMouseLeave);
-    document.addEventListener("mouseenter", handleMouseEnter);
-
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseleave", handleMouseLeave);
-      document.removeEventListener("mouseenter", handleMouseEnter);
-    };
-  }, [mouseX, mouseY, isVisible]);
-
-  return (
-    <>
-      <motion.div
-        className="fixed top-0 left-0 w-10 h-10 border border-accent rounded-full pointer-events-none z-[9999] mix-blend-difference will-change-transform"
-        style={{
-          x: ringX,
-          y: ringY,
-          translateX: "-50%",
-          translateY: "-50%",
-          opacity: isVisible ? 0.6 : 0,
-        }}
-        animate={{
-          scale: isHovering ? 1.8 : 1,
-        }}
-      />
-      <motion.div
-        className="fixed top-0 left-0 w-2 h-2 bg-accent rounded-full pointer-events-none z-[9999] mix-blend-difference will-change-transform"
-        style={{
-          x: dotX,
-          y: dotY,
-          translateX: "-50%",
-          translateY: "-50%",
-          opacity: isVisible ? 1 : 0,
-        }}
-        animate={{
-          scale: isHovering ? 0.4 : 1,
-        }}
-      />
-    </>
-  );
-};
-
-const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 50);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          observer.unobserve(entry.target);
+        }
+      },
+      { threshold: 0.1 }
+    );
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
   }, []);
 
+  return { ref, inView };
+}
+
+/* ─────────────────────────────── SCROLL REVEAL ─────────────────────────────── */
+
+const Reveal = ({ children, delay = 0, className = "" }: { children: ReactNode, delay?: number, className?: string, key?: any }) => {
+  const { ref, inView } = useInView();
   return (
-    <nav className={`fixed top-0 left-0 w-full z-[1000] transition-all duration-500 ${scrolled ? "bg-paper py-4 shadow-xl" : "bg-paper py-6 border-b border-bg/5"}`}>
-      <div className="max-w-[1800px] mx-auto flex justify-between items-center px-8 md:px-12">
-        <motion.div 
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
+    <motion.div ref={ref} initial={{ opacity: 0, y: 40 }} animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+};
+
+/* ─────────────────────────────── COUNTER ─────────────────────────────── */
+
+const Counter = ({ value, duration = 2.5 }: { value: string, duration?: number }) => {
+  const { ref, inView } = useInView();
+  const numMatch = value.match(/(\d+(\.\d+)?)/);
+  const target = numMatch ? parseFloat(numMatch[0]) : 0;
+  const suffix = value.replace(numMatch ? numMatch[0] : "", "");
+  const isDecimal = numMatch && numMatch[0].includes(".");
+  
+  const count = useMotionValue(0);
+  const [display, setDisplay] = useState<string | number>(0);
+
+  useEffect(() => {
+    if (inView) {
+      const controls = animate(count, target, { 
+        duration: duration, 
+        ease: [0.16, 1, 0.3, 1],
+        onUpdate: (latest) => {
+          if (isDecimal) {
+            setDisplay(latest.toFixed(1));
+          } else {
+            setDisplay(Math.round(latest));
+          }
+        }
+      });
+      return controls.stop;
+    }
+  }, [inView, target, duration, count, isDecimal]);
+
+  return <span ref={ref}>{display}{suffix}</span>;
+};
+
+/* ─────────────────────────────── NAVBAR ─────────────────────────────── */
+
+const Navbar = () => {
+  const { scrollY } = useScroll();
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    return scrollY.on("change", (latest) => setScrolled(latest > 50));
+  }, [scrollY]);
+
+  return (
+    <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-700 ${scrolled ? "bg-white/90 backdrop-blur-xl border-b border-black/5 shadow-sm py-3" : "bg-white py-5 border-b border-black/5"}`}>
+      <div className="flex justify-between items-center px-8 md:px-16">
+        <motion.a href="#" initial={{ opacity: 0 }} animate={{ opacity: 1 }}
           className="flex items-center gap-4"
         >
-          <div className="w-14 h-14 flex items-center justify-center overflow-hidden">
-            <img 
-              src="https://imglink.cc/cdn/-G5PGyVsCf.png" 
-              alt="FORGED 1 Logo" 
-              className="w-full h-full object-contain"
-              referrerPolicy="no-referrer"
-            />
+          <img 
+            src="https://imglink.cc/cdn/-G5PGyVsCf.png" 
+            alt="FORGED 1 Logo" 
+            className="h-10 w-auto object-contain"
+            referrerPolicy="no-referrer"
+          />
+          <div className="flex flex-col">
+            <span className="text-main/40 text-[8px] uppercase tracking-[0.4em] hidden md:inline">AI for Business Leaders</span>
           </div>
-          <div className="flex flex-col -gap-1">
-            <span className="text-bg/40 text-[10px] uppercase tracking-[0.3em] font-bold transition-colors">AI Leadership</span>
-          </div>
-        </motion.div>
+        </motion.a>
 
-        <div className="flex items-center gap-12">
-          <div className="hidden lg:flex items-center gap-8">
-            {["Curriculum", "Workflows", "Edge", "Manifesto"].map((item) => (
-              <a 
-                key={item} 
-                href={`#${item.toLowerCase()}`} 
-                className="text-[10px] uppercase tracking-[0.4em] text-bg/60 hover:text-bg transition-colors font-bold"
-              >
-                {item}
-              </a>
-            ))}
+        <motion.a href="#services" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
+          className="group flex items-center gap-3 text-[9px] uppercase tracking-[0.5em] font-medium text-main/60 hover:text-accent transition-colors duration-300"
+        >
+          <span className="hidden md:inline">Our Services</span>
+          <div className="w-10 h-10 border border-main/10 flex items-center justify-center group-hover:border-accent group-hover:bg-accent transition-all duration-300">
+            <ArrowRight size={13} className="text-main group-hover:text-white transition-colors" />
           </div>
-          <button 
-            onClick={() => setIsOpen(true)}
-            className="group flex items-center gap-4 text-bg"
-          >
-            <div className="w-12 h-12 border border-bg/20 group-hover:border-bg flex items-center justify-center transition-colors relative overflow-hidden">
-              <Menu size={20} className="group-hover:translate-y-10 transition-transform duration-300" />
-              <Menu size={20} className="absolute -translate-y-10 group-hover:translate-y-0 transition-transform duration-300 text-bg" />
-            </div>
-          </button>
-        </div>
+        </motion.a>
       </div>
-
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div 
-            initial={{ x: "100%" }}
-            animate={{ x: 0 }}
-            exit={{ x: "100%" }}
-            transition={{ type: "spring", damping: 30, stiffness: 200 }}
-            className="fixed inset-0 bg-paper z-[2000] flex flex-col p-12 md:p-24"
-          >
-            <div className="flex justify-between items-center mb-24">
-              <span className="font-display text-4xl text-bg">NAVIGATION</span>
-              <button 
-                onClick={() => setIsOpen(false)}
-                className="w-16 h-16 border border-bg/10 flex items-center justify-center hover:bg-bg hover:text-paper transition-all group"
-              >
-                <X size={32} className="group-hover:rotate-90 transition-transform duration-500" />
-              </button>
-            </div>
-
-            <div className="flex-1 flex flex-col justify-center">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-24">
-                <div className="flex flex-col gap-6">
-                  {["Home", "Curriculum", "Workflows", "Edge", "Manifesto", "Apply"].map((item, idx) => (
-                    <motion.a 
-                      key={item}
-                      initial={{ x: 50, opacity: 0 }}
-                      animate={{ x: 0, opacity: 1 }}
-                      transition={{ delay: idx * 0.1 }}
-                      href={`#${item.toLowerCase()}`}
-                      onClick={() => setIsOpen(false)}
-                      className="text-bg text-6xl md:text-8xl font-display hover:text-accent hover:pl-8 transition-all duration-500 group flex items-center gap-8"
-                    >
-                      <span className="text-bg/20 text-sm font-body opacity-20 group-hover:opacity-100 transition-opacity">0{idx + 1}</span>
-                      {item}
-                    </motion.a>
-                  ))}
-                </div>
-                <div className="flex flex-col justify-end gap-12 border-l border-bg/5 pl-12">
-                  <div className="flex flex-col gap-4">
-                    <span className="text-accent text-[10px] uppercase tracking-[0.4em] font-bold">Inquiries</span>
-                    <a href="mailto:forge@forged1.ai" className="text-bg text-4xl font-display hover:text-accent transition-colors">FORGE@FORGED1.AI</a>
-                  </div>
-                  <div className="flex gap-12">
-                    {["Instagram", "Twitter", "LinkedIn"].map(social => (
-                      <a key={social} href="#" className="text-bg/40 text-[10px] uppercase tracking-widest hover:text-bg transition-colors font-bold">{social}</a>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </nav>
   );
 };
 
+/* ─────────────────────────────── HERO ─────────────────────────────── */
+
 const Hero = () => {
   const containerRef = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end start"]
-  });
+  const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start start", "end start"] });
+  const y1 = useTransform(scrollYProgress, [0, 1], [0, -120]);
+  const y2 = useTransform(scrollYProgress, [0, 1], [0, 80]);
+  const opacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
+  const scrollIndicatorOpacity = useTransform(scrollYProgress, [0, 0.1], [1, 0]);
 
-  const y = useTransform(scrollYProgress, [0, 1], [0, 300]);
-  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
-
-  const [count, setCount] = useState(0);
+  const taglines = [
+    { text: "Strategy", accent: true },
+    { text: "Leadership", accent: false },
+    { text: "Decision-Making", accent: true },
+  ];
+  const [activeTag, setActiveTag] = useState(0);
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCount(prev => (prev < 94 ? prev + 1 : 94));
-    }, 30);
+    const interval = setInterval(() => setActiveTag(i => (i + 1) % taglines.length), 3000);
     return () => clearInterval(interval);
-  }, []);
+  }, [taglines.length]);
 
   return (
-    <section ref={containerRef} className="relative h-screen flex flex-col justify-center items-center px-8 overflow-hidden">
-      <motion.div style={{ y, opacity }} className="relative z-10 text-center">
-        <Reveal>
-          <span className="text-accent text-[12px] uppercase tracking-[0.8em] font-bold mb-8 block">EST. 2026 — INDUSTRIAL AI</span>
-        </Reveal>
-        
-        <motion.h1 
-          className="text-[18vw] md:text-[14vw] font-display leading-[0.8] tracking-tight flex flex-col items-center"
-        >
-          <span className="glitch-text" data-text="FORGED">FORGED</span>
-          <span className="flex items-center gap-4 text-gold">
-            <span className="w-[10vw] h-2 bg-accent hidden md:block"></span>
-            ONE
-            <span className="w-[10vw] h-2 bg-accent hidden md:block"></span>
-          </span>
-        </motion.h1>
+    <section ref={containerRef} className="relative min-h-screen flex flex-col justify-center px-8 md:px-16 pt-24 overflow-hidden">
+      {/* background video */}
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover opacity-30 pointer-events-none"
+      >
+        <source src="https://imglink.cc/cdn/yilKLu3tUf.mp4" type="video/mp4" />
+      </video>
 
-        <div className="mt-16 flex flex-col md:flex-row items-center gap-12 md:gap-24">
-          <div className="flex flex-col items-center">
-            <span className="text-6xl font-display text-paper">{count}%</span>
-            <span className="text-[10px] uppercase tracking-widest text-paper/40">Market Readiness</span>
+      {/* ambient glow */}
+      <div className="absolute top-[30%] left-1/2 -translate-x-1/2 w-[50vw] h-[30vw] rounded-full bg-accent/3 blur-[200px] pointer-events-none" />
+
+      <motion.div style={{ opacity }} className="relative z-10">
+        {/* eyebrow */}
+        <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="flex items-center gap-4 mb-8"
+        >
+          <div className="w-8 h-px bg-accent" />
+          <span className="text-[9px] uppercase tracking-[0.6em] text-secondary/40">Next-Gen AI Solutions</span>
+        </motion.div>
+
+        {/* headline */}
+        <motion.div style={{ y: y1 }}>
+          <h1 className="font-serif leading-[0.78] tracking-[0.02em] uppercase">
+            <motion.span
+              initial={{ opacity: 0, y: 100 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+              className="block text-[18vw] md:text-[16vw] text-secondary"
+            >
+              FORGED
+            </motion.span>
+            <motion.span
+              initial={{ opacity: 0, y: 100 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+              className="block text-[18vw] md:text-[16vw] text-accent italic"
+            >
+              1
+            </motion.span>
+            <motion.span
+              initial={{ opacity: 0, y: 60 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}
+              className="block text-[8vw] md:text-[5vw] text-secondary/30 tracking-[0.1em]"
+            >
+              AI FOR BUSINESS
+            </motion.span>
+          </h1>
+
+          {/* rotating tagline */}
+          <div className="mt-8 h-8 overflow-hidden">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeTag}
+                initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }}
+                exit={{ y: -20, opacity: 0 }}
+                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                className="flex items-center gap-3"
+              >
+                <div className="w-2 h-2 rounded-full bg-accent" />
+                <span className={`text-[9px] uppercase tracking-[0.5em] font-mono ${taglines[activeTag].accent ? "text-accent" : "text-secondary/40"}`}>
+                  {taglines[activeTag].text}
+                </span>
+              </motion.div>
+            </AnimatePresence>
           </div>
-          <div className="w-px h-12 bg-paper/10 hidden md:block"></div>
-          <p className="max-w-md text-paper/60 text-sm md:text-base leading-relaxed font-light">
-            The definitive AI business leadership course for the industrial age. 
-            Master the workflows that define the next decade of industry leadership.
-          </p>
-        </div>
+        </motion.div>
 
-        <motion.button 
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className="mt-16 bg-accent text-bg px-12 py-6 font-display text-2xl tracking-widest hover:bg-gold transition-colors relative group"
-        >
-          ENROLL NOW
-          <div className="absolute inset-0 border border-accent translate-x-2 translate-y-2 group-hover:translate-x-0 group-hover:translate-y-0 transition-transform"></div>
-        </motion.button>
+        {/* stats + CTA row */}
+        <motion.div style={{ y: y2 }} className="mt-20 grid grid-cols-2 md:grid-cols-12 gap-8 border-t border-line pt-10">
+          {[
+            { n: "3X", label: "Increase in efficiency" },
+            { n: "75%", label: "Boost sales outreach" },
+            { n: "1st", label: "In market" },
+          ].map(({ n, label }, i) => (
+            <motion.div key={label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 + i * 0.1, ease: [0.16, 1, 0.3, 1] }}
+              className="md:col-span-2 flex flex-col gap-2"
+            >
+              <span className="font-serif text-5xl text-secondary leading-none">
+                <Counter value={n} />
+              </span>
+              <span className="text-[9px] uppercase tracking-[0.5em] text-secondary/25 font-mono">{label}</span>
+            </motion.div>
+          ))}
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8 }} className="md:col-start-8 md:col-span-5 flex flex-col gap-6"
+          >
+            <p className="text-base md:text-lg leading-relaxed text-secondary/40 font-light">
+              We build the autonomous systems that define the next decade of industrial dominance.
+            </p>
+            <a href="#services" className="group inline-flex items-center gap-4 text-[9px] uppercase tracking-[0.5em] font-medium">
+              <span className="text-secondary hover:text-accent transition-colors">Our Services</span>
+              <div className="w-11 h-11 border border-secondary/15 flex items-center justify-center group-hover:bg-accent group-hover:border-accent transition-all duration-300">
+                <ArrowRight size={13} className="group-hover:text-main transition-colors group-hover:translate-x-0.5 transition-transform" />
+              </div>
+            </a>
+          </motion.div>
+        </motion.div>
       </motion.div>
 
-      <div className="absolute inset-0 z-0 opacity-20">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent/20 blur-[120px] rounded-full"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gold/20 blur-[120px] rounded-full"></div>
-      </div>
-
+      {/* scroll indicator */}
       <motion.div 
-        animate={{ y: [0, 10, 0] }}
-        transition={{ duration: 2, repeat: Infinity }}
-        className="absolute bottom-12 left-1/2 -translate-x-1/2 text-paper/20"
+        style={{ opacity: scrollIndicatorOpacity }}
+        animate={{ y: [0, 10, 0] }} 
+        transition={{ duration: 2.5, repeat: Infinity }}
+        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-secondary/15"
       >
-        <ArrowDown size={32} strokeWidth={1} />
+        <span className="text-[8px] uppercase tracking-[0.5em] font-mono">Scroll</span>
+        <ArrowDown size={18} strokeWidth={1} />
       </motion.div>
     </section>
   );
 };
 
-const Marquee = ({ direction = "left", text }: { direction?: "left" | "right", text: string }) => {
+/* ─────────────────────────────── MARQUEE ─────────────────────────────── */
+
+const MarqueeDivider = () => {
+  const items = ["Strategy", "Generative AI", "Leadership", "Prompt Engineering", "AI Ethics", "ROI Measurement", "Team Building", "ML Lifecycle"];
+  const doubled = [...items, ...items];
   return (
-    <div className="py-12 border-y border-paper/10 overflow-hidden flex bg-bg relative z-20">
-      <motion.div 
-        animate={{ x: direction === "left" ? ["0%", "-50%"] : ["-50%", "0%"] }}
-        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-        className="flex whitespace-nowrap gap-12 items-center"
-      >
-        {[...Array(10)].map((_, i) => (
-          <div key={i} className="flex items-center gap-12">
-            <span className="text-6xl md:text-8xl font-display text-paper/10 outline-text">{text}</span>
-            <Plus className="text-accent" size={40} />
-          </div>
+    <div className="py-8 border-y border-line overflow-hidden bg-surface marquee-mask">
+      <div className="marquee-track">
+        {doubled.map((item, i) => (
+          <span key={i} className="whitespace-nowrap px-6 font-mono text-[11px] tracking-[0.3em] text-secondary/12 uppercase select-none">
+            {item}
+            <span className="text-accent/40 mx-6">/</span>
+          </span>
         ))}
-      </motion.div>
+      </div>
     </div>
   );
 };
 
-const Manifesto = () => {
-  const text = "AI is not a tool. It is a fundamental shift in the architecture of value. Those who treat it as a feature will be replaced by those who treat it as a foundation. FORGED 1 is the crucible where legacy leadership is burned away to reveal the industrial elite.";
-  const words = text.split(" ");
+/* ─────────────────────────────── SECTION HEADER ─────────────────────────────── */
 
+const SectionHeader = ({ number, title, subtitle }: { number: string, title: string, subtitle: string }) => {
+  const { ref, inView } = useInView();
   return (
-    <section id="manifesto" className="py-64 px-8 md:px-24 bg-bg">
-      <div className="max-w-6xl mx-auto">
-        <span className="text-accent text-[10px] uppercase tracking-[0.8em] font-bold mb-12 block">THE MANIFESTO</span>
-        <div className="flex flex-wrap gap-x-4 gap-y-2">
-          {words.map((word, i) => (
-            <Word key={i} progress={i / words.length}>{word}</Word>
-          ))}
-        </div>
+    <div ref={ref} className="flex flex-col gap-6 mb-20">
+      <div className="flex items-center gap-4">
+        <motion.span initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}} className="text-[9px] font-mono font-medium tracking-widest text-accent">{number}</motion.span>
+        <motion.div initial={{ scaleX: 0 }} animate={inView ? { scaleX: 1 } : {}}
+          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+          className="h-px flex-1 bg-secondary/8 origin-left"
+        />
       </div>
-    </section>
-  );
-};
-
-const Word = ({ children, progress }: { children: string, progress: number, key?: any }) => {
-  const ref = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start 80%", "start 50%"]
-  });
-
-  const opacity = useTransform(scrollYProgress, [0, 1], [0.1, 1]);
-  const x = useTransform(scrollYProgress, [0, 1], [10, 0]);
-
-  return (
-    <motion.span 
-      ref={ref} 
-      style={{ opacity, x }}
-      className="text-4xl md:text-7xl font-display text-paper tracking-tight"
-    >
-      {children}
-    </motion.span>
-  );
-};
-
-const HorizontalScroll = () => {
-  const targetRef = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: targetRef,
-  });
-
-  const x = useTransform(scrollYProgress, [0, 1], ["0%", "-75%"]);
-
-  const sections = [
-    { title: "THE ARCHITECTURE", desc: "Understanding the neural foundations of modern business.", icon: <Cpu size={48} /> },
-    { title: "STRATEGIC FORGE", desc: "Building proprietary AI models for industry dominance.", icon: <Target size={48} /> },
-    { title: "PROCESS KINETICS", desc: "Automating the high-value decision cycles.", icon: <Zap size={48} /> },
-    { title: "LEGACY SHIELD", desc: "Protecting market share against algorithmic disruption.", icon: <Shield size={48} /> },
-  ];
-
-  return (
-    <section id="curriculum" ref={targetRef} className="relative h-[300vh] bg-bg">
-      <div className="sticky top-0 h-screen flex items-center overflow-hidden">
-        <motion.div style={{ x }} className="flex gap-24 px-24">
-          <div className="flex flex-col justify-center min-w-[600px]">
-            <span className="text-accent text-[10px] uppercase tracking-[0.8em] font-bold mb-8 block">CURRICULUM</span>
-            <h2 className="text-8xl md:text-[10rem] font-display leading-[0.8] text-paper">THE<br/>CRUCIBLE</h2>
-            <p className="mt-12 text-paper/40 max-w-md text-xl font-light">
-              Four intensive modules designed to strip away inefficiency and rebuild your leadership for the AI era.
-            </p>
-          </div>
-          {sections.map((s, i) => (
-            <div key={i} className="min-w-[500px] h-[600px] bg-paper/5 border border-paper/10 p-16 flex flex-col justify-between group hover:border-accent transition-colors">
-              <div className="text-accent group-hover:scale-110 transition-transform duration-500">{s.icon}</div>
-              <div>
-                <span className="text-gold text-sm mb-4 block font-bold">MODULE 0{i + 1}</span>
-                <h3 className="text-6xl font-display text-paper mb-6">{s.title}</h3>
-                <p className="text-paper/60 text-lg font-light leading-relaxed">{s.desc}</p>
-              </div>
-            </div>
-          ))}
-        </motion.div>
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+        <motion.h2 initial={{ opacity: 0, y: 40 }} animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+          className="text-6xl md:text-[7rem] font-serif tracking-wider uppercase text-secondary leading-[0.85]"
+        >{title}</motion.h2>
+        <motion.p initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}}
+          transition={{ delay: 0.3 }} className="text-[9px] uppercase tracking-[0.5em] font-mono text-secondary/25 max-w-[220px] leading-relaxed"
+        >{subtitle}</motion.p>
       </div>
-    </section>
+    </div>
   );
 };
 
-const UseCases = () => {
-  const [activeModal, setActiveModal] = useState<string | null>(null);
+/* ─────────────────────────────── WORKFLOWS ─────────────────────────────── */
 
+const Workflows = () => {
   const cases = [
-    { 
-      id: "01", 
-      title: "Are You Tracking the AI Developments That Will Define Your Industry?", 
-      category: "Decision Support",
-      popupContent: "Is really a question about awareness, timing, and competitive positioning. AI is not evolving evenly—it’s advancing in sharp, uneven bursts across specific domains (creative production, finance, healthcare, logistics, etc.). That means the developments that matter most to you are not the headlines everyone is sharing, but the niche breakthroughs that directly impact your workflows, costs, and output quality."
+    {
+      id: "01", title: "Decision Support", category: "Strategy",
+      description: "Are You Tracking the AI Developments That Will Define Your Industry?",
+      detail: "AI is not evolving evenly, it's advancing in sharp, uneven bursts across specific domains. The developments that matter most to you are not the headlines everyone is sharing, but the niche breakthroughs that directly impact your workflows, costs, and output quality. This course builds the radar you need."
     },
-    { id: "02", title: "Customer Intelligence", category: "Marketing" },
-    { id: "03", title: "Process Autonomy", category: "Operations" },
-    { id: "04", title: "Talent Optimization", category: "HR" }
+    {
+      id: "02", title: "Customer Intelligence", category: "Marketing",
+      description: "Transform customer data into actionable insights with AI-powered analytics and predictive modeling.",
+      detail: "Leverage generative AI to understand customer behavior patterns, predict churn, and personalize engagement at scale, turning your marketing from reactive to anticipatory."
+    },
+    {
+      id: "03", title: "Process Autonomy", category: "Operations",
+      description: "Automate complex operational workflows while maintaining strategic oversight and quality control.",
+      detail: "From supply chain optimization to intelligent document processing, AI can handle the repetitive while you focus on the strategic. Learn to identify which processes are ripe for autonomy."
+    },
+    {
+      id: "04", title: "Talent Optimization", category: "HR",
+      description: "Reshape how your organization attracts, develops, and retains talent in an AI-augmented workplace.",
+      detail: "AI is redefining job roles, skill requirements, and team structures. Understand how to build teams that combine human creativity with AI capability for maximum output."
+    },
   ];
 
   return (
-    <section id="workflows" className="py-32 px-8 md:px-12 bg-bg relative z-10">
-      <div className="flex flex-col gap-4 mb-24">
-        <div className="flex items-center gap-4">
-          <span className="text-[10px] font-bold tracking-widest text-accent">01</span>
-          <div className="h-px flex-1 bg-paper/10"></div>
+    <section id="workflows" className="py-28 px-8 md:px-16">
+      <SectionHeader number="01" title="Workflows" subtitle="Practical applications for immediate ROI" />
+      <div className="flex flex-col">
+        {cases.map((c, i) => (
+          <Reveal key={c.id} delay={i * 0.06}>
+            <WorkflowCard {...c} />
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+};
+
+const WorkflowCard = ({ id, title, category, description, detail }: {
+  id: string, title: string, category: string, description: string, detail: string
+}) => {
+  const [hovered, setHovered] = useState(false);
+
+  return (
+    <div
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      className="group border-t border-line last:border-b"
+    >
+      <div className="flex flex-col md:flex-row md:items-start gap-6 md:gap-16 py-10 md:py-14 cursor-default">
+        {/* left: number + category */}
+        <div className="md:w-40 shrink-0 flex md:flex-col items-center md:items-start gap-4 md:gap-2">
+          <span className="text-[9px] font-mono font-medium tracking-widest text-secondary/20">{id}</span>
+          <span className="text-[9px] font-mono uppercase tracking-[0.4em] text-accent">{category}</span>
         </div>
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
-          <h2 className="text-7xl md:text-9xl font-display tracking-tight text-paper">WORKFLOWS</h2>
-          <p className="text-[10px] uppercase tracking-[0.4em] text-paper/40 max-w-[200px] leading-relaxed">
-            Practical applications for immediate industrial ROI
+        {/* middle: title + description */}
+        <div className="flex-1 flex flex-col gap-3">
+          <h3 className="text-3xl md:text-4xl font-serif tracking-tight text-secondary group-hover:text-accent transition-colors duration-500 leading-[0.95]">
+            {title}
+          </h3>
+          <p className="text-sm text-secondary/40 font-light leading-relaxed max-w-lg">
+            {description}
           </p>
+          {/* expandable detail */}
+          <div className={`accordion-content ${hovered ? "open" : ""}`}>
+            <div className="accordion-inner">
+              <p className="text-sm text-secondary/30 font-light leading-relaxed max-w-lg pt-3 border-t border-line mt-3">
+                {detail}
+              </p>
+            </div>
+          </div>
+        </div>
+        {/* right: arrow indicator */}
+        <div className="shrink-0 self-center md:self-start">
+          <motion.div
+            animate={{ rotate: hovered ? 45 : 0, scale: hovered ? 1.1 : 1 }}
+            transition={{ duration: 0.3 }}
+            className="w-10 h-10 border border-secondary/10 flex items-center justify-center group-hover:border-accent transition-colors duration-300"
+          >
+            <Plus size={14} className="text-secondary/30 group-hover:text-accent transition-colors" />
+          </motion.div>
         </div>
       </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-paper/10 border-y border-paper/10">
-        {cases.map((c) => (
-          <motion.div 
-            key={c.id}
-            whileHover={{ backgroundColor: "rgba(255, 255, 255, 0.05)" }}
-            onClick={() => c.popupContent && setActiveModal(c.id)}
-            className={`bg-bg p-12 md:p-20 flex flex-col items-center justify-center text-center aspect-square group relative ${c.popupContent ? 'cursor-pointer' : 'cursor-default'}`}
-          >
-            <div className="absolute top-8 md:top-12 left-8 md:left-12 right-8 md:right-12 flex justify-between items-start">
-              <span className="text-[10px] font-bold tracking-widest text-paper/20">{c.id}</span>
-              {c.popupContent && <ArrowUpRight className="text-paper/20 group-hover:text-accent transition-colors" />}
+    </div>
+  );
+};
+
+/* ─────────────────────────────── SERVICES ─────────────────────────────── */
+
+const ServicesSection = () => {
+  const services = [
+    { n: "01", name: "Intelligent Chatbots", desc: "Advanced conversational interfaces built on custom LLMs for 24/7 customer engagement and support.", color: "#FFFFFF" },
+    { n: "02", name: "AI Advertising", desc: "Algorithmic ad optimization and automated creative generation for maximum conversion at minimum spend.", color: "#FF3B2F" },
+    { n: "03", name: "Data Collection", desc: "Automated harvesting and structured extraction of complex datasets from across the digital landscape.", color: "#FFFFFF" },
+    { n: "04", name: "Autonomous AI Agents", desc: "Custom-built agents capable of executing multi-step complex workflows with minimal human oversight.", color: "#FF3B2F" },
+    { n: "05", name: "AI Courses", desc: "Boutique education programs designed to equip business leaders with the literacy to lead AI initiatives confidently.", color: "#FFFFFF" },
+  ];
+
+  return (
+    <section id="services" className="py-28 px-8 md:px-16 border-t border-line">
+      <SectionHeader number="02" title="Services" subtitle="End-to-end AI integration for modern enterprise" />
+
+      {/* vertical card list */}
+      <div className="flex flex-col">
+        {services.map((s, i) => (
+          <Reveal key={s.n} delay={i * 0.04}>
+            <div className="group border-t border-line last:border-b flex items-center gap-6 md:gap-12 py-8 md:py-12 cursor-default hover:bg-secondary/[0.02] transition-colors duration-500 px-2 md:px-4">
+              <span className="font-serif text-4xl md:text-5xl leading-none shrink-0" style={{ color: s.color }}>{s.n}</span>
+              <div className="flex-1 flex flex-col md:flex-row md:items-center gap-4 md:gap-12">
+                <h3 className="text-xl md:text-3xl font-serif tracking-tight text-secondary group-hover:text-accent transition-colors duration-400 md:w-1/3">
+                  {s.name}
+                </h3>
+                <p className="text-sm text-secondary/40 font-light leading-relaxed max-w-lg flex-1">
+                  {s.desc}
+                </p>
+              </div>
+              <div className="w-16 h-px bg-secondary/5 group-hover:w-24 group-hover:bg-accent/40 transition-all duration-500 shrink-0" />
             </div>
-            <div className="max-w-[90%]">
-              <span className="text-accent text-[10px] uppercase tracking-[0.4em] mb-6 block font-bold">{c.category}</span>
-              <h3 className={`font-display tracking-wider ${c.id === "01" ? "text-4xl md:text-5xl leading-[1.1]" : "text-6xl md:text-8xl"} text-paper`}>
-                {c.title}
-              </h3>
-            </div>
-          </motion.div>
+          </Reveal>
         ))}
       </div>
 
-      <Modal 
-        isOpen={activeModal === "01"} 
-        onClose={() => setActiveModal(null)}
-      >
-        <div className="flex flex-col gap-10 items-center">
-          <div className="flex flex-col gap-6">
-            <span className="text-accent text-[10px] uppercase tracking-[0.6em] font-bold">Deep Dive Analysis</span>
-            <h3 className="text-3xl md:text-5xl font-display leading-[1.1] tracking-tight text-bg">
-              {cases[0].title}
-            </h3>
-          </div>
-
-          <div className="w-24 h-px bg-bg/10"></div>
-          
-          <p className="text-lg md:text-xl leading-relaxed text-bg/80 font-light max-w-prose font-body">
-            {cases[0].popupContent}
-          </p>
-
-          <button 
-            onClick={() => setActiveModal(null)}
-            className="mt-6 group flex items-center gap-4 text-[10px] uppercase tracking-[0.4em] font-bold py-4 px-8 rounded-full border border-bg/10 hover:bg-bg hover:text-paper transition-all"
-          >
-            Return to Workflows
-          </button>
-        </div>
-      </Modal>
+      {/* total stats */}
+      <div className="grid grid-cols-1 md:grid-cols-3 mt-16 border border-line">
+        {[
+          { n: "500k+", label: "Data Points/Day" },
+          { n: "24/7", label: "Agent Uptime" },
+          { n: "4.2x", label: "Avg. ROI Increase" },
+        ].map(({ n, label }) => (
+          <Reveal key={label}>
+            <div className="bg-main p-10 flex flex-col gap-2 text-center border-b md:border-b-0 md:border-r border-line last:border-r-0 last:border-b-0">
+              <span className="font-serif text-5xl md:text-6xl text-secondary">
+                <Counter value={n} />
+              </span>
+              <span className="text-[9px] uppercase tracking-[0.5em] font-mono text-secondary/25">{label}</span>
+            </div>
+          </Reveal>
+        ))}
+      </div>
     </section>
   );
 };
+
+/* ─────────────────────────────── THE EDGE ─────────────────────────────── */
 
 const CompetitiveEdge = () => {
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
+  const imgY = useTransform(scrollYProgress, [0, 1], [-30, 30]);
+
   return (
-    <section id="edge" className="py-64 px-8 md:px-12 bg-paper text-bg relative overflow-hidden">
-      <div className="relative z-10">
-        <div className="flex flex-col gap-4 mb-24">
-          <div className="flex items-center gap-4">
-            <span className="text-[10px] font-bold tracking-widest text-accent">02</span>
-            <div className="h-px flex-1 bg-bg/10"></div>
-          </div>
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
-            <h2 className="text-7xl md:text-9xl font-display tracking-tight text-bg">THE EDGE</h2>
-            <p className="text-[10px] uppercase tracking-[0.4em] text-bg/40 max-w-[200px] leading-relaxed">
-              Why AI is the new baseline for industrial competition
-            </p>
+    <section id="edge" ref={ref} className="py-28 px-8 md:px-16 bg-surface border-t border-line relative overflow-hidden">
+      <div className="absolute top-0 right-0 w-[40vw] h-[40vw] rounded-full bg-accent/2 blur-[180px] pointer-events-none" />
+
+      <SectionHeader number="03" title="The Edge" subtitle="Why AI literacy is the new baseline" />
+
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-16 mt-8">
+        {/* image */}
+        <div className="md:col-span-6">
+          <div className="relative aspect-[4/3] overflow-hidden border border-line">
+            <motion.img style={{ y: imgY }}
+              src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=1000"
+              alt="AI visualization" className="w-full h-[120%] object-cover grayscale opacity-30 hover:grayscale-0 hover:opacity-60 transition-all duration-1000 -mt-[10%]"
+            />
+            <div className="absolute inset-0 flex items-end p-6">
+              <span className="text-[9px] uppercase tracking-[0.5em] font-mono text-secondary/30">Visual Intelligence</span>
+            </div>
+            <div className="absolute top-0 left-0 w-5 h-5 border-t border-l border-accent/30" />
+            <div className="absolute bottom-0 right-0 w-5 h-5 border-b border-r border-accent/30" />
           </div>
         </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-24 mt-32">
-          <div className="md:col-span-6">
-            <div className="aspect-[4/5] bg-bg/5 relative overflow-hidden group">
-              <img 
-                src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=1000" 
-                alt="Industrial AI" 
-                className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 scale-110 group-hover:scale-100"
-                referrerPolicy="no-referrer"
-              />
-              <div className="absolute inset-0 bg-accent/20 mix-blend-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+
+        {/* statement */}
+        <div className="md:col-span-5 md:col-start-8 flex flex-col justify-center gap-12">
+          <Reveal>
+            <p className="text-3xl md:text-[2.6rem] font-serif leading-[1.05] tracking-wide text-secondary">
+              "The greatest risk isn't <span className="text-accent">AI itself</span>, it's being the last to understand its potential."
+            </p>
+          </Reveal>
+
+          <Reveal delay={0.15}>
+            <div className="flex items-center gap-4">
+              <div className="w-8 h-px bg-accent" />
+              <span className="text-[9px] uppercase tracking-[0.5em] font-mono text-secondary/25">Market Dominance</span>
             </div>
-          </div>
-          <div className="md:col-span-5 md:col-start-8 flex flex-col justify-center gap-12">
-            <Reveal>
-              <p className="text-4xl md:text-6xl font-display leading-[0.9] text-bg">
-                "THE GREATEST RISK ISN'T AI ITSELF, BUT BEING THE LAST TO UNDERSTAND ITS POTENTIAL."
-              </p>
-            </Reveal>
-            <div className="flex flex-col gap-8">
-              <div className="flex items-center gap-6">
-                <div className="w-12 h-px bg-accent"></div>
-                <span className="text-[10px] uppercase tracking-[0.4em] text-bg/60 font-bold">Market Dominance</span>
-              </div>
-              <p className="text-bg/60 font-body text-lg leading-relaxed">
-                Early adopters are capturing 3x more market share through AI-driven insights and automated decision cycles. The industrial landscape is being re-forged in real-time.
-              </p>
-              <button className="flex items-center gap-4 text-[10px] uppercase tracking-[0.4em] font-bold group">
-                READ THE WHITE PAPER <ArrowRight size={16} className="group-hover:translate-x-2 transition-transform" />
-              </button>
+            <p className="text-secondary/40 font-light leading-relaxed mt-4">
+              Early adopters are capturing 3× more market share through AI-driven insights and automated decision cycles.
+            </p>
+          </Reveal>
+
+          <Reveal delay={0.25}>
+            <div className="flex flex-wrap gap-8 md:gap-12">
+              {[
+                { n: "3×", label: "More market share" },
+                { n: "60%", label: "Cost reduction" },
+                { n: "18mo", label: "Ahead of laggards" },
+              ].map(({ n, label }) => (
+                <div key={label} className="flex flex-col gap-1">
+                  <span className="font-serif text-4xl text-accent">{n}</span>
+                  <span className="text-[9px] uppercase tracking-widest font-mono text-secondary/25">{label}</span>
+                </div>
+              ))}
             </div>
-          </div>
+          </Reveal>
         </div>
       </div>
     </section>
   );
 };
 
-const Footer = () => {
+/* ─────────────────────────────── MANIFESTO ─────────────────────────────── */
+
+const Manifesto = () => {
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
+  const scale = useTransform(scrollYProgress, [0, 0.5], [0.96, 1]);
+  const words = "The leaders who define the next decade are not the ones who build AI, they are the ones who understand it well enough to wield it.".split(" ");
+  const accentWords = new Set(["understand", "wield"]);
+
   return (
-    <footer className="py-32 px-8 md:px-12 bg-bg border-t border-paper/5">
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-24">
-        <div className="md:col-span-4">
-          <div className="flex items-center gap-4 mb-12">
-            <div className="w-16 h-16 flex items-center justify-center overflow-hidden">
-              <img 
-                src="https://imglink.cc/cdn/-G5PGyVsCf.png" 
-                alt="FORGED 1 Logo" 
-                className="w-full h-full object-contain"
-                referrerPolicy="no-referrer"
-              />
-            </div>
-            <span className="text-gold text-[10px] uppercase tracking-[0.3em] font-bold">AI Leadership</span>
-          </div>
-          <p className="text-paper/40 text-sm leading-relaxed max-w-xs font-body">
-            A boutique education platform for the next generation of industrial leaders. Re-forging leadership for the algorithmic age.
-          </p>
+    <section id="manifesto" ref={ref} className="py-36 px-8 md:px-16 border-t border-line overflow-hidden">
+      <motion.div style={{ scale }}>
+        <div className="flex items-center gap-4 mb-16">
+          <div className="w-2 h-2 rounded-full bg-accent" />
+          <span className="text-[9px] uppercase tracking-[0.6em] font-mono text-secondary/25">Manifesto</span>
         </div>
+        <p className="text-3xl md:text-[3.5rem] font-serif leading-[1.1] tracking-wide text-secondary max-w-6xl">
+          {words.map((word, i) => (
+            <Word key={i} word={word} index={i} total={words.length} accent={accentWords.has(word.toLowerCase().replace(/[—,\.]/g, ""))} />
+          ))}
+        </p>
+      </motion.div>
+    </section>
+  );
+};
 
-        <div className="md:col-span-2 md:col-start-7">
-          <span className="text-accent text-[10px] uppercase tracking-[0.4em] mb-8 block font-bold">NAVIGATION</span>
-          <div className="flex flex-col gap-4">
-            {["Curriculum", "Workflows", "Edge", "Manifesto", "Apply"].map(item => (
-              <a key={item} href="#" className="text-sm text-paper/60 hover:text-accent transition-colors font-bold uppercase tracking-widest">{item}</a>
-            ))}
-          </div>
-        </div>
+const Word = ({ word, index, total, accent }: { word: string, index: number, total: number, accent: boolean, key?: any }) => {
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.9", "start 0.4"] });
+  const opacity = useTransform(scrollYProgress, [0, 1], [0.08, 1]);
+  const y = useTransform(scrollYProgress, [0, 1], [20, 0]);
+  return (
+    <motion.span ref={ref} style={{ opacity, y }}
+      className={`inline-block mr-[0.3em] ${accent ? "text-accent" : ""}`}
+    >{word}</motion.span>
+  );
+};
 
-        <div className="md:col-span-3 md:col-start-10">
-          <span className="text-accent text-[10px] uppercase tracking-[0.4em] mb-8 block font-bold">NEWSLETTER</span>
-          <div className="flex border-b border-paper/10 pb-4 group focus-within:border-accent transition-colors">
-            <input 
-              type="email" 
-              placeholder="JOIN THE FORGE" 
-              className="bg-transparent flex-1 text-sm outline-none text-paper placeholder:text-paper/20 font-display tracking-widest"
-            />
-            <button className="text-paper/40 hover:text-accent transition-colors"><ArrowRight size={20} /></button>
-          </div>
+/* ─────────────────────────────── FAQ ─────────────────────────────── */
+
+const FAQ = () => {
+  const faqs = [
+    {
+      q: "Who is this course for?",
+      a: "Business leaders, managers, and decision-makers who want to understand AI without needing to code. Whether you're in strategy, operations, marketing, or HR, this course gives you the literacy to lead AI initiatives confidently."
+    },
+    {
+      q: "How long does it take to complete?",
+      a: "The complete course runs 1 hour and 41 minutes across 29 lectures. It's designed to be consumed in one focused session or spread across a week, whatever fits your schedule."
+    },
+    {
+      q: "Do I need technical experience?",
+      a: "No. This course is built for non-technical leaders. We focus on strategic understanding, decision frameworks, and practical application, not coding or data science."
+    },
+    {
+      q: "What makes this different from other AI courses?",
+      a: "Most AI courses teach you how to build models. This one teaches you how to wield them. It's designed for the people who fund, direct, and scale AI, not the people who code it."
+    },
+    {
+      q: "Is there a certificate?",
+      a: "Yes. Upon completion, you'll receive a FORGED 1 certificate demonstrating your AI leadership competency, a credential recognized by our network of industry partners."
+    },
+  ];
+
+  return (
+    <section className="py-28 px-8 md:px-16 border-t border-line bg-surface">
+      <SectionHeader number="04" title="FAQ" subtitle="Common questions answered" />
+      <div className="max-w-3xl">
+        {faqs.map((faq, i) => (
+          <Reveal key={i} delay={i * 0.04}>
+            <AccordionItem question={faq.q} answer={faq.a} />
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+};
+
+const AccordionItem = ({ question, answer }: { question: string, answer: string }) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="border-t border-line">
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-full flex items-center justify-between py-8 text-left group"
+      >
+        <span className="text-base md:text-lg text-secondary/80 group-hover:text-accent transition-colors duration-300 max-w-[85%]">{question}</span>
+        <motion.div
+          animate={{ rotate: open ? 45 : 0 }}
+          transition={{ duration: 0.3 }}
+          className="shrink-0 w-8 h-8 border border-secondary/10 flex items-center justify-center group-hover:border-accent transition-colors"
+        >
+          <Plus size={12} className="text-secondary/30 group-hover:text-accent transition-colors" />
+        </motion.div>
+      </button>
+      <div className={`accordion-content ${open ? "open" : ""}`}>
+        <div className="accordion-inner">
+          <p className="text-sm text-secondary/40 font-light leading-relaxed pb-8 max-w-xl">{answer}</p>
         </div>
       </div>
-      
-      <div className="mt-32 pt-12 border-t border-paper/5 flex flex-col md:flex-row justify-between gap-8">
-        <p className="text-[10px] uppercase tracking-[0.4em] text-paper/20 font-bold">© 2026 FORGED 1 — ALL RIGHTS RESERVED</p>
-        <div className="flex gap-12">
-          {["Privacy", "Terms", "Cookies"].map(item => (
-            <a key={item} href="#" className="text-[10px] uppercase tracking-[0.4em] text-paper/20 hover:text-paper transition-colors font-bold">{item}</a>
+    </div>
+  );
+};
+
+/* ─────────────────────────────── FOOTER ─────────────────────────────── */
+
+const Footer = () => (
+  <footer className="py-20 px-8 md:px-16 border-t border-line">
+    <div className="grid grid-cols-1 md:grid-cols-12 gap-16">
+      <div className="md:col-span-4">
+        <div className="flex flex-col gap-1 mb-8">
+          <span className="font-serif text-5xl tracking-wider text-secondary">FORGED<span className="text-accent">1</span></span>
+          <span className="text-[8px] uppercase tracking-[0.4em] font-mono text-secondary/25">AI for Business Leaders</span>
+        </div>
+        <p className="text-secondary/25 text-sm leading-relaxed max-w-xs">
+          A boutique education platform for the next generation of industry leaders.
+        </p>
+      </div>
+
+      <div className="md:col-span-2 md:col-start-6">
+        <span className="text-[9px] uppercase tracking-[0.5em] font-mono text-accent mb-6 block">Navigate</span>
+        <div className="flex flex-col gap-3">
+          {["Workflows", "Services", "The Edge", "Manifesto"].map(item => (
+            <a key={item} href={`#${item.toLowerCase()}`} className="text-sm text-secondary/30 hover:text-accent transition-colors tracking-wide">{item}</a>
           ))}
         </div>
       </div>
-    </footer>
-  );
-};
 
-// --- Main App ---
+      <div className="md:col-span-3 md:col-start-9">
+        <span className="text-[9px] uppercase tracking-[0.5em] font-mono text-accent mb-6 block">Contact</span>
+        <a href="mailto:hello@forged1.ai" className="text-lg font-serif text-secondary/60 hover:text-accent transition-colors">hello@forged1.ai</a>
+        <div className="flex gap-8 mt-8">
+          {["LinkedIn", "X / Twitter", "YouTube"].map(s => (
+            <a key={s} href="#" className="text-[9px] uppercase tracking-widest font-mono text-secondary/20 hover:text-accent transition-colors">{s}</a>
+          ))}
+        </div>
+      </div>
+
+      <div className="md:col-span-2 md:col-start-12 flex flex-col justify-between">
+        <a href="#services" className="group inline-flex items-center gap-3 text-[9px] uppercase tracking-[0.5em] font-mono font-medium text-secondary/40 hover:text-accent transition-colors">
+          <span>Our Services</span>
+          <div className="w-10 h-10 border border-secondary/10 flex items-center justify-center group-hover:border-accent group-hover:bg-accent transition-all duration-300">
+            <ArrowRight size={12} className="group-hover:text-main transition-colors" />
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <div className="mt-16 pt-8 border-t border-line flex flex-col md:flex-row justify-between gap-6">
+      <p className="text-[9px] uppercase tracking-[0.5em] font-mono text-secondary/12">© 2026 Forged 1, All rights reserved</p>
+      <div className="flex gap-10">
+        {["Privacy", "Terms", "Accessibility"].map(l => (
+          <a key={l} href="#" className="text-[9px] uppercase tracking-[0.4em] font-mono text-secondary/12 hover:text-secondary transition-colors">{l}</a>
+        ))}
+      </div>
+    </div>
+  </footer>
+);
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-bg selection:bg-accent selection:text-bg">
-      <div className="noise-overlay" />
-      <CustomCursor />
+    <div className="min-h-screen">
       <Navbar />
       <main className="relative z-10">
         <Hero />
-        <Marquee direction="left" text="INDUSTRIAL INTELLIGENCE" />
-        <Manifesto />
-        <HorizontalScroll />
-        <Marquee direction="right" text="ALGORITHMIC DOMINANCE" />
-        <UseCases />
+        <MarqueeDivider />
+        <Workflows />
+        <ServicesSection />
         <CompetitiveEdge />
+        <Manifesto />
+        <FAQ />
       </main>
       <Footer />
     </div>
