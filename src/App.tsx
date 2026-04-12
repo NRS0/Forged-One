@@ -462,24 +462,29 @@ const CompetitiveEdge = () => {
 
       <SectionHeader number="03" title="The Edge" subtitle="Why AI literacy is the new baseline" />
 
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-16 mt-8">
-        {/* image */}
-        <div className="md:col-span-6">
-          <div className="relative aspect-[4/3] overflow-hidden border border-line">
-            <motion.img style={{ y: imgY }}
-              src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=1000"
-              alt="AI visualization" className="w-full h-[120%] object-cover grayscale opacity-30 hover:grayscale-0 hover:opacity-60 transition-all duration-1000 -mt-[10%]"
-            />
-            <div className="absolute inset-0 flex items-end p-6">
-              <span className="text-[9px] uppercase tracking-[0.5em] font-mono text-secondary/30">Visual Intelligence</span>
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mt-12 items-center">
+        {/* video */}
+        <div className="md:col-span-7">
+          <div className="relative aspect-video overflow-hidden border border-line shadow-2xl">
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="w-full h-full object-cover"
+            >
+              <source src="https://imglink.cc/cdn/uk2b_8PwJk.mp4" type="video/mp4" />
+            </video>
+            <div className="absolute inset-0 flex items-end p-6 bg-linear-to-t from-main/60 to-transparent">
+              <span className="text-[9px] uppercase tracking-[0.5em] font-mono text-white/70">Visual Intelligence</span>
             </div>
-            <div className="absolute top-0 left-0 w-5 h-5 border-t border-l border-accent/30" />
-            <div className="absolute bottom-0 right-0 w-5 h-5 border-b border-r border-accent/30" />
+            <div className="absolute top-0 left-0 w-8 h-8 border-t border-l border-accent" />
+            <div className="absolute bottom-0 right-0 w-8 h-8 border-b border-r border-accent" />
           </div>
         </div>
 
         {/* statement */}
-        <div className="md:col-span-5 md:col-start-8 flex flex-col justify-center gap-12">
+        <div className="md:col-span-5 flex flex-col justify-center gap-10">
           <Reveal>
             <p className="text-3xl md:text-[2.6rem] font-serif leading-[1.05] tracking-wide text-secondary">
               "The greatest risk isn't <span className="text-accent">AI itself</span>, it's being the last to understand its potential."
