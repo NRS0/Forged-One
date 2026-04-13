@@ -145,7 +145,7 @@ const Hero = () => {
   }, [taglines.length]);
 
   return (
-    <section ref={containerRef} className="relative min-h-screen flex flex-col justify-center px-8 md:px-16 pt-24 overflow-hidden">
+    <section ref={containerRef} className="relative min-h-screen flex flex-col justify-center px-8 md:px-16 pt-40 overflow-hidden">
       {/* background video */}
       <video
         autoPlay
@@ -183,7 +183,7 @@ const Hero = () => {
             <motion.span
               initial={{ opacity: 0, y: 60 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}
-              className="block text-[8vw] md:text-[5vw] text-secondary tracking-[0.1em]"
+              className="block text-[6vw] md:text-[3.5vw] text-secondary tracking-[0.1em]"
             >
               AI FOR BUSINESS
             </motion.span>
