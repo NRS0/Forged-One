@@ -86,7 +86,7 @@ const Navbar = () => {
   }, [scrollY]);
 
   return (
-    <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-700 ${scrolled ? "bg-white/90 backdrop-blur-xl border-b border-black/5 shadow-sm py-3" : "bg-white py-5 border-b border-black/5"}`}>
+    <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-700 ${scrolled ? "bg-white/90 backdrop-blur-xl border-b border-black/5 shadow-sm py-3" : "bg-white py-3 md:py-5 border-b border-black/5"}`}>
       <div className="flex justify-between items-center px-8 md:px-16">
         <motion.a href="#" initial={{ opacity: 0 }} animate={{ opacity: 1 }}
           className="flex items-center gap-4"
@@ -145,7 +145,7 @@ const Hero = () => {
   }, [taglines.length]);
 
   return (
-    <section ref={containerRef} className="relative min-h-screen flex flex-col justify-center px-8 md:px-16 pt-40 overflow-hidden">
+    <section ref={containerRef} className="relative min-h-screen flex flex-col justify-center px-8 md:px-16 pt-24 md:pt-40 overflow-hidden">
       {/* background video */}
       <video
         autoPlay
@@ -183,7 +183,7 @@ const Hero = () => {
             <motion.span
               initial={{ opacity: 0, y: 60 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}
-              className="block text-[6vw] md:text-[3.5vw] text-secondary tracking-[0.1em]"
+              className="block text-[8vw] md:text-[3.5vw] text-secondary tracking-[0.1em]"
             >
               AI FOR BUSINESS
             </motion.span>
@@ -211,7 +211,7 @@ const Hero = () => {
         {/* stats + CTA row */}
         <motion.div 
           style={{ y: y2 }} 
-          className="mt-64 grid grid-cols-2 md:grid-cols-12 gap-8 border-t border-line pt-10 relative"
+          className="mt-32 md:mt-60 grid grid-cols-3 md:grid-cols-12 gap-4 md:gap-8 border-t border-line pt-8 md:pt-10 relative"
         >
           {/* full-width gradient overlay for visibility */}
           <div className="absolute top-0 bottom-[-100vh] left-[-100vw] right-[-100vw] -z-10 bg-linear-to-b from-main via-main/90 to-main opacity-95" />
@@ -223,16 +223,16 @@ const Hero = () => {
           ].map(({ n, label }, i) => (
             <motion.div key={label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 + i * 0.1, ease: [0.16, 1, 0.3, 1] }}
-              className="md:col-span-2 flex flex-col gap-2"
+              className="col-span-1 md:col-span-2 flex flex-col gap-1 md:gap-2"
             >
-              <span className="font-serif text-5xl text-secondary leading-none">
+              <span className="font-serif text-3xl md:text-5xl text-secondary leading-tight">
                 <Counter value={n} />
               </span>
               <span className="text-[9px] uppercase tracking-[0.5em] text-accent font-mono">{label}</span>
             </motion.div>
           ))}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8 }} className="md:col-start-8 md:col-span-5 flex flex-col gap-6"
+            transition={{ delay: 0.8 }} className="col-span-3 md:col-start-8 md:col-span-5 flex flex-col gap-4 md:gap-6"
           >
             <p className="text-base md:text-lg leading-relaxed text-secondary font-light">
               We build the autonomous systems that define the next decade of industrial dominance.
@@ -279,7 +279,7 @@ const MarqueeDivider = () => {
 const SectionHeader = ({ number, title, subtitle }: { number: string, title: string, subtitle: string }) => {
   const { ref, inView } = useInView();
   return (
-    <div ref={ref} className="flex flex-col gap-6 mb-20">
+    <div ref={ref} className="flex flex-col gap-6 mb-12 md:mb-20">
       <div className="flex items-center gap-4">
         <motion.span initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}} className="text-[9px] font-mono font-medium tracking-widest text-accent">{number}</motion.span>
         <motion.div initial={{ scaleX: 0 }} animate={inView ? { scaleX: 1 } : {}}
@@ -327,7 +327,7 @@ const Workflows = () => {
   ];
 
   return (
-    <section id="workflows" className="py-28 px-8 md:px-16">
+    <section id="workflows" className="py-16 md:py-28 px-8 md:px-16">
       <SectionHeader number="01" title="Workflows" subtitle="Practical applications for immediate ROI" />
       <div className="flex flex-col">
         {cases.map((c, i) => (
@@ -351,7 +351,7 @@ const WorkflowCard = ({ id, title, category, description, detail }: {
       onMouseLeave={() => setHovered(false)}
       className="group border-t border-line last:border-b"
     >
-      <div className="flex flex-col md:flex-row md:items-start gap-6 md:gap-16 py-10 md:py-14 cursor-default">
+      <div className="flex flex-col md:flex-row md:items-start gap-6 md:gap-16 py-8 md:py-14 cursor-default">
         {/* left: number + category */}
         <div className="md:w-40 shrink-0 flex md:flex-col items-center md:items-start gap-4 md:gap-2">
           <span className="text-[9px] font-mono font-medium tracking-widest text-accent">{id}</span>
@@ -401,14 +401,14 @@ const ServicesSection = () => {
   ];
 
   return (
-    <section id="services" className="py-28 px-8 md:px-16 border-t border-line">
+    <section id="services" className="py-16 md:py-28 px-8 md:px-16 border-t border-line">
       <SectionHeader number="02" title="Services" subtitle="End-to-end AI integration for modern enterprise" />
 
       {/* vertical card list */}
       <div className="flex flex-col">
         {services.map((s, i) => (
           <Reveal key={s.n} delay={i * 0.04}>
-            <div className="group border-t border-line last:border-b flex items-center gap-6 md:gap-12 py-8 md:py-12 cursor-default hover:bg-secondary/[0.02] transition-colors duration-500 px-2 md:px-4">
+            <div className="group border-t border-line last:border-b flex items-center gap-6 md:gap-12 py-6 md:py-12 cursor-default hover:bg-secondary/[0.02] transition-colors duration-500 px-2 md:px-4">
               <span className="font-serif text-4xl md:text-5xl leading-none shrink-0" style={{ color: s.color }}>{s.n}</span>
               <div className="flex-1 flex flex-col md:flex-row md:items-center gap-4 md:gap-12">
                 <h3 className="text-xl md:text-3xl font-serif tracking-tight text-secondary group-hover:text-accent transition-colors duration-400 md:w-1/3">
@@ -453,7 +453,7 @@ const CompetitiveEdge = () => {
   const imgY = useTransform(scrollYProgress, [0, 1], [-30, 30]);
 
   return (
-    <section id="edge" ref={ref} className="py-28 px-8 md:px-16 bg-surface border-t border-line relative overflow-hidden">
+    <section id="edge" ref={ref} className="py-16 md:py-28 px-8 md:px-16 bg-surface border-t border-line relative overflow-hidden">
       <div className="absolute top-0 right-0 w-[40vw] h-[40vw] rounded-full bg-accent/2 blur-[180px] pointer-events-none" />
 
       <SectionHeader number="03" title="The Edge" subtitle="Why AI literacy is the new baseline" />
@@ -527,7 +527,7 @@ const Manifesto = () => {
   const accentWords = new Set(["understand", "wield"]);
 
   return (
-    <section id="manifesto" ref={ref} className="py-36 px-8 md:px-16 border-t border-line overflow-hidden">
+    <section id="manifesto" ref={ref} className="py-20 md:py-36 px-8 md:px-16 border-t border-line overflow-hidden">
       <motion.div style={{ scale }}>
         <div className="flex items-center gap-4 mb-16">
           <div className="w-2 h-2 rounded-full bg-accent" />
@@ -582,7 +582,7 @@ const FAQ = () => {
   ];
 
   return (
-    <section className="py-28 px-8 md:px-16 border-t border-line bg-surface">
+    <section className="py-16 md:py-28 px-8 md:px-16 border-t border-line bg-surface">
       <SectionHeader number="04" title="FAQ" subtitle="Common questions answered" />
       <div className="max-w-3xl">
         {faqs.map((faq, i) => (
@@ -624,7 +624,7 @@ const AccordionItem = ({ question, answer }: { question: string, answer: string 
 /* ─────────────────────────────── FOOTER ─────────────────────────────── */
 
 const Footer = () => (
-  <footer className="py-20 px-8 md:px-16 border-t border-line">
+  <footer className="py-12 md:py-20 px-8 md:px-16 border-t border-line">
     <div className="grid grid-cols-1 md:grid-cols-12 gap-16">
       <div className="md:col-span-4">
         <div className="flex flex-col gap-4 mb-8">
