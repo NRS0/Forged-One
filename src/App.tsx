@@ -102,14 +102,22 @@ const Navbar = () => {
           </div>
         </motion.a>
 
-        <motion.a href="#services" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
-          className="group flex items-center gap-3 text-[9px] uppercase tracking-[0.5em] font-medium text-main/60 hover:text-accent transition-colors duration-300"
-        >
-          <span className="hidden md:inline">Our Services</span>
-          <div className="w-10 h-10 border border-main/10 flex items-center justify-center group-hover:border-accent group-hover:bg-accent transition-all duration-300">
-            <ArrowRight size={13} className="text-main group-hover:text-white transition-colors" />
-          </div>
-        </motion.a>
+        <div className="flex items-center gap-12">
+          <motion.a href="#contact" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
+            className="hidden lg:flex items-center gap-3 text-[9px] uppercase tracking-[0.5em] font-bold text-accent hover:text-accent/80 transition-colors duration-300"
+          >
+            <span>Book a Strategy Call</span>
+          </motion.a>
+
+          <motion.a href="#services" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
+            className="group flex items-center gap-3 text-[9px] uppercase tracking-[0.5em] font-medium text-main/60 hover:text-accent transition-colors duration-300"
+          >
+            <span className="hidden md:inline">Our Services</span>
+            <div className="w-10 h-10 border border-main/10 flex items-center justify-center group-hover:border-accent group-hover:bg-accent transition-all duration-300">
+              <ArrowRight size={13} className="text-main group-hover:text-white transition-colors" />
+            </div>
+          </motion.a>
+        </div>
       </div>
     </nav>
   );
@@ -158,30 +166,24 @@ const Hero = () => {
           className="flex items-center gap-4 mb-8"
         >
           <div className="w-8 h-px bg-accent" />
-          <span className="text-[9px] uppercase tracking-[0.6em] text-secondary/40">Next-Gen AI Solutions</span>
+          <span className="text-[9px] uppercase tracking-[0.6em] text-accent">Next-Gen AI Solutions</span>
         </motion.div>
 
         {/* headline */}
         <motion.div style={{ y: y1 }}>
-          <h1 className="font-serif leading-[0.78] tracking-[0.02em] uppercase">
-            <motion.span
+          <h1 className="font-serif leading-none tracking-[0.02em] uppercase flex flex-col">
+            <motion.img
               initial={{ opacity: 0, y: 100 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-              className="block text-[18vw] md:text-[16vw] text-secondary"
-            >
-              FORGED
-            </motion.span>
-            <motion.span
-              initial={{ opacity: 0, y: 100 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-              className="block text-[18vw] md:text-[16vw] text-accent italic"
-            >
-              1
-            </motion.span>
+              src="https://imglink.cc/cdn/P7zm8Tr4Cq.png"
+              alt="FORGED 1"
+              className="h-[14vw] md:h-[10vw] w-auto object-contain self-start mb-4"
+              referrerPolicy="no-referrer"
+            />
             <motion.span
               initial={{ opacity: 0, y: 60 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}
-              className="block text-[8vw] md:text-[5vw] text-secondary/30 tracking-[0.1em]"
+              className="block text-[8vw] md:text-[5vw] text-secondary tracking-[0.1em]"
             >
               AI FOR BUSINESS
             </motion.span>
@@ -198,7 +200,7 @@ const Hero = () => {
                 className="flex items-center gap-3"
               >
                 <div className="w-2 h-2 rounded-full bg-accent" />
-                <span className={`text-[9px] uppercase tracking-[0.5em] font-mono ${taglines[activeTag].accent ? "text-accent" : "text-secondary/40"}`}>
+                <span className={`text-[9px] uppercase tracking-[0.5em] font-mono ${taglines[activeTag].accent ? "text-accent" : "text-secondary"}`}>
                   {taglines[activeTag].text}
                 </span>
               </motion.div>
@@ -209,7 +211,7 @@ const Hero = () => {
         {/* stats + CTA row */}
         <motion.div 
           style={{ y: y2 }} 
-          className="mt-20 grid grid-cols-2 md:grid-cols-12 gap-8 border-t border-line pt-10 relative"
+          className="mt-64 grid grid-cols-2 md:grid-cols-12 gap-8 border-t border-line pt-10 relative"
         >
           {/* full-width gradient overlay for visibility */}
           <div className="absolute top-0 bottom-[-100vh] left-[-100vw] right-[-100vw] -z-10 bg-linear-to-b from-main via-main/90 to-main opacity-95" />
@@ -226,21 +228,15 @@ const Hero = () => {
               <span className="font-serif text-5xl text-secondary leading-none">
                 <Counter value={n} />
               </span>
-              <span className="text-[9px] uppercase tracking-[0.5em] text-secondary/25 font-mono">{label}</span>
+              <span className="text-[9px] uppercase tracking-[0.5em] text-accent font-mono">{label}</span>
             </motion.div>
           ))}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.8 }} className="md:col-start-8 md:col-span-5 flex flex-col gap-6"
           >
-            <p className="text-base md:text-lg leading-relaxed text-secondary/40 font-light">
+            <p className="text-base md:text-lg leading-relaxed text-secondary font-light">
               We build the autonomous systems that define the next decade of industrial dominance.
             </p>
-            <a href="#services" className="group inline-flex items-center gap-4 text-[9px] uppercase tracking-[0.5em] font-medium">
-              <span className="text-secondary hover:text-accent transition-colors">Our Services</span>
-              <div className="w-11 h-11 border border-secondary/15 flex items-center justify-center group-hover:bg-accent group-hover:border-accent transition-all duration-300">
-                <ArrowRight size={13} className="group-hover:text-main transition-colors group-hover:translate-x-0.5 transition-transform" />
-              </div>
-            </a>
           </motion.div>
         </motion.div>
       </motion.div>
@@ -250,7 +246,7 @@ const Hero = () => {
         style={{ opacity: scrollIndicatorOpacity }}
         animate={{ y: [0, 10, 0] }} 
         transition={{ duration: 2.5, repeat: Infinity }}
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-secondary/15 z-20"
+        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-secondary z-20"
       >
         <span className="text-[8px] uppercase tracking-[0.5em] font-mono">Scroll</span>
         <ArrowDown size={18} strokeWidth={1} />
@@ -268,7 +264,7 @@ const MarqueeDivider = () => {
     <div className="py-8 border-y border-line overflow-hidden bg-surface marquee-mask">
       <div className="marquee-track">
         {doubled.map((item, i) => (
-          <span key={i} className="whitespace-nowrap px-6 font-mono text-[11px] tracking-[0.3em] text-secondary/12 uppercase select-none">
+          <span key={i} className="whitespace-nowrap px-6 font-mono text-[11px] tracking-[0.3em] text-secondary uppercase select-none">
             {item}
             <span className="text-accent/40 mx-6">/</span>
           </span>
@@ -297,7 +293,7 @@ const SectionHeader = ({ number, title, subtitle }: { number: string, title: str
           className="text-6xl md:text-[7rem] font-serif tracking-wider uppercase text-secondary leading-[0.85]"
         >{title}</motion.h2>
         <motion.p initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}}
-          transition={{ delay: 0.3 }} className="text-[9px] uppercase tracking-[0.5em] font-mono text-secondary/25 max-w-[220px] leading-relaxed"
+          transition={{ delay: 0.3 }} className="text-[9px] uppercase tracking-[0.5em] font-mono text-accent max-w-[220px] leading-relaxed"
         >{subtitle}</motion.p>
       </div>
     </div>
@@ -358,7 +354,7 @@ const WorkflowCard = ({ id, title, category, description, detail }: {
       <div className="flex flex-col md:flex-row md:items-start gap-6 md:gap-16 py-10 md:py-14 cursor-default">
         {/* left: number + category */}
         <div className="md:w-40 shrink-0 flex md:flex-col items-center md:items-start gap-4 md:gap-2">
-          <span className="text-[9px] font-mono font-medium tracking-widest text-secondary/20">{id}</span>
+          <span className="text-[9px] font-mono font-medium tracking-widest text-accent">{id}</span>
           <span className="text-[9px] font-mono uppercase tracking-[0.4em] text-accent">{category}</span>
         </div>
         {/* middle: title + description */}
@@ -366,13 +362,13 @@ const WorkflowCard = ({ id, title, category, description, detail }: {
           <h3 className="text-3xl md:text-4xl font-serif tracking-tight text-secondary group-hover:text-accent transition-colors duration-500 leading-[0.95]">
             {title}
           </h3>
-          <p className="text-sm text-secondary/40 font-light leading-relaxed max-w-lg">
+          <p className="text-sm text-secondary font-light leading-relaxed max-w-lg">
             {description}
           </p>
           {/* expandable detail */}
           <div className={`accordion-content ${hovered ? "open" : ""}`}>
             <div className="accordion-inner">
-              <p className="text-sm text-secondary/30 font-light leading-relaxed max-w-lg pt-3 border-t border-line mt-3">
+              <p className="text-sm text-secondary font-light leading-relaxed max-w-lg pt-3 border-t border-line mt-3">
                 {detail}
               </p>
             </div>
@@ -385,7 +381,7 @@ const WorkflowCard = ({ id, title, category, description, detail }: {
             transition={{ duration: 0.3 }}
             className="w-10 h-10 border border-secondary/10 flex items-center justify-center group-hover:border-accent transition-colors duration-300"
           >
-            <Plus size={14} className="text-secondary/30 group-hover:text-accent transition-colors" />
+            <Plus size={14} className="text-accent group-hover:text-accent transition-colors" />
           </motion.div>
         </div>
       </div>
@@ -418,7 +414,7 @@ const ServicesSection = () => {
                 <h3 className="text-xl md:text-3xl font-serif tracking-tight text-secondary group-hover:text-accent transition-colors duration-400 md:w-1/3">
                   {s.name}
                 </h3>
-                <p className="text-sm text-secondary/40 font-light leading-relaxed max-w-lg flex-1">
+                <p className="text-sm text-secondary font-light leading-relaxed max-w-lg flex-1">
                   {s.desc}
                 </p>
               </div>
@@ -440,7 +436,7 @@ const ServicesSection = () => {
               <span className="font-serif text-5xl md:text-6xl text-secondary">
                 <Counter value={n} />
               </span>
-              <span className="text-[9px] uppercase tracking-[0.5em] font-mono text-secondary/25">{label}</span>
+              <span className="text-[9px] uppercase tracking-[0.5em] font-mono text-accent">{label}</span>
             </div>
           </Reveal>
         ))}
@@ -476,7 +472,7 @@ const CompetitiveEdge = () => {
               <source src="https://imglink.cc/cdn/uk2b_8PwJk.mp4" type="video/mp4" />
             </video>
             <div className="absolute inset-0 flex items-end p-6 bg-linear-to-t from-main/60 to-transparent">
-              <span className="text-[9px] uppercase tracking-[0.5em] font-mono text-white/70">Visual Intelligence</span>
+              <span className="text-[9px] uppercase tracking-[0.5em] font-mono text-accent">Visual Intelligence</span>
             </div>
             <div className="absolute top-0 left-0 w-8 h-8 border-t border-l border-accent" />
             <div className="absolute bottom-0 right-0 w-8 h-8 border-b border-r border-accent" />
@@ -494,9 +490,9 @@ const CompetitiveEdge = () => {
           <Reveal delay={0.15}>
             <div className="flex items-center gap-4">
               <div className="w-8 h-px bg-accent" />
-              <span className="text-[9px] uppercase tracking-[0.5em] font-mono text-secondary/25">Market Dominance</span>
+              <span className="text-[9px] uppercase tracking-[0.5em] font-mono text-accent">Market Dominance</span>
             </div>
-            <p className="text-secondary/40 font-light leading-relaxed mt-4">
+            <p className="text-secondary font-light leading-relaxed mt-4">
               Early adopters are capturing 3× more market share through AI-driven insights and automated decision cycles.
             </p>
           </Reveal>
@@ -510,7 +506,7 @@ const CompetitiveEdge = () => {
               ].map(({ n, label }) => (
                 <div key={label} className="flex flex-col gap-1">
                   <span className="font-serif text-4xl text-accent">{n}</span>
-                  <span className="text-[9px] uppercase tracking-widest font-mono text-secondary/25">{label}</span>
+                  <span className="text-[9px] uppercase tracking-widest font-mono text-accent">{label}</span>
                 </div>
               ))}
             </div>
@@ -535,7 +531,7 @@ const Manifesto = () => {
       <motion.div style={{ scale }}>
         <div className="flex items-center gap-4 mb-16">
           <div className="w-2 h-2 rounded-full bg-accent" />
-          <span className="text-[9px] uppercase tracking-[0.6em] font-mono text-secondary/25">Manifesto</span>
+          <span className="text-[9px] uppercase tracking-[0.6em] font-mono text-accent">Manifesto</span>
         </div>
         <p className="text-3xl md:text-[3.5rem] font-serif leading-[1.1] tracking-wide text-secondary max-w-6xl">
           {words.map((word, i) => (
@@ -613,12 +609,12 @@ const AccordionItem = ({ question, answer }: { question: string, answer: string 
           transition={{ duration: 0.3 }}
           className="shrink-0 w-8 h-8 border border-secondary/10 flex items-center justify-center group-hover:border-accent transition-colors"
         >
-          <Plus size={12} className="text-secondary/30 group-hover:text-accent transition-colors" />
+          <Plus size={12} className="text-accent group-hover:text-accent transition-colors" />
         </motion.div>
       </button>
       <div className={`accordion-content ${open ? "open" : ""}`}>
         <div className="accordion-inner">
-          <p className="text-sm text-secondary/40 font-light leading-relaxed pb-8 max-w-xl">{answer}</p>
+          <p className="text-sm text-secondary font-light leading-relaxed pb-8 max-w-xl">{answer}</p>
         </div>
       </div>
     </div>
@@ -631,11 +627,16 @@ const Footer = () => (
   <footer className="py-20 px-8 md:px-16 border-t border-line">
     <div className="grid grid-cols-1 md:grid-cols-12 gap-16">
       <div className="md:col-span-4">
-        <div className="flex flex-col gap-1 mb-8">
-          <span className="font-serif text-5xl tracking-wider text-secondary">FORGED<span className="text-accent">1</span></span>
-          <span className="text-[8px] uppercase tracking-[0.4em] font-mono text-secondary/25">AI for Business Leaders</span>
+        <div className="flex flex-col gap-4 mb-8">
+          <img 
+            src="https://imglink.cc/cdn/P7zm8Tr4Cq.png" 
+            alt="FORGED 1 Logo" 
+            className="h-10 w-auto object-contain self-start"
+            referrerPolicy="no-referrer"
+          />
+          <span className="text-[8px] uppercase tracking-[0.4em] font-mono text-accent">AI for Business Leaders</span>
         </div>
-        <p className="text-secondary/25 text-sm leading-relaxed max-w-xs">
+        <p className="text-secondary text-sm leading-relaxed max-w-xs">
           A boutique education platform for the next generation of industry leaders.
         </p>
       </div>
@@ -644,23 +645,23 @@ const Footer = () => (
         <span className="text-[9px] uppercase tracking-[0.5em] font-mono text-accent mb-6 block">Navigate</span>
         <div className="flex flex-col gap-3">
           {["Workflows", "Services", "The Edge", "Manifesto"].map(item => (
-            <a key={item} href={`#${item.toLowerCase()}`} className="text-sm text-secondary/30 hover:text-accent transition-colors tracking-wide">{item}</a>
+            <a key={item} href={`#${item.toLowerCase()}`} className="text-sm text-secondary hover:text-accent transition-colors tracking-wide">{item}</a>
           ))}
         </div>
       </div>
 
       <div className="md:col-span-3 md:col-start-9">
         <span className="text-[9px] uppercase tracking-[0.5em] font-mono text-accent mb-6 block">Contact</span>
-        <a href="mailto:hello@forged1.ai" className="text-lg font-serif text-secondary/60 hover:text-accent transition-colors">hello@forged1.ai</a>
+        <a href="mailto:hello@forged1.ai" className="text-lg font-serif text-secondary hover:text-accent transition-colors">hello@forged1.ai</a>
         <div className="flex gap-8 mt-8">
           {["LinkedIn", "X / Twitter", "YouTube"].map(s => (
-            <a key={s} href="#" className="text-[9px] uppercase tracking-widest font-mono text-secondary/20 hover:text-accent transition-colors">{s}</a>
+            <a key={s} href="#" className="text-[9px] uppercase tracking-widest font-mono text-accent hover:text-accent transition-colors">{s}</a>
           ))}
         </div>
       </div>
 
       <div className="md:col-span-2 md:col-start-12 flex flex-col justify-between">
-        <a href="#services" className="group inline-flex items-center gap-3 text-[9px] uppercase tracking-[0.5em] font-mono font-medium text-secondary/40 hover:text-accent transition-colors">
+        <a href="#services" className="group inline-flex items-center gap-3 text-[9px] uppercase tracking-[0.5em] font-mono font-medium text-accent hover:text-accent transition-colors">
           <span>Our Services</span>
           <div className="w-10 h-10 border border-secondary/10 flex items-center justify-center group-hover:border-accent group-hover:bg-accent transition-all duration-300">
             <ArrowRight size={12} className="group-hover:text-main transition-colors" />
@@ -680,10 +681,43 @@ const Footer = () => (
   </footer>
 );
 
+/* ─────────────────────────────── FLOATING CTA ─────────────────────────────── */
+
+const FloatingCTA = () => {
+  const { scrollY } = useScroll();
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    return scrollY.on("change", (latest) => setVisible(latest > 300));
+  }, [scrollY]);
+
+  return (
+    <AnimatePresence>
+      {visible && (
+        <motion.a
+          href="#contact"
+          initial={{ opacity: 0, x: 100 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: 100 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="fixed right-0 top-1/2 -translate-y-1/2 z-[60] hidden md:flex items-center"
+        >
+          <div className="bg-accent text-white py-6 px-4 [writing-mode:vertical-lr] rotate-180 flex items-center gap-4 hover:pr-8 transition-all duration-500 group shadow-2xl border-l border-white/10 cursor-pointer">
+            <span className="text-[10px] uppercase tracking-[0.4em] font-mono font-bold whitespace-nowrap">Book a Free Strategy Call</span>
+            <div className="w-px h-8 bg-white/30 group-hover:h-12 transition-all duration-500" />
+            <ArrowRight size={14} className="-rotate-90 group-hover:translate-y-1 transition-transform" />
+          </div>
+        </motion.a>
+      )}
+    </AnimatePresence>
+  );
+};
+
 export default function App() {
   return (
     <div className="min-h-screen">
       <Navbar />
+      <FloatingCTA />
       <main className="relative z-10">
         <Hero />
         <MarqueeDivider />
