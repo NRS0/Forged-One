@@ -103,7 +103,13 @@ const Navbar = () => {
         </motion.a>
 
         <div className="flex items-center gap-12">
-          <motion.a href="#contact" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
+          <motion.a 
+            href="https://calendly.com/forgedonebusiness/30min" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            initial={{ opacity: 0 }} 
+            animate={{ opacity: 1 }} 
+            transition={{ delay: 0.2 }}
             className="hidden lg:flex items-center gap-3 text-[9px] uppercase tracking-[0.5em] font-bold text-accent hover:text-accent/80 transition-colors duration-300"
           >
             <span>Book a Strategy Call</span>
@@ -652,7 +658,7 @@ const Footer = ({ onOpenLegal }: { onOpenLegal: (type: "Privacy" | "Terms" | "Ac
 
       <div className="md:col-span-3 md:col-start-9">
         <span className="text-[9px] uppercase tracking-[0.5em] font-mono text-accent mb-6 block">Contact</span>
-        <a href="mailto:hello@forged1.ai" className="text-lg font-serif text-secondary hover:text-accent transition-colors">hello@forged1.ai</a>
+        <a href="mailto:forgedonebusiness@gmail.com" className="text-lg font-serif text-secondary hover:text-accent transition-colors">forgedonebusiness@gmail.com</a>
         <div className="flex gap-8 mt-8">
           {["LinkedIn", "X / Twitter", "YouTube"].map(s => (
             <a key={s} href="#" className="text-[9px] uppercase tracking-widest font-mono text-accent hover:text-accent transition-colors">{s}</a>
@@ -760,7 +766,7 @@ This site is not directed at children under 13. We do not knowingly collect pers
 We may update this policy from time to time. Changes will be posted on this page with an updated date. Continued use of the site after changes constitutes acceptance.
 
 10. Contact
-Questions about this policy? Reach us at: legal@forgedone.xyz`
+Questions about this policy? Reach us at: forgedonebusiness@gmail.com`
     },
     Terms: {
       title: "Terms of Use",
@@ -803,7 +809,7 @@ These Terms are governed by the laws of the jurisdiction in which Forged One ope
 We reserve the right to modify these Terms at any time. Updated Terms will be posted on this page. Continued use of the Site after changes constitutes your acceptance of the revised Terms.
 
 11. Contact
-Questions about these Terms? Contact us at: legal@forgedone.xyz`
+Questions about these Terms? Contact us at: forgedonebusiness@gmail.com`
     },
     Accessibility: {
       title: "Accessibility Statement",
@@ -834,7 +840,7 @@ We aim to support:
 
 Feedback and Contact
 If you experience any accessibility issues on the Site, or if you need content in an alternative format, please contact us:
-Email: accessibility@forgedone.xyz
+Email: forgedonebusiness@gmail.com
 
 We aim to acknowledge accessibility feedback within 2 business days and to resolve issues within 10 business days where possible.
 
@@ -912,7 +918,9 @@ const FloatingCTA = () => {
     <AnimatePresence>
       {visible && (
         <motion.a
-          href="#contact"
+          href="https://calendly.com/forgedonebusiness/30min"
+          target="_blank"
+          rel="noopener noreferrer"
           initial={{ opacity: 0, x: 100 }}
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: 100 }}
