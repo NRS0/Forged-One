@@ -4,7 +4,7 @@
  */
 
 import { motion, useScroll, useTransform, AnimatePresence, useMotionValue, animate } from "motion/react";
-import { ArrowRight, ArrowDown, Plus } from "lucide-react";
+import { ArrowRight, ArrowDown, Plus, X } from "lucide-react";
 import { useState, useRef, useEffect, ReactNode } from "react";
 
 /* ─────────────────────────────── UTILS ─────────────────────────────── */
@@ -623,7 +623,7 @@ const AccordionItem = ({ question, answer }: { question: string, answer: string 
 
 /* ─────────────────────────────── FOOTER ─────────────────────────────── */
 
-const Footer = () => (
+const Footer = ({ onOpenLegal }: { onOpenLegal: (type: "Privacy" | "Terms" | "Accessibility") => void }) => (
   <footer className="py-12 md:py-20 px-8 md:px-16 border-t border-line">
     <div className="grid grid-cols-1 md:grid-cols-12 gap-16">
       <div className="md:col-span-4">
@@ -671,15 +671,232 @@ const Footer = () => (
     </div>
 
     <div className="mt-16 pt-8 border-t border-line flex flex-col md:flex-row justify-between gap-6">
-      <p className="text-[9px] uppercase tracking-[0.5em] font-mono text-secondary/12">© 2026 Forged 1, All rights reserved</p>
+      <p className="text-[9px] uppercase tracking-[0.5em] font-mono text-secondary">© 2026 Forged 1, All rights reserved</p>
       <div className="flex gap-10">
         {["Privacy", "Terms", "Accessibility"].map(l => (
-          <a key={l} href="#" className="text-[9px] uppercase tracking-[0.4em] font-mono text-secondary/12 hover:text-secondary transition-colors">{l}</a>
+          <button 
+            key={l} 
+            onClick={() => onOpenLegal(l as any)}
+            className="text-[9px] uppercase tracking-[0.4em] font-mono text-secondary hover:text-accent transition-colors cursor-pointer"
+          >
+            {l}
+          </button>
         ))}
       </div>
     </div>
   </footer>
 );
+
+/* ─────────────────────────────── LEGAL MODAL ─────────────────────────────── */
+
+const LegalModal = ({ isOpen, onClose, type }: { isOpen: boolean, onClose: () => void, type: "Privacy" | "Terms" | "Accessibility" | null }) => {
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+
+  if (!type) return null;
+
+  const content = {
+    Privacy: {
+      title: "Privacy Policy",
+      text: `Forged One · forgedone.xyz · Last updated: April 13, 2025
+
+1. Who We Are
+Forged One ("we", "us", "our") operates the website at forgedone.xyz. This policy explains what information we collect, how we use it, and your rights regarding it.
+
+2. Information We Collect
+Information you provide directly:
+• Contact details (name, email) if you fill out a contact or sign-up form
+• Any messages or communications you send us
+
+Information collected automatically:
+• IP address and general location (country/region)
+• Browser type and version
+• Pages visited and time spent
+• Referring URLs
+• Device type and operating system
+
+Cookies and similar technologies:
+We use essential cookies to operate the site and, where applicable, analytics cookies to understand how visitors use it. You can disable cookies in your browser settings, though some site functionality may be affected.
+
+3. How We Use Your Information
+• To operate and improve the website
+• To respond to enquiries you send us
+• To monitor security and prevent abuse
+• To analyse usage patterns through aggregated, anonymised analytics
+
+We do not sell, rent, or trade your personal information to third parties.
+
+4. Third-Party Services
+We may use third-party tools such as hosting providers and analytics services (e.g. Cloudflare, Google Analytics, or similar). These services may process data on our behalf under their own privacy policies.
+
+5. Data Retention
+We retain personal data only as long as necessary for the purposes described above, or as required by law. Analytics data is typically retained in aggregated form.
+
+6. Your Rights
+Depending on your location, you may have the right to:
+• Access the personal data we hold about you
+• Request correction or deletion of your data
+• Object to or restrict certain processing
+• Withdraw consent at any time (where processing is based on consent)
+• Lodge a complaint with your local data protection authority
+
+To exercise any of these rights, contact us at the address below.
+
+7. Data Security
+We take reasonable technical and organisational measures to protect your data. No transmission over the internet is completely secure, however, and we cannot guarantee absolute security.
+
+8. Children's Privacy
+This site is not directed at children under 13. We do not knowingly collect personal data from children.
+
+9. Changes to This Policy
+We may update this policy from time to time. Changes will be posted on this page with an updated date. Continued use of the site after changes constitutes acceptance.
+
+10. Contact
+Questions about this policy? Reach us at: legal@forgedone.xyz`
+    },
+    Terms: {
+      title: "Terms of Use",
+      text: `Forged One · forgedone.xyz · Last updated: April 13, 2025
+
+1. Acceptance of Terms
+By accessing or using forgedone.xyz ("the Site"), you agree to be bound by these Terms of Use. If you do not agree, please do not use the Site.
+
+2. Use of the Site
+You may use the Site for lawful purposes only. You agree not to:
+• Use the Site in any way that violates applicable local, national, or international law
+• Attempt to gain unauthorised access to any part of the Site or its underlying systems
+• Transmit any unsolicited or unauthorised advertising or spam
+• Introduce malware, viruses, or other malicious code
+• Scrape, harvest, or extract data from the Site in bulk without our prior written consent
+• Impersonate any person or entity, or misrepresent your affiliation with any person or entity
+
+3. Intellectual Property
+All content on the site including text, graphics, logos, images, and code is the property of Forged One or its licensors and is protected by applicable intellectual property laws. You may not reproduce, distribute, or create derivative works from any content on the Site without our express written permission.
+
+4. User-Submitted Content
+If you submit any content to us (e.g. via a contact form or other channel), you grant us a non-exclusive, royalty-free licence to use, display, and reproduce that content for the purposes of operating the Site and responding to you. You represent that you own or have the right to submit such content and that it does not infringe any third party's rights.
+
+5. Third-Party Links
+The Site may contain links to third-party websites. These are provided for convenience only. We have no control over those sites and accept no responsibility for their content, privacy practices, or availability.
+
+6. Disclaimers
+The Site and its content are provided "as is" without warranties of any kind, express or implied. We do not warrant that the Site will be uninterrupted, error-free, or free of harmful components. We make no representations about the accuracy, completeness, or suitability of any content on the Site.
+
+7. Limitation of Liability
+To the fullest extent permitted by law, Forged One shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising out of or related to your use of, or inability to use, the site even if we have been advised of the possibility of such damages.
+
+8. Indemnification
+You agree to indemnify and hold harmless Forged One and its operators from any claims, damages, or expenses (including legal fees) arising from your use of the Site or your violation of these Terms.
+
+9. Governing Law
+These Terms are governed by the laws of the jurisdiction in which Forged One operates, without regard to conflict of law principles. Any disputes shall be resolved in the courts of that jurisdiction.
+
+10. Changes to These Terms
+We reserve the right to modify these Terms at any time. Updated Terms will be posted on this page. Continued use of the Site after changes constitutes your acceptance of the revised Terms.
+
+11. Contact
+Questions about these Terms? Contact us at: legal@forgedone.xyz`
+    },
+    Accessibility: {
+      title: "Accessibility Statement",
+      text: `Forged One · forgedone.xyz · Last updated: April 13, 2025
+
+Our Commitment
+Forged One is committed to ensuring that forgedone.xyz is accessible to everyone, including people with disabilities. We aim to meet the Web Content Accessibility Guidelines (WCAG) 2.1 at Level AA as our baseline standard.
+
+Measures We Take
+We work to make the Site accessible by:
+• Using semantic HTML to provide meaningful structure
+• Ensuring sufficient colour contrast between text and backgrounds
+• Providing text alternatives for non-text content
+• Making all functionality available via keyboard navigation
+• Avoiding content that flashes or strobes in ways known to cause seizures
+• Ensuring the Site is usable with screen readers and other assistive technologies
+• Testing the Site across modern browsers and devices
+
+Known Limitations
+We are a small team and continuously working to improve. If you encounter any accessibility barriers, we want to hear from you.
+
+Supported Assistive Technologies
+We aim to support:
+• Screen readers (including NVDA, JAWS, VoiceOver, and TalkBack)
+• Keyboard-only navigation
+• Browser zoom up to 200% without loss of functionality
+• High contrast and forced-colour display modes
+
+Feedback and Contact
+If you experience any accessibility issues on the Site, or if you need content in an alternative format, please contact us:
+Email: accessibility@forgedone.xyz
+
+We aim to acknowledge accessibility feedback within 2 business days and to resolve issues within 10 business days where possible.
+
+Formal Complaints
+If you are not satisfied with our response, you may contact the relevant national accessibility enforcement body in your country.`
+    }
+  }[type];
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8">
+          <motion.div 
+            initial={{ opacity: 0 }} 
+            animate={{ opacity: 1 }} 
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+            className="absolute inset-0 bg-main/95 backdrop-blur-md"
+          />
+          <motion.div 
+            initial={{ opacity: 0, y: 40, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 40, scale: 0.95 }}
+            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+            className="relative w-full max-w-3xl max-h-[85vh] bg-surface border border-line p-8 md:p-12 overflow-y-auto shadow-2xl overscroll-contain custom-scrollbar"
+          >
+            <button 
+              onClick={onClose}
+              className="absolute top-6 right-6 p-2 text-secondary/40 hover:text-accent transition-colors z-10"
+            >
+              <X size={20} />
+            </button>
+            
+            <div className="flex items-center gap-4 mb-8">
+              <div className="w-2 h-2 rounded-full bg-accent" />
+              <span className="text-[9px] uppercase tracking-[0.6em] font-mono text-accent">Legal</span>
+            </div>
+            
+            <h2 className="text-4xl md:text-5xl font-serif text-secondary mb-8 leading-none">{content.title}</h2>
+            
+            <div className="space-y-6">
+              {content.text.split('\n\n').map((paragraph, i) => (
+                <p key={i} className="text-secondary/70 text-sm leading-relaxed whitespace-pre-line">
+                  {paragraph}
+                </p>
+              ))}
+            </div>
+            
+            <div className="mt-12 pt-8 border-t border-line">
+              <button 
+                onClick={onClose}
+                className="text-[9px] uppercase tracking-[0.5em] font-mono text-accent hover:text-accent/80 transition-colors"
+              >
+                Close Document
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      )}
+    </AnimatePresence>
+  );
+};
 
 /* ─────────────────────────────── FLOATING CTA ─────────────────────────────── */
 
@@ -714,6 +931,8 @@ const FloatingCTA = () => {
 };
 
 export default function App() {
+  const [legalType, setLegalType] = useState<"Privacy" | "Terms" | "Accessibility" | null>(null);
+
   return (
     <div className="min-h-screen">
       <Navbar />
@@ -727,7 +946,12 @@ export default function App() {
         <Manifesto />
         <FAQ />
       </main>
-      <Footer />
+      <Footer onOpenLegal={(type) => setLegalType(type)} />
+      <LegalModal 
+        isOpen={!!legalType} 
+        onClose={() => setLegalType(null)} 
+        type={legalType} 
+      />
     </div>
   );
 }

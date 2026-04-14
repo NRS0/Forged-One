@@ -69,6 +69,21 @@ html.lenis, html.lenis body {
   overflow: hidden;
 }
 
+/* ── Custom Scrollbar ── */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(232,230,223,0.02);
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(232,230,223,0.1);
+  border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent);
+}
+
 /* ── Selection ── */
 ::selection {
   background: var(--color-accent);
