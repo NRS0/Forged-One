@@ -151,7 +151,37 @@ const Hero = () => {
   }, [taglines.length]);
 
   return (
-    <section ref={containerRef} className="relative min-h-screen flex flex-col justify-center px-8 md:px-16 pt-24 md:pt-40 overflow-hidden">
+    <section ref={containerRef} className="relative min-h-screen flex flex-col justify-center px-8 md:px-16 pt-44 md:pt-64 pb-20 overflow-visible">
+      <motion.div 
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+        className="absolute top-28 md:top-64 right-8 md:right-16 z-20 max-w-lg text-right hidden lg:flex flex-col justify-center gap-4 bg-[#0F0F0F]/35 backdrop-blur-md p-8 md:p-10 rounded-[32px] border border-white/5 min-h-[350px]"
+      >
+        <div className="flex flex-col gap-1">
+          <p className="text-[10px] md:text-[11px] font-mono uppercase tracking-[0.4em] text-accent/80 font-medium">Core Objectives</p>
+          <div className="h-px w-10 bg-accent/20 ml-auto" />
+        </div>
+        
+        <div className="flex flex-col gap-5 md:gap-6">
+          {[
+            "Equip your team with practical AI skills.",
+            "Use AI for content, workflows, and business growth.",
+            "Deploy AI agents and custom solutions with confidence."
+          ].map((text, i) => (
+            <motion.p 
+              key={i}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.3 + i * 0.15, duration: 0.8 }}
+              className="text-lg md:text-[42px] font-serif leading-[1.05] tracking-tight text-secondary/90 hover:text-secondary transition-colors"
+            >
+              {text}
+            </motion.p>
+          ))}
+        </div>
+      </motion.div>
+
       {/* background video */}
       <video
         autoPlay
@@ -212,6 +242,19 @@ const Hero = () => {
               </motion.div>
             </AnimatePresence>
           </div>
+
+          <motion.button 
+            className="fo-cta mt-12 mb-8"
+            data-tally-open="QKBk0l"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+            </svg>
+            Find Your AI Solution
+          </motion.button>
         </motion.div>
 
         {/* stats + CTA row */}
@@ -238,7 +281,7 @@ const Hero = () => {
             </motion.div>
           ))}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8 }} className="col-span-3 md:col-start-8 md:col-span-5 flex flex-col gap-4 md:gap-6"
+            transition={{ delay: 0.8 }} className="col-span-3 md:col-start-8 md:col-span-5 flex flex-col gap-8"
           >
             <p className="text-base md:text-lg leading-relaxed text-secondary font-light">
               We build the autonomous systems that define the next decade of industrial dominance.
@@ -267,7 +310,7 @@ const MarqueeDivider = () => {
   const items = ["Strategy", "Generative AI", "Leadership", "Prompt Engineering", "AI Ethics", "ROI Measurement", "Team Building", "ML Lifecycle"];
   const doubled = [...items, ...items];
   return (
-    <div className="py-8 border-y border-line overflow-hidden bg-surface marquee-mask">
+    <div className="-mt-6 md:-mt-12 mb-12 md:mb-16 py-8 border-y border-line bg-surface marquee-container relative z-30">
       <div className="marquee-track">
         {doubled.map((item, i) => (
           <span key={i} className="whitespace-nowrap px-6 font-mono text-[11px] tracking-[0.3em] text-secondary uppercase select-none">
@@ -940,6 +983,14 @@ const FloatingCTA = () => {
 
 export default function App() {
   const [legalType, setLegalType] = useState<"Privacy" | "Terms" | "Accessibility" | null>(null);
+
+  useEffect(() => {
+    // Initialize Tally if script is loaded
+    const tally = (window as any).Tally;
+    if (tally && typeof tally.loadEmbeds === 'function') {
+      tally.loadEmbeds();
+    }
+  }, []);
 
   return (
     <div className="min-h-screen">
