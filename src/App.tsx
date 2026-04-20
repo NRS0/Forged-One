@@ -102,7 +102,7 @@ const Navbar = () => {
           </div>
         </motion.a>
 
-        <div className="flex items-center gap-12">
+        <div className="flex items-center gap-4 md:gap-12">
           <motion.a 
             href="https://calendly.com/forgedonebusiness/30min" 
             target="_blank" 
@@ -151,19 +151,19 @@ const Hero = () => {
   }, [taglines.length]);
 
   return (
-    <section ref={containerRef} className="relative min-h-screen flex flex-col justify-center px-8 md:px-16 pt-44 md:pt-64 pb-20 overflow-visible">
+    <section ref={containerRef} className="relative min-h-screen flex flex-col justify-center px-8 md:px-16 pt-32 md:pt-48 lg:pt-64 pb-20 overflow-visible">
       <motion.div 
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-        className="absolute top-28 md:top-64 right-8 md:right-16 z-20 max-w-lg text-right hidden lg:flex flex-col justify-center gap-4 bg-[#0F0F0F]/35 backdrop-blur-md p-8 md:p-10 rounded-[32px] border border-white/5 min-h-[350px]"
+        className="absolute top-24 md:top-56 lg:top-64 right-8 md:right-12 lg:right-16 z-20 max-w-xs md:max-w-[280px] lg:max-w-lg text-right hidden md:flex flex-col justify-center gap-4 bg-[#0F0F0F]/35 backdrop-blur-md p-6 md:p-6 lg:p-10 rounded-[24px] md:rounded-[24px] lg:rounded-[32px] border border-white/5 min-h-[280px] md:min-h-[280px] lg:min-h-[350px]"
       >
         <div className="flex flex-col gap-1">
           <p className="text-[10px] md:text-[11px] font-mono uppercase tracking-[0.4em] text-accent/80 font-medium">Core Objectives</p>
           <div className="h-px w-10 bg-accent/20 ml-auto" />
         </div>
         
-        <div className="flex flex-col gap-5 md:gap-6">
+        <div className="flex flex-col gap-4 md:gap-4 lg:gap-6">
           {[
             "Equip your team with practical AI skills.",
             "Use AI for content, workflows, and business growth.",
@@ -174,7 +174,7 @@ const Hero = () => {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.3 + i * 0.15, duration: 0.8 }}
-              className="text-lg md:text-[42px] font-serif leading-[1.05] tracking-tight text-secondary/90 hover:text-secondary transition-colors"
+              className="text-lg md:text-[24px] lg:text-[42px] font-serif leading-[1.05] tracking-tight text-secondary/90 hover:text-secondary transition-colors"
             >
               {text}
             </motion.p>
@@ -260,7 +260,7 @@ const Hero = () => {
         {/* stats + CTA row */}
         <motion.div 
           style={{ y: y2 }} 
-          className="mt-32 md:mt-60 grid grid-cols-3 md:grid-cols-12 gap-4 md:gap-8 border-t border-line pt-8 md:pt-10 relative"
+          className="mt-20 md:mt-40 lg:mt-60 grid grid-cols-3 md:grid-cols-12 gap-4 md:gap-8 border-t border-line pt-8 md:pt-10 relative"
         >
           {/* full-width gradient overlay for visibility */}
           <div className="absolute top-0 bottom-[-100vh] left-[-100vw] right-[-100vw] -z-10 bg-linear-to-b from-main via-main/90 to-main opacity-95" />
@@ -339,7 +339,7 @@ const SectionHeader = ({ number, title, subtitle }: { number: string, title: str
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
         <motion.h2 initial={{ opacity: 0, y: 40 }} animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-          className="text-6xl md:text-[7rem] font-serif tracking-wider uppercase text-secondary leading-[0.85]"
+          className="text-6xl md:text-[5rem] lg:text-[7rem] font-serif tracking-wider uppercase text-secondary leading-[0.85]"
         >{title}</motion.h2>
         <motion.p initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}}
           transition={{ delay: 0.3 }} className="text-[9px] uppercase tracking-[0.5em] font-mono text-accent max-w-[220px] leading-relaxed"
@@ -457,10 +457,10 @@ const ServicesSection = () => {
       <div className="flex flex-col">
         {services.map((s, i) => (
           <Reveal key={s.n} delay={i * 0.04}>
-            <div className="group border-t border-line last:border-b flex items-center gap-6 md:gap-12 py-6 md:py-12 cursor-default hover:bg-secondary/[0.02] transition-colors duration-500 px-2 md:px-4">
+            <div className="group border-t border-line last:border-b flex items-center gap-6 md:gap-8 lg:gap-12 py-6 md:py-10 lg:py-12 cursor-default hover:bg-secondary/[0.02] transition-colors duration-500 px-2 md:px-4">
               <span className="font-serif text-4xl md:text-5xl leading-none shrink-0" style={{ color: s.color }}>{s.n}</span>
-              <div className="flex-1 flex flex-col md:flex-row md:items-center gap-4 md:gap-12">
-                <h3 className="text-xl md:text-3xl font-serif tracking-tight text-secondary group-hover:text-accent transition-colors duration-400 md:w-1/3">
+              <div className="flex-1 flex flex-col md:flex-row md:items-center gap-4 md:gap-8 lg:gap-12">
+                <h3 className="text-xl md:text-2xl lg:text-3xl font-serif tracking-tight text-secondary group-hover:text-accent transition-colors duration-400 md:w-[40%] lg:w-1/3">
                   {s.name}
                 </h3>
                 <p className="text-sm text-secondary font-light leading-relaxed max-w-lg flex-1">
@@ -507,9 +507,9 @@ const CompetitiveEdge = () => {
 
       <SectionHeader number="03" title="The Edge" subtitle="Why AI literacy is the new baseline" />
 
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mt-12 items-center">
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-10 lg:gap-12 mt-12 items-center">
         {/* video */}
-        <div className="md:col-span-7">
+        <div className="md:col-span-12 lg:col-span-7 mb-8 lg:mb-0">
           <div className="relative aspect-video overflow-hidden border border-line shadow-2xl">
             <video
               autoPlay
@@ -529,9 +529,9 @@ const CompetitiveEdge = () => {
         </div>
 
         {/* statement */}
-        <div className="md:col-span-5 flex flex-col justify-center gap-10">
+        <div className="md:col-span-12 lg:col-span-5 flex flex-col justify-center gap-8 lg:gap-10">
           <Reveal>
-            <p className="text-3xl md:text-[2.6rem] font-serif leading-[1.05] tracking-wide text-secondary">
+            <p className="text-3xl md:text-4xl lg:text-[2.6rem] font-serif leading-[1.05] tracking-wide text-secondary">
               "The greatest risk isn't <span className="text-accent">AI itself</span>, it's being the last to understand its potential."
             </p>
           </Reveal>
@@ -673,8 +673,8 @@ const AccordionItem = ({ question, answer }: { question: string, answer: string 
 /* ─────────────────────────────── FOOTER ─────────────────────────────── */
 
 const Footer = ({ onOpenLegal }: { onOpenLegal: (type: "Privacy" | "Terms" | "Accessibility") => void }) => (
-  <footer className="py-12 md:py-20 px-8 md:px-16 border-t border-line">
-    <div className="grid grid-cols-1 md:grid-cols-12 gap-16">
+    <footer className="py-12 md:py-20 px-8 md:px-16 border-t border-line">
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-16">
       <div className="md:col-span-4">
         <div className="flex flex-col gap-4 mb-8">
           <img 
@@ -702,7 +702,7 @@ const Footer = ({ onOpenLegal }: { onOpenLegal: (type: "Privacy" | "Terms" | "Ac
       <div className="md:col-span-3 md:col-start-9">
         <span className="text-[9px] uppercase tracking-[0.5em] font-mono text-accent mb-6 block">Contact</span>
         <a href="mailto:forgedonebusiness@gmail.com" className="text-lg font-serif text-secondary hover:text-accent transition-colors">forgedonebusiness@gmail.com</a>
-        <div className="flex gap-8 mt-8">
+        <div className="flex flex-wrap gap-4 md:gap-8 mt-8">
           {["LinkedIn", "X / Twitter", "YouTube"].map(s => (
             <a key={s} href="#" className="text-[9px] uppercase tracking-widest font-mono text-accent hover:text-accent transition-colors">{s}</a>
           ))}
@@ -719,7 +719,7 @@ const Footer = ({ onOpenLegal }: { onOpenLegal: (type: "Privacy" | "Terms" | "Ac
       </div>
     </div>
 
-    <div className="mt-16 pt-8 border-t border-line flex flex-col md:flex-row justify-between gap-6">
+    <div className="mt-16 pt-8 border-t border-line flex flex-col md:flex-row justify-between gap-8 md:gap-6">
       <p className="text-[9px] uppercase tracking-[0.5em] font-mono text-secondary">© 2026 Forged 1, All rights reserved</p>
       <div className="flex gap-10">
         {["Privacy", "Terms", "Accessibility"].map(l => (
