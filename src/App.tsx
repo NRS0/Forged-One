@@ -86,7 +86,7 @@ const Navbar = () => {
   }, [scrollY]);
 
   return (
-    <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-700 ${scrolled ? "bg-white/90 backdrop-blur-xl border-b border-black/5 shadow-sm py-3" : "bg-white py-3 md:py-5 border-b border-black/5"}`}>
+    <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-700 ${scrolled ? "bg-white/90 backdrop-blur-xl border-b border-black/5 shadow-sm py-3" : "bg-transparent py-3 md:py-5 border-b border-white/10"}`}>
       <div className="flex justify-between items-center px-8 md:px-16">
         <motion.a href="#" initial={{ opacity: 0 }} animate={{ opacity: 1 }}
           className="flex items-center gap-4"
@@ -94,11 +94,11 @@ const Navbar = () => {
           <img 
             src="https://imglink.cc/cdn/-G5PGyVsCf.png" 
             alt="FORGED 1 Logo" 
-            className="h-10 w-auto object-contain"
+            className={`h-10 w-auto object-contain transition-all duration-500 ${!scrolled ? "invert brightness-200" : ""}`}
             referrerPolicy="no-referrer"
           />
           <div className="flex flex-col">
-            <span className="text-main/40 text-[8px] uppercase tracking-[0.4em] hidden md:inline">AI for Business Leaders</span>
+            <span className={`text-[8px] uppercase tracking-[0.4em] hidden md:inline transition-colors duration-500 ${scrolled ? "text-main/40" : "text-white/60"}`}>AI for Business Leaders</span>
           </div>
         </motion.a>
 
@@ -110,17 +110,18 @@ const Navbar = () => {
             initial={{ opacity: 0 }} 
             animate={{ opacity: 1 }} 
             transition={{ delay: 0.2 }}
-            className="hidden lg:flex items-center gap-3 text-[9px] uppercase tracking-[0.5em] font-bold text-accent hover:text-accent/80 transition-colors duration-300"
+            className={`flex items-center gap-3 text-[9px] uppercase tracking-[0.5em] font-bold transition-colors duration-300 ${scrolled ? "text-accent hover:text-accent/80" : "text-accent hover:text-white"}`}
           >
-            <span>Book a Strategy Call</span>
+            <span className="hidden sm:inline">Book a Strategy Call</span>
+            <span className="sm:hidden">Book Call</span>
           </motion.a>
 
           <motion.a href="#services" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
-            className="group flex items-center gap-3 text-[9px] uppercase tracking-[0.5em] font-medium text-main/60 hover:text-accent transition-colors duration-300"
+            className={`group flex items-center gap-3 text-[9px] uppercase tracking-[0.5em] font-medium transition-colors duration-300 ${scrolled ? "text-main/60 hover:text-accent" : "text-white/80 hover:text-white"}`}
           >
             <span className="hidden md:inline">Our Services</span>
-            <div className="w-10 h-10 border border-main/10 flex items-center justify-center group-hover:border-accent group-hover:bg-accent transition-all duration-300">
-              <ArrowRight size={13} className="text-main group-hover:text-white transition-colors" />
+            <div className={`w-10 h-10 border flex items-center justify-center group-hover:border-accent group-hover:bg-accent transition-all duration-300 ${scrolled ? "border-main/10" : "border-white/20"}`}>
+              <ArrowRight size={13} className={`transition-colors ${scrolled ? "text-main group-hover:text-white" : "text-white group-hover:text-white"}`} />
             </div>
           </motion.a>
         </div>
@@ -151,151 +152,159 @@ const Hero = () => {
   }, [taglines.length]);
 
   return (
-    <section ref={containerRef} className="relative min-h-screen flex flex-col justify-center px-8 md:px-16 pt-32 md:pt-48 lg:pt-64 pb-20 overflow-visible">
-      <motion.div 
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-        className="absolute top-24 md:top-56 lg:top-64 right-8 md:right-12 lg:right-16 z-20 max-w-xs md:max-w-[280px] lg:max-w-lg text-right hidden md:flex flex-col justify-center gap-4 bg-[#0F0F0F]/35 backdrop-blur-md p-6 md:p-6 lg:p-10 rounded-[24px] md:rounded-[24px] lg:rounded-[32px] border border-white/5 min-h-[280px] md:min-h-[280px] lg:min-h-[350px]"
-      >
-        <div className="flex flex-col gap-1">
-          <p className="text-[10px] md:text-[11px] font-mono uppercase tracking-[0.4em] text-accent/80 font-medium">Core Objectives</p>
-          <div className="h-px w-10 bg-accent/20 ml-auto" />
-        </div>
-        
-        <div className="flex flex-col gap-4 md:gap-4 lg:gap-6">
-          {[
-            "Equip your team with practical AI skills.",
-            "Use AI for content, workflows, and business growth.",
-            "Deploy AI agents and custom solutions with confidence."
-          ].map((text, i) => (
-            <motion.p 
-              key={i}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.3 + i * 0.15, duration: 0.8 }}
-              className="text-lg md:text-[24px] lg:text-[42px] font-serif leading-[1.05] tracking-tight text-secondary/90 hover:text-secondary transition-colors"
-            >
-              {text}
-            </motion.p>
-          ))}
-        </div>
-      </motion.div>
-
-      {/* background video */}
-      <video
-        autoPlay
-        muted
-        loop
-        playsInline
-        className="absolute inset-0 w-full h-full object-cover pointer-events-none"
-      >
-        <source src="https://imglink.cc/cdn/yilKLu3tUf.mp4" type="video/mp4" />
-      </video>
-
-      {/* ambient glow removed */}
-
-      <motion.div style={{ opacity }} className="relative z-10">
-        {/* eyebrow */}
-        <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="flex items-center gap-4 mb-8"
+    <section ref={containerRef} className="relative min-h-screen flex flex-col justify-center px-0 md:px-0 pt-24 md:pt-48 lg:pt-64 pb-20 overflow-visible">
+      {/* background video wrapper - crops for tablet only */}
+      <div className="absolute inset-0 -z-10 pointer-events-none md:overflow-hidden lg:overflow-visible">
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="absolute w-screen object-cover -z-10"
+          style={{ 
+            left: '50%', 
+            transform: 'translateX(-50%)', 
+            top: '-265px', 
+            height: 'calc(100vh + 265px)' 
+          }}
         >
-          <div className="w-8 h-px bg-accent" />
-          <span className="text-[9px] uppercase tracking-[0.6em] text-accent">Next-Gen AI Solutions</span>
-        </motion.div>
+          <source src="https://imglink.cc/cdn/yilKLu3tUf.mp4" type="video/mp4" />
+        </video>
+      </div>
 
-        {/* headline */}
-        <motion.div style={{ y: y1 }}>
-          <h1 className="font-serif leading-none tracking-[0.02em] uppercase flex flex-col">
-            <motion.img
-              initial={{ opacity: 0, y: 100 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-              src="https://imglink.cc/cdn/P7zm8Tr4Cq.png"
-              alt="FORGED 1"
-              className="h-[14vw] md:h-[10vw] w-auto object-contain self-start mb-4"
-              referrerPolicy="no-referrer"
-            />
-            <motion.span
-              initial={{ opacity: 0, y: 60 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}
-              className="block text-[8vw] md:text-[3.5vw] text-secondary tracking-[0.1em]"
-            >
-              AI FOR BUSINESS
-            </motion.span>
-          </h1>
-
-          {/* rotating tagline */}
-          <div className="mt-8 h-8 overflow-hidden">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeTag}
-                initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }}
-                exit={{ y: -20, opacity: 0 }}
-                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                className="flex items-center gap-3"
-              >
-                <div className="w-2 h-2 rounded-full bg-accent" />
-                <span className={`text-[9px] uppercase tracking-[0.5em] font-mono ${taglines[activeTag].accent ? "text-accent" : "text-secondary"}`}>
-                  {taglines[activeTag].text}
-                </span>
-              </motion.div>
-            </AnimatePresence>
-          </div>
-
-          <motion.button 
-            className="fo-cta mt-12 mb-8"
-            data-tally-open="QKBk0l"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
-            </svg>
-            Find Your AI Solution
-          </motion.button>
-        </motion.div>
-
-        {/* stats + CTA row */}
+      <div className="px-8 md:px-16 w-full relative">
         <motion.div 
-          style={{ y: y2 }} 
-          className="mt-20 md:mt-40 lg:mt-60 grid grid-cols-3 md:grid-cols-12 gap-4 md:gap-8 border-t border-line pt-8 md:pt-10 relative"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+          className="absolute top-24 md:top-[-6px] lg:top-[-9px] right-8 md:right-12 lg:right-16 z-20 max-w-xs md:max-w-[280px] lg:max-w-lg text-right hidden md:flex flex-col justify-center gap-4 bg-[#0F0F0F]/35 backdrop-blur-md p-6 md:p-6 lg:p-10 rounded-[24px] md:rounded-[24px] lg:rounded-[32px] border border-white/5 min-h-[280px] md:min-h-[280px] lg:min-h-[350px]"
         >
-          {/* full-width gradient overlay for visibility */}
-          <div className="absolute top-0 bottom-[-100vh] left-[-100vw] right-[-100vw] -z-10 bg-linear-to-b from-main via-main/90 to-main opacity-95" />
+          <div className="flex flex-col gap-1">
+            <p className="text-[10px] md:text-[11px] font-mono uppercase tracking-[0.4em] text-accent/80 font-medium">Core Objectives</p>
+            <div className="h-px w-10 bg-accent/20 ml-auto" />
+          </div>
           
-          {[
-            { n: "3X", label: "Increase in efficiency" },
-            { n: "75%", label: "Boost sales outreach" },
-            { n: "1st", label: "In market" },
-          ].map(({ n, label }, i) => (
-            <motion.div key={label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 + i * 0.1, ease: [0.16, 1, 0.3, 1] }}
-              className="col-span-1 md:col-span-2 flex flex-col gap-1 md:gap-2"
-            >
-              <span className="font-serif text-3xl md:text-5xl text-secondary leading-tight">
-                <Counter value={n} />
-              </span>
-              <span className="text-[9px] uppercase tracking-[0.5em] text-accent font-mono">{label}</span>
-            </motion.div>
-          ))}
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8 }} className="col-span-3 md:col-start-8 md:col-span-5 flex flex-col gap-8"
+          <div className="flex flex-col gap-4 md:gap-4 lg:gap-6">
+            {[
+              "Equip your team with practical AI skills.",
+              "Use AI for content, workflows, and business growth.",
+              "Deploy AI agents and custom solutions with confidence."
+            ].map((text, i) => (
+              <motion.p 
+                key={i}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.3 + i * 0.15, duration: 0.8 }}
+                className="text-lg md:text-[24px] lg:text-[42px] font-serif leading-[1.05] tracking-tight text-secondary/90 hover:text-secondary transition-colors"
+              >
+                {text}
+              </motion.p>
+            ))}
+          </div>
+        </motion.div>
+
+        <motion.div style={{ opacity }} className="relative z-10">
+          {/* eyebrow */}
+          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="flex items-center gap-4 mb-8"
           >
-            <p className="text-base md:text-lg leading-relaxed text-secondary font-light">
-              We build the autonomous systems that define the next decade of industrial dominance.
-            </p>
+            <div className="w-8 h-px bg-accent" />
+            <span className="text-[9px] uppercase tracking-[0.6em] text-accent">Next-Gen AI Solutions</span>
+          </motion.div>
+
+          {/* headline */}
+          <motion.div style={{ y: y1 }}>
+            <h1 className="font-serif leading-none tracking-[0.02em] uppercase flex flex-col">
+              <motion.img
+                initial={{ opacity: 0, y: 100 }} animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+                src="https://imglink.cc/cdn/P7zm8Tr4Cq.png"
+                alt="FORGED 1"
+                className="h-[14vw] md:h-[10vw] w-auto object-contain self-start mb-4"
+                referrerPolicy="no-referrer"
+              />
+              <motion.span
+                initial={{ opacity: 0, y: 60 }} animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}
+                className="block text-[8vw] md:text-[3.5vw] text-secondary tracking-[0.1em]"
+              >
+                AI FOR BUSINESS
+              </motion.span>
+            </h1>
+
+            {/* rotating tagline */}
+            <div className="mt-8 h-8 overflow-hidden">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeTag}
+                  initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }}
+                  exit={{ y: -20, opacity: 0 }}
+                  transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                  className="flex items-center gap-3"
+                >
+                  <div className="w-2 h-2 rounded-full bg-accent" />
+                  <span className={`text-[9px] uppercase tracking-[0.5em] font-mono ${taglines[activeTag].accent ? "text-accent" : "text-secondary"}`}>
+                    {taglines[activeTag].text}
+                  </span>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            <motion.button 
+              className="fo-cta mt-12 mb-8"
+              data-tally-open="QKBk0l"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+              </svg>
+              Find Your AI Solution
+            </motion.button>
+          </motion.div>
+
+          {/* stats + CTA row */}
+          <motion.div 
+            style={{ y: y2 }} 
+            className="mt-20 md:mt-40 lg:mt-10 grid grid-cols-3 md:grid-cols-12 gap-4 md:gap-8 border-t border-line pt-8 md:pt-10 relative -mx-8 md:-mx-16 px-8 md:px-16"
+          >
+            {/* full-width gradient overlay for visibility */}
+            <div className="absolute top-0 bottom-[-180px] md:bottom-[-260px] lg:bottom-[-187px] left-[-100vw] right-[-100vw] -z-10 bg-linear-to-b from-main via-main/90 to-main opacity-95" />
+            
+            {[
+              { n: "3X", label: "Increase in efficiency" },
+              { n: "75%", label: "Boost sales outreach" },
+              { n: "1st", label: "In market" },
+            ].map(({ n, label }, i) => (
+              <motion.div key={label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 + i * 0.1, ease: [0.16, 1, 0.3, 1] }}
+                className="col-span-1 md:col-span-2 flex flex-col gap-1 md:gap-2"
+              >
+                <span className="font-serif text-3xl md:text-5xl text-secondary leading-tight">
+                  <Counter value={n} />
+                </span>
+                <span className="text-[9px] uppercase tracking-[0.5em] text-accent font-mono">{label}</span>
+              </motion.div>
+            ))}
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8 }} className="col-span-3 md:col-start-8 md:col-span-5 flex flex-col gap-8"
+            >
+              <p className="text-base md:text-lg leading-relaxed text-secondary font-light">
+                We build the autonomous systems that define the next decade of industrial dominance.
+              </p>
+            </motion.div>
           </motion.div>
         </motion.div>
-      </motion.div>
+      </div>
 
       {/* scroll indicator */}
       <motion.div 
         style={{ opacity: scrollIndicatorOpacity }}
         animate={{ y: [0, 10, 0] }} 
         transition={{ duration: 2.5, repeat: Infinity }}
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-secondary z-20"
+        className="absolute bottom-10 lg:bottom-24 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-secondary z-20"
       >
         <span className="text-[8px] uppercase tracking-[0.5em] font-mono">Scroll</span>
         <ArrowDown size={18} strokeWidth={1} />
@@ -310,7 +319,7 @@ const MarqueeDivider = () => {
   const items = ["Strategy", "Generative AI", "Leadership", "Prompt Engineering", "AI Ethics", "ROI Measurement", "Team Building", "ML Lifecycle"];
   const doubled = [...items, ...items];
   return (
-    <div className="-mt-6 md:-mt-12 mb-12 md:mb-16 py-8 border-y border-line bg-surface marquee-container relative z-30">
+    <div className="-mt-6 md:-mt-12 lg:-mt-[59px] mb-12 md:mb-16 py-8 border-y border-line bg-surface marquee-container relative z-30">
       <div className="marquee-track">
         {doubled.map((item, i) => (
           <span key={i} className="whitespace-nowrap px-6 font-mono text-[11px] tracking-[0.3em] text-secondary uppercase select-none">
@@ -325,10 +334,10 @@ const MarqueeDivider = () => {
 
 /* ─────────────────────────────── SECTION HEADER ─────────────────────────────── */
 
-const SectionHeader = ({ number, title, subtitle }: { number: string, title: string, subtitle: string }) => {
+const SectionHeader = ({ number, title, subtitle, className = "" }: { number: string, title: string, subtitle: string, className?: string }) => {
   const { ref, inView } = useInView();
   return (
-    <div ref={ref} className="flex flex-col gap-6 mb-12 md:mb-20">
+    <div ref={ref} className={`flex flex-col gap-6 mb-12 md:mb-20 ${className}`}>
       <div className="flex items-center gap-4">
         <motion.span initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}} className="text-[9px] font-mono font-medium tracking-widest text-accent">{number}</motion.span>
         <motion.div initial={{ scaleX: 0 }} animate={inView ? { scaleX: 1 } : {}}
@@ -339,7 +348,7 @@ const SectionHeader = ({ number, title, subtitle }: { number: string, title: str
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
         <motion.h2 initial={{ opacity: 0, y: 40 }} animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-          className="text-6xl md:text-[5rem] lg:text-[7rem] font-serif tracking-wider uppercase text-secondary leading-[0.85]"
+          className="text-4xl md:text-[5rem] lg:text-[7rem] font-serif tracking-wider uppercase text-secondary leading-[0.85]"
         >{title}</motion.h2>
         <motion.p initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}}
           transition={{ delay: 0.3 }} className="text-[9px] uppercase tracking-[0.5em] font-mono text-accent max-w-[220px] leading-relaxed"
@@ -376,9 +385,9 @@ const Workflows = () => {
   ];
 
   return (
-    <section id="workflows" className="py-16 md:py-28 px-8 md:px-16">
-      <SectionHeader number="01" title="Workflows" subtitle="Practical applications for immediate ROI" />
-      <div className="flex flex-col">
+    <section id="workflows" className="py-16 md:py-28 px-0 md:px-0">
+      <SectionHeader number="01" title="Workflows" subtitle="Practical applications for immediate ROI" className="px-8 md:px-16" />
+      <div className="flex flex-col px-8 md:px-16">
         {cases.map((c, i) => (
           <Reveal key={c.id} delay={i * 0.06}>
             <WorkflowCard {...c} />
@@ -450,15 +459,15 @@ const ServicesSection = () => {
   ];
 
   return (
-    <section id="services" className="py-16 md:py-28 px-8 md:px-16 border-t border-line">
-      <SectionHeader number="02" title="Services" subtitle="End-to-end AI integration for modern enterprise" />
+    <section id="services" className="py-16 md:py-28 px-0 md:px-0 border-t border-line">
+      <SectionHeader number="02" title="Services" subtitle="End-to-end AI integration for modern enterprise" className="px-8 md:px-16" />
 
       {/* vertical card list */}
-      <div className="flex flex-col">
+      <div className="flex flex-col px-8 md:px-16">
         {services.map((s, i) => (
           <Reveal key={s.n} delay={i * 0.04}>
-            <div className="group border-t border-line last:border-b flex items-center gap-6 md:gap-8 lg:gap-12 py-6 md:py-10 lg:py-12 cursor-default hover:bg-secondary/[0.02] transition-colors duration-500 px-2 md:px-4">
-              <span className="font-serif text-4xl md:text-5xl leading-none shrink-0" style={{ color: s.color }}>{s.n}</span>
+            <div className="group border-t border-line last:border-b flex items-center gap-6 md:gap-8 lg:gap-12 py-8 md:py-10 lg:py-12 cursor-default hover:bg-secondary/[0.02] transition-colors duration-500 px-0 md:px-4">
+              <span className="font-serif text-3xl md:text-5xl leading-none shrink-0" style={{ color: s.color }}>{s.n}</span>
               <div className="flex-1 flex flex-col md:flex-row md:items-center gap-4 md:gap-8 lg:gap-12">
                 <h3 className="text-xl md:text-2xl lg:text-3xl font-serif tracking-tight text-secondary group-hover:text-accent transition-colors duration-400 md:w-[40%] lg:w-1/3">
                   {s.name}
@@ -502,12 +511,12 @@ const CompetitiveEdge = () => {
   const imgY = useTransform(scrollYProgress, [0, 1], [-30, 30]);
 
   return (
-    <section id="edge" ref={ref} className="py-16 md:py-28 px-8 md:px-16 bg-surface border-t border-line relative overflow-hidden">
+    <section id="edge" ref={ref} className="py-16 md:py-28 px-0 md:px-0 bg-surface border-t border-line relative overflow-hidden">
       <div className="absolute top-0 right-0 w-[40vw] h-[40vw] rounded-full bg-accent/2 blur-[180px] pointer-events-none" />
 
-      <SectionHeader number="03" title="The Edge" subtitle="Why AI literacy is the new baseline" />
+      <SectionHeader number="03" title="The Edge" subtitle="Why AI literacy is the new baseline" className="px-8 md:px-16" />
 
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-10 lg:gap-12 mt-12 items-center">
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-10 lg:gap-12 mt-12 items-center px-8 md:px-16">
         {/* video */}
         <div className="md:col-span-12 lg:col-span-7 mb-8 lg:mb-0">
           <div className="relative aspect-video overflow-hidden border border-line shadow-2xl">
@@ -576,8 +585,8 @@ const Manifesto = () => {
   const accentWords = new Set(["understand", "wield"]);
 
   return (
-    <section id="manifesto" ref={ref} className="py-20 md:py-36 px-8 md:px-16 border-t border-line overflow-hidden">
-      <motion.div style={{ scale }}>
+    <section id="manifesto" ref={ref} className="py-20 md:py-36 px-0 md:px-0 border-t border-line overflow-hidden">
+      <motion.div style={{ scale }} className="px-8 md:px-16">
         <div className="flex items-center gap-4 mb-16">
           <div className="w-2 h-2 rounded-full bg-accent" />
           <span className="text-[9px] uppercase tracking-[0.6em] font-mono text-accent">Manifesto</span>
@@ -631,9 +640,9 @@ const FAQ = () => {
   ];
 
   return (
-    <section className="py-16 md:py-28 px-8 md:px-16 border-t border-line bg-surface">
-      <SectionHeader number="04" title="FAQ" subtitle="Common questions answered" />
-      <div className="max-w-3xl">
+    <section className="py-16 md:py-28 px-0 md:px-0 border-t border-line bg-surface">
+      <SectionHeader number="04" title="FAQ" subtitle="Common questions answered" className="px-8 md:px-16" />
+      <div className="max-w-3xl px-8 md:px-16">
         {faqs.map((faq, i) => (
           <Reveal key={i} delay={i * 0.04}>
             <AccordionItem question={faq.q} answer={faq.a} />
@@ -673,8 +682,8 @@ const AccordionItem = ({ question, answer }: { question: string, answer: string 
 /* ─────────────────────────────── FOOTER ─────────────────────────────── */
 
 const Footer = ({ onOpenLegal }: { onOpenLegal: (type: "Privacy" | "Terms" | "Accessibility") => void }) => (
-    <footer className="py-12 md:py-20 px-8 md:px-16 border-t border-line">
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-16">
+    <footer className="py-12 md:py-20 px-0 md:px-0 border-t border-line">
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-16 px-8 md:px-16">
       <div className="md:col-span-4">
         <div className="flex flex-col gap-4 mb-8">
           <img 
@@ -719,7 +728,7 @@ const Footer = ({ onOpenLegal }: { onOpenLegal: (type: "Privacy" | "Terms" | "Ac
       </div>
     </div>
 
-    <div className="mt-16 pt-8 border-t border-line flex flex-col md:flex-row justify-between gap-8 md:gap-6">
+    <div className="mt-16 pt-8 border-t border-line flex flex-col md:flex-row justify-between gap-8 md:gap-6 px-8 md:px-16">
       <p className="text-[9px] uppercase tracking-[0.5em] font-mono text-secondary">© 2026 Forged 1, All rights reserved</p>
       <div className="flex gap-10">
         {["Privacy", "Terms", "Accessibility"].map(l => (
@@ -993,7 +1002,7 @@ export default function App() {
   }, []);
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen overflow-x-clip">
       <Navbar />
       <FloatingCTA />
       <main className="relative z-10">

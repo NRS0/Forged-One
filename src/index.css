@@ -11,7 +11,7 @@
   --color-surface: #0C0C0A;
   --color-secondary: #E8E6DF;
   --color-muted: rgba(232,230,223,0.4);
-  --color-line: rgba(232,230,223,0.06);
+  --color-line: rgba(232,230,223,0.12);
 }
 
 @layer base {
