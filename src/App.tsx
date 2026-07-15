@@ -231,7 +231,7 @@ const Hero = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-          className="hero-title absolute text-white font-medium text-[11vw] xs:text-[12vw] md:text-[13vw] left-4 md:left-10 top-[18%] lowercase"
+          className="hero-title absolute text-white font-bold font-sans text-[11vw] xs:text-[12vw] md:text-[13vw] left-4 md:left-10 top-[18%] uppercase tracking-tighter"
         >
           ai
         </motion.h1>
@@ -240,7 +240,7 @@ const Hero = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
-          className="hero-title absolute text-white font-medium text-[11vw] xs:text-[12vw] md:text-[13vw] left-[18%] md:left-[28%] top-[58%] lowercase"
+          className="hero-title absolute text-white font-bold font-sans text-[11vw] xs:text-[12vw] md:text-[13vw] left-[18%] md:left-[28%] top-[58%] uppercase tracking-tighter"
         >
           for
         </motion.h1>
@@ -249,9 +249,9 @@ const Hero = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
-          className="hero-title absolute text-white font-medium text-[11vw] xs:text-[12vw] md:text-[13vw] right-4 md:right-10 top-[38%] lowercase"
+          className="hero-title absolute text-white font-bold font-sans text-[11vw] xs:text-[12vw] md:text-[13vw] right-4 md:right-10 top-[38%] uppercase tracking-tighter"
         >
-          business
+          businesses
         </motion.h1>
 
         {/* Description paragraph */}
