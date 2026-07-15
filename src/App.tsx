@@ -226,33 +226,91 @@ const Hero = () => {
 
       {/* Foreground content wrapper */}
       <div className="relative h-full w-full max-w-[1440px] mx-auto z-10">
-        {/* Three giant staggered headline words */}
-        <motion.h1 
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-          className="hero-title absolute text-white font-bold font-sans text-[11vw] xs:text-[12vw] md:text-[13vw] left-[136px] md:left-[160px] top-[18%] uppercase tracking-tighter"
-        >
-          ai
-        </motion.h1>
-        
-        <motion.h1 
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
-          className="hero-title absolute text-white font-bold font-sans text-[11vw] xs:text-[12vw] md:text-[13vw] right-[45vw] md:right-[712px] top-[38%] uppercase tracking-tighter"
-        >
-          for
-        </motion.h1>
-        
-        <motion.h1 
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
-          className="hero-title absolute text-white font-bold font-sans text-[11vw] xs:text-[12vw] md:text-[13vw] left-[18%] md:left-[28%] top-[58%] uppercase tracking-tighter"
-        >
-          businesses
-        </motion.h1>
+        {/* Desktop-only: Three giant staggered headline words */}
+        <div className="hidden lg:block">
+          <motion.h1 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+            className="hero-title absolute text-white font-bold font-sans lg:text-[13vw] lg:left-[160px] top-[18%] uppercase tracking-tighter"
+          >
+            ai
+          </motion.h1>
+          
+          <motion.h1 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
+            className="hero-title absolute text-white font-bold font-sans lg:text-[13vw] lg:right-[712px] top-[38%] uppercase tracking-tighter"
+          >
+            for
+          </motion.h1>
+          
+          <motion.h1 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
+            className="hero-title absolute text-white font-bold font-sans lg:text-[13vw] lg:left-[28%] top-[58%] uppercase tracking-tighter"
+          >
+            businesses
+          </motion.h1>
+        </div>
+
+        {/* Tablet-only: Uniform & well-structured headline layout */}
+        <div className="absolute left-12 top-[22%] hidden md:flex lg:hidden flex-col gap-2 z-10">
+          <motion.h1 
+            initial={{ opacity: 0, y: 25 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+            className="hero-title text-white font-bold font-sans text-[11vw] uppercase tracking-tighter leading-[0.85]"
+          >
+            ai
+          </motion.h1>
+          <motion.h1 
+            initial={{ opacity: 0, y: 25 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
+            className="hero-title text-white font-bold font-sans text-[11vw] uppercase tracking-tighter leading-[0.85]"
+          >
+            for
+          </motion.h1>
+          <motion.h1 
+            initial={{ opacity: 0, y: 25 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
+            className="hero-title text-white font-bold font-sans text-[11vw] uppercase tracking-tighter leading-[0.85]"
+          >
+            businesses
+          </motion.h1>
+        </div>
+
+        {/* Mobile-only: Uniform & well-structured headline layout */}
+        <div className="absolute left-6 top-[20%] md:hidden flex flex-col gap-1 z-10">
+          <motion.h1 
+            initial={{ opacity: 0, y: 25 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+            className="hero-title text-white font-bold font-sans text-[15vw] xs:text-[16vw] uppercase tracking-tighter leading-[0.85]"
+          >
+            ai
+          </motion.h1>
+          <motion.h1 
+            initial={{ opacity: 0, y: 25 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
+            className="hero-title text-white font-bold font-sans text-[15vw] xs:text-[16vw] uppercase tracking-tighter leading-[0.85]"
+          >
+            for
+          </motion.h1>
+          <motion.h1 
+            initial={{ opacity: 0, y: 25 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
+            className="hero-title text-white font-bold font-sans text-[15vw] xs:text-[16vw] uppercase tracking-tighter leading-[0.85]"
+          >
+            businesses
+          </motion.h1>
+        </div>
 
         {/* Description paragraph */}
         <motion.p 
@@ -269,7 +327,7 @@ const Hero = () => {
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
-          className="absolute right-6 md:right-24 top-[12%] sm:top-[14%] flex flex-col items-end"
+          className="absolute right-6 md:right-24 top-[24%] sm:top-[26%] flex flex-col items-end"
         >
           <div className="flex items-center gap-3 justify-end">
             <div className="hidden md:block h-px w-24 bg-white/40 rotate-[20deg]" />
