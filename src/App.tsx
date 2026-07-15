@@ -225,13 +225,13 @@ const Hero = () => {
       />
 
       {/* Foreground content wrapper */}
-      <div className="relative h-full w-full z-10">
+      <div className="relative h-full w-full max-w-[1440px] mx-auto z-10">
         {/* Three giant staggered headline words */}
         <motion.h1 
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-          className="hero-title absolute text-white font-bold font-sans text-[11vw] xs:text-[12vw] md:text-[13vw] left-4 md:left-10 top-[18%] uppercase tracking-tighter"
+          className="hero-title absolute text-white font-bold font-sans text-[11vw] xs:text-[12vw] md:text-[13vw] left-[136px] md:left-[160px] top-[18%] uppercase tracking-tighter"
         >
           ai
         </motion.h1>
@@ -240,7 +240,7 @@ const Hero = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
-          className="hero-title absolute text-white font-bold font-sans text-[11vw] xs:text-[12vw] md:text-[13vw] left-[18%] md:left-[28%] top-[58%] uppercase tracking-tighter"
+          className="hero-title absolute text-white font-bold font-sans text-[11vw] xs:text-[12vw] md:text-[13vw] right-[45vw] md:right-[712px] top-[38%] uppercase tracking-tighter"
         >
           for
         </motion.h1>
@@ -249,7 +249,7 @@ const Hero = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
-          className="hero-title absolute text-white font-bold font-sans text-[11vw] xs:text-[12vw] md:text-[13vw] right-4 md:right-10 top-[38%] uppercase tracking-tighter"
+          className="hero-title absolute text-white font-bold font-sans text-[11vw] xs:text-[12vw] md:text-[13vw] left-[18%] md:left-[28%] top-[58%] uppercase tracking-tighter"
         >
           businesses
         </motion.h1>
@@ -259,7 +259,7 @@ const Hero = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 0.9 }}
           transition={{ duration: 1.5, delay: 0.7 }}
-          className="absolute left-6 md:left-10 top-[46%] max-w-[180px] xs:max-w-[220px] md:max-w-[240px] text-xs xs:text-[14px] md:text-[15px] leading-snug text-white/90 lowercase"
+          className="absolute right-6 md:right-10 top-[46%] max-w-[180px] xs:max-w-[220px] md:max-w-[240px] text-xs xs:text-[14px] md:text-[15px] leading-snug text-white/90 lowercase text-right"
         >
           we build the autonomous systems that define the next decade of industrial dominance
         </motion.p>
