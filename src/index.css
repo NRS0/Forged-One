@@ -10,16 +10,31 @@
   --color-main: #050504;
   --color-surface: #0C0C0A;
   --color-secondary: #E8E6DF;
-  --color-muted: rgba(232,230,223,0.4);
-  --color-line: rgba(232,230,223,0.12);
+  --color-muted: rgba(232, 230, 223, 0.4);
+  --color-line: rgba(232, 230, 223, 0.12);
 }
 
 @layer base {
+  html, body, #root {
+    height: 100%;
+  }
   body {
-    @apply font-sans text-secondary bg-main antialiased overflow-x-hidden;
+    font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+    background: #050504;
+    color: #E8E6DF;
+    @apply antialiased overflow-x-hidden;
     scroll-behavior: smooth;
   }
-  h1, h2, h3, h4, h5, h6 { @apply font-serif tracking-tight; }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Bebas Neue', sans-serif;
+    @apply tracking-tight;
+  }
+}
+
+.hero-title {
+  font-family: 'Bebas Neue', sans-serif;
+  letter-spacing: -0.01em;
+  line-height: 0.95;
 }
 
 html.lenis, html.lenis body {
@@ -162,11 +177,11 @@ html.lenis, html.lenis body {
 }
 
 @keyframes foFlashColor {
-  0% { background: #000; color: #fff; }
-  25% { background: #fff; color: #000; }
-  50% { background: #000; color: #fff; }
-  75% { background: #fff; color: #000; }
-  100% { background: #fff; color: #000; } /* Stays in a high-contrast white state */
+  0% { background: #000000; color: #ffffff; }
+  25% { background: #ffffff; color: #000000; }
+  50% { background: #000000; color: #ffffff; }
+  75% { background: #ffffff; color: #000000; }
+  100% { background: #ffffff; color: #000000; } /* Stays in a high-contrast white state */
 }
 
 .fo-cta:active {

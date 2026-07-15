@@ -4,7 +4,7 @@
  */
 
 import { motion, useScroll, useTransform, AnimatePresence, useMotionValue, animate } from "motion/react";
-import { ArrowRight, ArrowDown, Plus, X } from "lucide-react";
+import { ArrowRight, ArrowDown, Plus, X, Menu } from "lucide-react";
 import { useState, useRef, useEffect, ReactNode } from "react";
 
 /* ─────────────────────────────── UTILS ─────────────────────────────── */
@@ -79,236 +79,236 @@ const Counter = ({ value, duration = 2.5 }: { value: string, duration?: number }
 /* ─────────────────────────────── NAVBAR ─────────────────────────────── */
 
 const Navbar = () => {
-  const { scrollY } = useScroll();
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+
   useEffect(() => {
-    return scrollY.on("change", (latest) => setScrolled(latest > 50));
-  }, [scrollY]);
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
-    <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-700 ${scrolled ? "bg-white/90 backdrop-blur-xl border-b border-black/5 shadow-sm py-3" : "bg-transparent py-3 md:py-5 border-b border-white/10"}`}>
-      <div className="flex justify-between items-center px-8 md:px-16">
-        <motion.a href="#" initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-          className="flex items-center gap-4"
-        >
+    <>
+      <nav className={`fixed z-50 px-6 md:px-10 left-0 right-0 top-0 flex items-center justify-between gap-4 transition-all duration-300 ${scrolled ? "pt-4 pb-4" : "pt-6"} bg-transparent`}>
+        {/* Left pill */}
+        <div className="flex items-center bg-neutral-900/90 backdrop-blur rounded-full px-4 py-2">
           <img 
             src="https://imglink.cc/cdn/-G5PGyVsCf.png" 
             alt="FORGED 1 Logo" 
-            className={`h-10 w-auto object-contain transition-all duration-500 ${!scrolled ? "invert brightness-200" : ""}`}
+            className="h-6 w-auto object-contain invert brightness-200"
             referrerPolicy="no-referrer"
           />
-          <div className="flex flex-col">
-            <span className={`text-[8px] uppercase tracking-[0.4em] hidden md:inline transition-colors duration-500 ${scrolled ? "text-main/40" : "text-white/60"}`}>AI for Business Leaders</span>
-          </div>
-        </motion.a>
-
-        <div className="flex items-center gap-4 md:gap-12">
-          <motion.a 
-            href="https://calendly.com/forgedonebusiness/30min" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            initial={{ opacity: 0 }} 
-            animate={{ opacity: 1 }} 
-            transition={{ delay: 0.2 }}
-            className={`flex items-center gap-3 text-[9px] uppercase tracking-[0.5em] font-bold transition-colors duration-300 ${scrolled ? "text-accent hover:text-accent/80" : "text-accent hover:text-white"}`}
-          >
-            <span className="hidden sm:inline">Book a Strategy Call</span>
-            <span className="sm:hidden">Book Call</span>
-          </motion.a>
-
-          <motion.a href="#services" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
-            className={`group flex items-center gap-3 text-[9px] uppercase tracking-[0.5em] font-medium transition-colors duration-300 ${scrolled ? "text-main/60 hover:text-accent" : "text-white/80 hover:text-white"}`}
-          >
-            <span className="hidden md:inline">Our Services</span>
-            <div className={`w-10 h-10 border flex items-center justify-center group-hover:border-accent group-hover:bg-accent transition-all duration-300 ${scrolled ? "border-main/10" : "border-white/20"}`}>
-              <ArrowRight size={13} className={`transition-colors ${scrolled ? "text-main group-hover:text-white" : "text-white group-hover:text-white"}`} />
-            </div>
-          </motion.a>
         </div>
-      </div>
-    </nav>
+
+        {/* Center pill (hidden on mobile) */}
+        <div className="hidden md:flex items-center gap-1 bg-neutral-900/90 backdrop-blur rounded-full px-3 py-2">
+          {[
+            { name: "Workflows", href: "#workflows" },
+            { name: "Services", href: "#services" },
+            { name: "The Edge", href: "#edge" },
+            { name: "FAQ", href: "#faq" }
+          ].map((item) => (
+            <a
+              key={item.name}
+              href={item.href}
+              className="text-neutral-300 hover:text-white transition-colors text-sm px-5 py-2 rounded-full cursor-pointer"
+            >
+              {item.name}
+            </a>
+          ))}
+        </div>
+
+        {/* Right actions */}
+        <div className="flex items-center gap-3">
+          <a href="https://calendly.com/forgedonebusiness/30min" target="_blank" rel="noopener noreferrer" className="hidden sm:block">
+            <button className="bg-accent text-white text-sm font-normal rounded-full px-6 py-3 hover:bg-[#ff5146] transition-colors cursor-pointer">
+              Book Call
+            </button>
+          </a>
+          
+          {/* Hamburger Menu Button for mobile/tablet */}
+          <button 
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="md:hidden bg-neutral-900/90 backdrop-blur text-white p-3 rounded-full hover:text-accent transition-colors cursor-pointer flex items-center justify-center"
+            aria-label="Toggle Menu"
+          >
+            <Menu size={18} />
+          </button>
+        </div>
+      </nav>
+
+      {/* Mobile / Tablet Full-Screen Overlay Menu */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: "-100%" }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: "-100%" }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            className="fixed inset-0 z-50 bg-main flex flex-col justify-between p-8 md:p-16"
+          >
+            {/* Header in overlay */}
+            <div className="flex items-center justify-between">
+              <img 
+                src="https://imglink.cc/cdn/-G5PGyVsCf.png" 
+                alt="FORGED 1 Logo" 
+                className="h-6 w-auto object-contain invert brightness-200"
+                referrerPolicy="no-referrer"
+              />
+              <button 
+                onClick={() => setMenuOpen(false)}
+                className="bg-neutral-900/90 backdrop-blur text-white p-3 rounded-full hover:text-accent transition-colors cursor-pointer flex items-center justify-center"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {/* Navigation links */}
+            <div className="flex flex-col gap-6 my-auto">
+              {[
+                { name: "Workflows", href: "#workflows" },
+                { name: "Services", href: "#services" },
+                { name: "The Edge", href: "#edge" },
+                { name: "FAQ", href: "#faq" }
+              ].map((item, index) => (
+                <motion.a
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  key={item.name}
+                  href={item.href}
+                  onClick={() => setMenuOpen(false)}
+                  className="font-serif text-5xl md:text-7xl uppercase tracking-wider text-secondary hover:text-accent transition-colors"
+                >
+                  {item.name}
+                </motion.a>
+              ))}
+            </div>
+
+            {/* Bottom info / CTA */}
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 border-t border-line pt-8">
+              <span className="text-[10px] uppercase tracking-[0.4em] font-mono text-accent">AI for Business Leaders</span>
+              <a 
+                href="https://calendly.com/forgedonebusiness/30min" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                onClick={() => setMenuOpen(false)}
+                className="w-full sm:w-auto"
+              >
+                <button className="w-full sm:w-auto bg-accent text-white text-sm font-normal rounded-full px-8 py-4 hover:bg-[#ff5146] transition-colors cursor-pointer">
+                  Book Strategy Call
+                </button>
+              </a>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 };
 
 /* ─────────────────────────────── HERO ─────────────────────────────── */
 
 const Hero = () => {
-  const containerRef = useRef(null);
-  const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start start", "end start"] });
-  const y1 = useTransform(scrollYProgress, [0, 1], [0, -120]);
-  const y2 = useTransform(scrollYProgress, [0, 1], [0, 80]);
-  const opacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
-  const scrollIndicatorOpacity = useTransform(scrollYProgress, [0, 0.1], [1, 0]);
-
-  const taglines = [
-    { text: "Strategy", accent: true },
-    { text: "Leadership", accent: false },
-    { text: "Decision-Making", accent: true },
-  ];
-  const [activeTag, setActiveTag] = useState(0);
-  useEffect(() => {
-    const interval = setInterval(() => setActiveTag(i => (i + 1) % taglines.length), 3000);
-    return () => clearInterval(interval);
-  }, [taglines.length]);
-
   return (
-    <section ref={containerRef} className="relative min-h-screen flex flex-col justify-center px-0 md:px-0 pt-24 md:pt-48 lg:pt-64 pb-20 overflow-visible">
-      {/* background video wrapper - crops for tablet only */}
-      <div className="absolute inset-0 -z-10 pointer-events-none md:overflow-hidden lg:overflow-visible">
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="absolute w-screen object-cover -z-10"
-          style={{ 
-            left: '50%', 
-            transform: 'translateX(-50%)', 
-            top: '-265px', 
-            height: 'calc(100vh + 265px)' 
-          }}
-        >
-          <source src="https://imglink.cc/cdn/yilKLu3tUf.mp4" type="video/mp4" />
-        </video>
-      </div>
+    <section className="relative h-screen w-full overflow-hidden bg-black">
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover"
+        src="https://imglink.cc/cdn/yilKLu3tUf.mp4"
+      />
 
-      <div className="px-8 md:px-16 w-full relative">
-        <motion.div 
-          initial={{ opacity: 0, y: -20 }}
+      {/* Foreground content wrapper */}
+      <div className="relative h-full w-full z-10">
+        {/* Three giant staggered headline words */}
+        <motion.h1 
+          initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-          className="absolute top-24 md:top-[-6px] lg:top-[-9px] right-8 md:right-12 lg:right-16 z-20 max-w-xs md:max-w-[280px] lg:max-w-lg text-right hidden md:flex flex-col justify-center gap-4 bg-[#0F0F0F]/35 backdrop-blur-md p-6 md:p-6 lg:p-10 rounded-[24px] md:rounded-[24px] lg:rounded-[32px] border border-white/5 min-h-[280px] md:min-h-[280px] lg:min-h-[350px]"
+          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+          className="hero-title absolute text-white font-medium text-[11vw] xs:text-[12vw] md:text-[13vw] left-4 md:left-10 top-[18%] lowercase"
         >
-          <div className="flex flex-col gap-1">
-            <p className="text-[10px] md:text-[11px] font-mono uppercase tracking-[0.4em] text-accent/80 font-medium">Core Objectives</p>
-            <div className="h-px w-10 bg-accent/20 ml-auto" />
+          ai
+        </motion.h1>
+        
+        <motion.h1 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
+          className="hero-title absolute text-white font-medium text-[11vw] xs:text-[12vw] md:text-[13vw] left-[18%] md:left-[28%] top-[58%] lowercase"
+        >
+          for
+        </motion.h1>
+        
+        <motion.h1 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
+          className="hero-title absolute text-white font-medium text-[11vw] xs:text-[12vw] md:text-[13vw] right-4 md:right-10 top-[38%] lowercase"
+        >
+          business
+        </motion.h1>
+
+        {/* Description paragraph */}
+        <motion.p 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.9 }}
+          transition={{ duration: 1.5, delay: 0.7 }}
+          className="absolute left-6 md:left-10 top-[46%] max-w-[180px] xs:max-w-[220px] md:max-w-[240px] text-xs xs:text-[14px] md:text-[15px] leading-snug text-white/90 lowercase"
+        >
+          we build the autonomous systems that define the next decade of industrial dominance
+        </motion.p>
+
+        {/* Stat block — top-right */}
+        <motion.div 
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
+          className="absolute right-6 md:right-24 top-[12%] sm:top-[14%] flex flex-col items-end"
+        >
+          <div className="flex items-center gap-3 justify-end">
+            <div className="hidden md:block h-px w-24 bg-white/40 rotate-[20deg]" />
+            <span className="text-3xl md:text-5xl font-medium tracking-tight text-white">3x</span>
           </div>
-          
-          <div className="flex flex-col gap-4 md:gap-4 lg:gap-6">
-            {[
-              "Equip your team with practical AI skills.",
-              "Use AI for content, workflows, and business growth.",
-              "Deploy AI agents and custom solutions with confidence."
-            ].map((text, i) => (
-              <motion.p 
-                key={i}
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.3 + i * 0.15, duration: 0.8 }}
-                className="text-lg md:text-[24px] lg:text-[42px] font-serif leading-[1.05] tracking-tight text-secondary/90 hover:text-secondary transition-colors"
-              >
-                {text}
-              </motion.p>
-            ))}
-          </div>
+          <span className="text-[10px] md:text-sm text-white/70 mt-0.5 text-right lowercase">efficiency increase</span>
         </motion.div>
 
-        <motion.div style={{ opacity }} className="relative z-10">
-          {/* eyebrow */}
-          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="flex items-center gap-4 mb-8"
-          >
-            <div className="w-8 h-px bg-accent" />
-            <span className="text-[9px] uppercase tracking-[0.6em] text-accent">Next-Gen AI Solutions</span>
-          </motion.div>
-
-          {/* headline */}
-          <motion.div style={{ y: y1 }}>
-            <h1 className="font-serif leading-none tracking-[0.02em] uppercase flex flex-col">
-              <motion.img
-                initial={{ opacity: 0, y: 100 }} animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-                src="https://imglink.cc/cdn/P7zm8Tr4Cq.png"
-                alt="FORGED 1"
-                className="h-[14vw] md:h-[10vw] w-auto object-contain self-start mb-4"
-                referrerPolicy="no-referrer"
-              />
-              <motion.span
-                initial={{ opacity: 0, y: 60 }} animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}
-                className="block text-[8vw] md:text-[3.5vw] text-secondary tracking-[0.1em]"
-              >
-                AI FOR BUSINESS
-              </motion.span>
-            </h1>
-
-            {/* rotating tagline */}
-            <div className="mt-8 h-8 overflow-hidden">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={activeTag}
-                  initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }}
-                  exit={{ y: -20, opacity: 0 }}
-                  transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                  className="flex items-center gap-3"
-                >
-                  <div className="w-2 h-2 rounded-full bg-accent" />
-                  <span className={`text-[9px] uppercase tracking-[0.5em] font-mono ${taglines[activeTag].accent ? "text-accent" : "text-secondary"}`}>
-                    {taglines[activeTag].text}
-                  </span>
-                </motion.div>
-              </AnimatePresence>
-            </div>
-
-            <motion.button 
-              className="fo-cta mt-12 mb-8"
-              data-tally-open="QKBk0l"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
-              </svg>
-              Find Your AI Solution
-            </motion.button>
-          </motion.div>
-
-          {/* stats + CTA row */}
-          <motion.div 
-            style={{ y: y2 }} 
-            className="mt-20 md:mt-40 lg:mt-10 grid grid-cols-3 md:grid-cols-12 gap-4 md:gap-8 border-t border-line pt-8 md:pt-10 relative -mx-8 md:-mx-16 px-8 md:px-16"
-          >
-            {/* full-width gradient overlay for visibility */}
-            <div className="absolute top-0 bottom-[-180px] md:bottom-[-260px] lg:bottom-[-187px] left-[-100vw] right-[-100vw] -z-10 bg-linear-to-b from-main via-main/90 to-main opacity-95" />
-            
-            {[
-              { n: "3X", label: "Increase in efficiency" },
-              { n: "75%", label: "Boost sales outreach" },
-              { n: "1st", label: "In market" },
-            ].map(({ n, label }, i) => (
-              <motion.div key={label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 + i * 0.1, ease: [0.16, 1, 0.3, 1] }}
-                className="col-span-1 md:col-span-2 flex flex-col gap-1 md:gap-2"
-              >
-                <span className="font-serif text-3xl md:text-5xl text-secondary leading-tight">
-                  <Counter value={n} />
-                </span>
-                <span className="text-[9px] uppercase tracking-[0.5em] text-accent font-mono">{label}</span>
-              </motion.div>
-            ))}
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8 }} className="col-span-3 md:col-start-8 md:col-span-5 flex flex-col gap-8"
-            >
-              <p className="text-base md:text-lg leading-relaxed text-secondary font-light">
-                We build the autonomous systems that define the next decade of industrial dominance.
-              </p>
-            </motion.div>
-          </motion.div>
+        {/* Stat block — bottom-left */}
+        <motion.div 
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.6 }}
+          className="absolute left-6 md:left-20 bottom-24 md:bottom-24 flex flex-col items-start"
+        >
+          <div className="flex items-center gap-3 justify-start">
+            <span className="text-3xl md:text-5xl font-medium tracking-tight text-white">75%</span>
+            <div className="hidden md:block h-px w-24 bg-white/40 rotate-[-20deg]" />
+          </div>
+          <span className="text-[10px] md:text-sm text-white/70 mt-0.5 lowercase">boost sales outreach</span>
         </motion.div>
+
+        {/* Stat block — bottom-right */}
+        <motion.div 
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.8 }}
+          className="absolute right-6 md:right-20 bottom-12 md:bottom-20 flex flex-col items-end"
+        >
+          <div className="flex items-center gap-3 justify-end">
+            <div className="h-px w-24 bg-white/40 rotate-[-20deg] hidden md:block" />
+            <span className="text-3xl md:text-5xl font-medium tracking-tight text-white">1st</span>
+          </div>
+          <span className="text-[10px] md:text-sm text-white/70 mt-0.5 text-right lowercase">in market rank</span>
+        </motion.div>
+
+        {/* Bottom gradient overlay */}
+        <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-b from-transparent to-black" />
       </div>
-
-      {/* scroll indicator */}
-      <motion.div 
-        style={{ opacity: scrollIndicatorOpacity }}
-        animate={{ y: [0, 10, 0] }} 
-        transition={{ duration: 2.5, repeat: Infinity }}
-        className="absolute bottom-10 lg:bottom-24 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-secondary z-20"
-      >
-        <span className="text-[8px] uppercase tracking-[0.5em] font-mono">Scroll</span>
-        <ArrowDown size={18} strokeWidth={1} />
-      </motion.div>
     </section>
   );
 };
@@ -348,7 +348,7 @@ const SectionHeader = ({ number, title, subtitle, className = "" }: { number: st
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
         <motion.h2 initial={{ opacity: 0, y: 40 }} animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-          className="text-4xl md:text-[5rem] lg:text-[7rem] font-serif tracking-wider uppercase text-secondary leading-[0.85]"
+          className="text-3xl xs:text-4xl sm:text-5xl md:text-[5rem] lg:text-[7rem] font-serif tracking-wider uppercase text-secondary leading-[0.85]"
         >{title}</motion.h2>
         <motion.p initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}}
           transition={{ delay: 0.3 }} className="text-[9px] uppercase tracking-[0.5em] font-mono text-accent max-w-[220px] leading-relaxed"
@@ -386,8 +386,8 @@ const Workflows = () => {
 
   return (
     <section id="workflows" className="py-16 md:py-28 px-0 md:px-0">
-      <SectionHeader number="01" title="Workflows" subtitle="Practical applications for immediate ROI" className="px-8 md:px-16" />
-      <div className="flex flex-col px-8 md:px-16">
+      <SectionHeader number="01" title="workflows" subtitle="the workflows of elite operators" className="px-8 md:px-16" />
+      <div className="flex flex-col px-8 md:px-16 border-b border-line">
         {cases.map((c, i) => (
           <Reveal key={c.id} delay={i * 0.06}>
             <WorkflowCard {...c} />
@@ -401,15 +401,18 @@ const Workflows = () => {
 const WorkflowCard = ({ id, title, category, description, detail }: {
   id: string, title: string, category: string, description: string, detail: string
 }) => {
+  const [isOpen, setIsOpen] = useState(false);
   const [hovered, setHovered] = useState(false);
+  const active = isOpen || hovered;
 
   return (
     <div
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className="group border-t border-line last:border-b"
+      onClick={() => setIsOpen(!isOpen)}
+      className="group border-t border-line"
     >
-      <div className="flex flex-col md:flex-row md:items-start gap-6 md:gap-16 py-8 md:py-14 cursor-default">
+      <div className="flex flex-col md:flex-row md:items-start gap-6 md:gap-16 py-8 md:py-14 cursor-pointer">
         {/* left: number + category */}
         <div className="md:w-40 shrink-0 flex md:flex-col items-center md:items-start gap-4 md:gap-2">
           <span className="text-[9px] font-mono font-medium tracking-widest text-accent">{id}</span>
@@ -417,14 +420,14 @@ const WorkflowCard = ({ id, title, category, description, detail }: {
         </div>
         {/* middle: title + description */}
         <div className="flex-1 flex flex-col gap-3">
-          <h3 className="text-3xl md:text-4xl font-serif tracking-tight text-secondary group-hover:text-accent transition-colors duration-500 leading-[0.95]">
+          <h3 className={`text-2xl sm:text-3xl md:text-4xl font-serif tracking-tight text-secondary transition-colors duration-500 leading-[0.95] ${active ? "text-accent" : "group-hover:text-accent"}`}>
             {title}
           </h3>
           <p className="text-sm text-secondary font-light leading-relaxed max-w-lg">
             {description}
           </p>
           {/* expandable detail */}
-          <div className={`accordion-content ${hovered ? "open" : ""}`}>
+          <div className={`accordion-content ${active ? "open" : ""}`}>
             <div className="accordion-inner">
               <p className="text-sm text-secondary font-light leading-relaxed max-w-lg pt-3 border-t border-line mt-3">
                 {detail}
@@ -433,13 +436,13 @@ const WorkflowCard = ({ id, title, category, description, detail }: {
           </div>
         </div>
         {/* right: arrow indicator */}
-        <div className="shrink-0 self-center md:self-start">
+        <div className="shrink-0 self-start">
           <motion.div
-            animate={{ rotate: hovered ? 45 : 0, scale: hovered ? 1.1 : 1 }}
+            animate={{ rotate: active ? 45 : 0, scale: active ? 1.1 : 1 }}
             transition={{ duration: 0.3 }}
-            className="w-10 h-10 border border-secondary/10 flex items-center justify-center group-hover:border-accent transition-colors duration-300"
+            className={`w-10 h-10 border flex items-center justify-center transition-colors duration-300 ${active ? "border-accent" : "border-secondary/10 group-hover:border-accent"}`}
           >
-            <Plus size={14} className="text-accent group-hover:text-accent transition-colors" />
+            <Plus size={14} className="text-accent" />
           </motion.div>
         </div>
       </div>
@@ -451,22 +454,22 @@ const WorkflowCard = ({ id, title, category, description, detail }: {
 
 const ServicesSection = () => {
   const services = [
-    { n: "01", name: "Intelligent Chatbots", desc: "Advanced conversational interfaces built on custom LLMs for 24/7 customer engagement and support.", color: "#FFFFFF" },
-    { n: "02", name: "AI Advertising", desc: "Algorithmic ad optimization and automated creative generation for maximum conversion at minimum spend.", color: "#FF3B2F" },
-    { n: "03", name: "Data Collection", desc: "Automated harvesting and structured extraction of complex datasets from across the digital landscape.", color: "#FFFFFF" },
-    { n: "04", name: "Autonomous AI Agents", desc: "Custom-built agents capable of executing multi-step complex workflows with minimal human oversight.", color: "#FF3B2F" },
-    { n: "05", name: "AI Courses", desc: "Boutique education programs designed to equip business leaders with the literacy to lead AI initiatives confidently.", color: "#FFFFFF" },
+    { n: "01", name: "Intelligent Chatbots", desc: "Automate internal and external communications with advanced conversational models trained on your proprietary data.", color: "#FFFFFF" },
+    { n: "02", name: "AI Advertising", desc: "Scale your outreach and conversion with self-optimizing, high-impact algorithmic campaigns.", color: "#FFFFFF" },
+    { n: "03", name: "Data Pipelines", desc: "Scrape, structure, and synthesize critical industry datasets to feed your decision-making engines.", color: "#FFFFFF" },
+    { n: "04", name: "Autonomous Agents", desc: "Deploy self-governing digital workforces that execute multi-step operational loops.", color: "#FFFFFF" },
+    { n: "05", name: "AI Courses", desc: "Equip your leadership with the framework knowledge to guide technical implementation without losing strategic control.", color: "#FFFFFF" },
   ];
 
   return (
     <section id="services" className="py-16 md:py-28 px-0 md:px-0 border-t border-line">
-      <SectionHeader number="02" title="Services" subtitle="End-to-end AI integration for modern enterprise" className="px-8 md:px-16" />
+      <SectionHeader number="02" title="services" subtitle="strategic capabilities for the industrial age" className="px-8 md:px-16" />
 
       {/* vertical card list */}
-      <div className="flex flex-col px-8 md:px-16">
+      <div className="flex flex-col px-8 md:px-16 border-b border-line">
         {services.map((s, i) => (
           <Reveal key={s.n} delay={i * 0.04}>
-            <div className="group border-t border-line last:border-b flex items-center gap-6 md:gap-8 lg:gap-12 py-8 md:py-10 lg:py-12 cursor-default hover:bg-secondary/[0.02] transition-colors duration-500 px-0 md:px-4">
+            <div className="group border-t border-line flex items-center gap-4 sm:gap-6 md:gap-8 lg:gap-12 py-8 md:py-10 lg:py-12 cursor-default hover:bg-secondary/[0.02] transition-colors duration-500 px-0 md:px-4">
               <span className="font-serif text-3xl md:text-5xl leading-none shrink-0" style={{ color: s.color }}>{s.n}</span>
               <div className="flex-1 flex flex-col md:flex-row md:items-center gap-4 md:gap-8 lg:gap-12">
                 <h3 className="text-xl md:text-2xl lg:text-3xl font-serif tracking-tight text-secondary group-hover:text-accent transition-colors duration-400 md:w-[40%] lg:w-1/3">
@@ -476,7 +479,7 @@ const ServicesSection = () => {
                   {s.desc}
                 </p>
               </div>
-              <div className="w-16 h-px bg-secondary/5 group-hover:w-24 group-hover:bg-accent/40 transition-all duration-500 shrink-0" />
+              <div className="hidden sm:block w-12 md:w-16 lg:w-24 h-px bg-secondary/5 group-hover:bg-accent/40 transition-all duration-500 shrink-0" />
             </div>
           </Reveal>
         ))}
@@ -485,17 +488,20 @@ const ServicesSection = () => {
       {/* total stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 mt-16 border border-line">
         {[
-          { n: "500k+", label: "Data Points/Day" },
-          { n: "24/7", label: "Agent Uptime" },
-          { n: "4.2x", label: "Avg. ROI Increase" },
-        ].map(({ n, label }) => (
-          <Reveal key={label}>
-            <div className="bg-main p-10 flex flex-col gap-2 text-center border-b md:border-b-0 md:border-r border-line last:border-r-0 last:border-b-0">
-              <span className="font-serif text-5xl md:text-6xl text-secondary">
-                <Counter value={n} />
-              </span>
-              <span className="text-[9px] uppercase tracking-[0.5em] font-mono text-accent">{label}</span>
-            </div>
+          { n: "100+", label: "Leaders Trained" },
+          { n: "24/7", label: "Agent Execution" },
+          { n: "14", label: "Custom Workflows" },
+        ].map(({ n, label }, index) => (
+          <Reveal 
+            key={label}
+            className={`bg-main p-10 flex flex-col gap-2 text-center border-line
+              ${index < 2 ? "border-b md:border-b-0 md:border-r" : ""}
+            `}
+          >
+            <span className="font-serif text-5xl md:text-6xl text-secondary">
+              <Counter value={n} />
+            </span>
+            <span className="text-[9px] uppercase tracking-[0.5em] font-mono text-accent">{label}</span>
           </Reveal>
         ))}
       </div>
@@ -514,7 +520,7 @@ const CompetitiveEdge = () => {
     <section id="edge" ref={ref} className="py-16 md:py-28 px-0 md:px-0 bg-surface border-t border-line relative overflow-hidden">
       <div className="absolute top-0 right-0 w-[40vw] h-[40vw] rounded-full bg-accent/2 blur-[180px] pointer-events-none" />
 
-      <SectionHeader number="03" title="The Edge" subtitle="Why AI literacy is the new baseline" className="px-8 md:px-16" />
+      <SectionHeader number="03" title="the edge" subtitle="why ai literacy is the new baseline" className="px-8 md:px-16" />
 
       <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-10 lg:gap-12 mt-12 items-center px-8 md:px-16">
         {/* video */}
@@ -556,15 +562,15 @@ const CompetitiveEdge = () => {
           </Reveal>
 
           <Reveal delay={0.25}>
-            <div className="flex flex-wrap gap-8 md:gap-12">
+            <div className="grid grid-cols-3 gap-4 sm:gap-8 md:gap-12">
               {[
                 { n: "3×", label: "More market share" },
                 { n: "60%", label: "Cost reduction" },
                 { n: "18mo", label: "Ahead of laggards" },
               ].map(({ n, label }) => (
                 <div key={label} className="flex flex-col gap-1">
-                  <span className="font-serif text-4xl text-accent">{n}</span>
-                  <span className="text-[9px] uppercase tracking-widest font-mono text-accent">{label}</span>
+                  <span className="font-serif text-3xl sm:text-4xl text-accent leading-none">{n}</span>
+                  <span className="text-[8px] sm:text-[9px] uppercase tracking-widest font-mono text-accent">{label}</span>
                 </div>
               ))}
             </div>
@@ -587,7 +593,7 @@ const Manifesto = () => {
   return (
     <section id="manifesto" ref={ref} className="py-20 md:py-36 px-0 md:px-0 border-t border-line overflow-hidden">
       <motion.div style={{ scale }} className="px-8 md:px-16">
-        <div className="flex items-center gap-4 mb-16">
+        <div className="flex items-center gap-4 mb-8 md:mb-16">
           <div className="w-2 h-2 rounded-full bg-accent" />
           <span className="text-[9px] uppercase tracking-[0.6em] font-mono text-accent">Manifesto</span>
         </div>
@@ -618,30 +624,30 @@ const Word = ({ word, index, total, accent }: { word: string, index: number, tot
 const FAQ = () => {
   const faqs = [
     {
-      q: "Who is this course for?",
-      a: "Business leaders, managers, and decision-makers who want to understand AI without needing to code. Whether you're in strategy, operations, marketing, or HR, this course gives you the literacy to lead AI initiatives confidently."
+      q: "Who is this course designed for?",
+      a: "Business leaders, executives, and elite operators who need to move past AI theory and master real, production-ready workflows that drive organizational efficiency."
     },
     {
-      q: "How long does it take to complete?",
-      a: "The complete course runs 1 hour and 41 minutes across 29 lectures. It's designed to be consumed in one focused session or spread across a week, whatever fits your schedule."
+      q: "How much time is required?",
+      a: "The program is designed for busy professionals. You can progress at your own pace, with structured modules that can be completed in under 4 hours per week."
     },
     {
-      q: "Do I need technical experience?",
-      a: "No. This course is built for non-technical leaders. We focus on strategic understanding, decision frameworks, and practical application, not coding or data science."
+      q: "Do I need a technical background?",
+      a: "No. This course is built specifically for leaders. We focus on strategic implementation, high-level architectures, and decision frameworks, not writing code."
     },
     {
-      q: "What makes this different from other AI courses?",
-      a: "Most AI courses teach you how to build models. This one teaches you how to wield them. It's designed for the people who fund, direct, and scale AI, not the people who code it."
+      q: "What makes Forged 1 different?",
+      a: "Unlike theoretical courses, Forged 1 provides exact, operational blueprints. You will see real-world systems, cost breakdowns, and live deployments that you can clone immediately."
     },
     {
-      q: "Is there a certificate?",
-      a: "Yes. Upon completion, you'll receive a FORGED 1 certificate demonstrating your AI leadership competency, a credential recognized by our network of industry partners."
+      q: "Is there post-program support?",
+      a: "Yes. Every participant gets access to our exclusive network of alumni, ongoing workflow updates, and monthly live strategy calls to review custom implementations."
     },
   ];
 
   return (
-    <section className="py-16 md:py-28 px-0 md:px-0 border-t border-line bg-surface">
-      <SectionHeader number="04" title="FAQ" subtitle="Common questions answered" className="px-8 md:px-16" />
+    <section id="faq" className="py-16 md:py-28 px-0 md:px-0 border-t border-line bg-surface">
+      <SectionHeader number="04" title="faq" subtitle="common questions answered" className="px-8 md:px-16" />
       <div className="max-w-3xl px-8 md:px-16">
         {faqs.map((faq, i) => (
           <Reveal key={i} delay={i * 0.04}>
@@ -686,29 +692,36 @@ const Footer = ({ onOpenLegal }: { onOpenLegal: (type: "Privacy" | "Terms" | "Ac
       <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-16 px-8 md:px-16">
       <div className="md:col-span-4">
         <div className="flex flex-col gap-4 mb-8">
-          <img 
-            src="https://imglink.cc/cdn/P7zm8Tr4Cq.png" 
-            alt="FORGED 1 Logo" 
-            className="h-10 w-auto object-contain self-start"
-            referrerPolicy="no-referrer"
-          />
+          <div className="flex items-center">
+            <img 
+              src="https://imglink.cc/cdn/-G5PGyVsCf.png" 
+              alt="FORGED 1 Logo" 
+              className="h-6 w-auto object-contain invert brightness-200"
+              referrerPolicy="no-referrer"
+            />
+          </div>
           <span className="text-[8px] uppercase tracking-[0.4em] font-mono text-accent">AI for Business Leaders</span>
         </div>
         <p className="text-secondary text-sm leading-relaxed max-w-xs">
-          A boutique education platform for the next generation of industry leaders.
+          The definitive AI business leadership course for the industrial age. Master the workflows that define the next decade of industry leadership.
         </p>
       </div>
 
       <div className="md:col-span-2 md:col-start-6">
         <span className="text-[9px] uppercase tracking-[0.5em] font-mono text-accent mb-6 block">Navigate</span>
         <div className="flex flex-col gap-3">
-          {["Workflows", "Services", "The Edge", "Manifesto"].map(item => (
-            <a key={item} href={`#${item.toLowerCase()}`} className="text-sm text-secondary hover:text-accent transition-colors tracking-wide">{item}</a>
+          {[
+            { name: "Workflows", href: "#workflows" },
+            { name: "Services", href: "#services" },
+            { name: "The Edge", href: "#edge" },
+            { name: "FAQ", href: "#faq" }
+          ].map(item => (
+            <a key={item.name} href={item.href} className="text-sm text-secondary hover:text-accent transition-colors tracking-wide">{item.name}</a>
           ))}
         </div>
       </div>
 
-      <div className="md:col-span-3 md:col-start-9">
+      <div className="md:col-span-3 md:col-start-8">
         <span className="text-[9px] uppercase tracking-[0.5em] font-mono text-accent mb-6 block">Contact</span>
         <a href="mailto:forgedonebusiness@gmail.com" className="text-lg font-serif text-secondary hover:text-accent transition-colors">forgedonebusiness@gmail.com</a>
         <div className="flex flex-wrap gap-4 md:gap-8 mt-8">
@@ -718,9 +731,9 @@ const Footer = ({ onOpenLegal }: { onOpenLegal: (type: "Privacy" | "Terms" | "Ac
         </div>
       </div>
 
-      <div className="md:col-span-2 md:col-start-12 flex flex-col justify-between">
-        <a href="#services" className="group inline-flex items-center gap-3 text-[9px] uppercase tracking-[0.5em] font-mono font-medium text-accent hover:text-accent transition-colors">
-          <span>Our Services</span>
+      <div className="md:col-span-2 md:col-start-11 flex flex-col justify-between">
+        <a href="#workflows" className="group inline-flex items-center gap-3 text-[9px] uppercase tracking-[0.5em] font-mono font-medium text-accent hover:text-accent transition-colors">
+          <span>Our Workflows</span>
           <div className="w-10 h-10 border border-secondary/10 flex items-center justify-center group-hover:border-accent group-hover:bg-accent transition-all duration-300">
             <ArrowRight size={12} className="group-hover:text-main transition-colors" />
           </div>
@@ -729,7 +742,7 @@ const Footer = ({ onOpenLegal }: { onOpenLegal: (type: "Privacy" | "Terms" | "Ac
     </div>
 
     <div className="mt-16 pt-8 border-t border-line flex flex-col md:flex-row justify-between gap-8 md:gap-6 px-8 md:px-16">
-      <p className="text-[9px] uppercase tracking-[0.5em] font-mono text-secondary">© 2026 Forged 1, All rights reserved</p>
+      <p className="text-[9px] uppercase tracking-[0.5em] font-mono text-secondary">© 2026, ALL RIGHTS RESERVED</p>
       <div className="flex gap-10">
         {["Privacy", "Terms", "Accessibility"].map(l => (
           <button 
@@ -967,26 +980,44 @@ const FloatingCTA = () => {
   }, [scrollY]);
 
   return (
-    <AnimatePresence>
-      {visible && (
-        <motion.a
-          href="https://calendly.com/forgedonebusiness/30min"
-          target="_blank"
-          rel="noopener noreferrer"
-          initial={{ opacity: 0, x: 100 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: 100 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="fixed right-0 top-1/2 -translate-y-1/2 z-[60] hidden md:flex items-center"
-        >
-          <div className="bg-accent text-white py-6 px-4 [writing-mode:vertical-lr] rotate-180 flex items-center gap-4 hover:pr-8 transition-all duration-500 group shadow-2xl border-l border-white/10 cursor-pointer">
-            <span className="text-[10px] uppercase tracking-[0.4em] font-mono font-bold whitespace-nowrap">Book a Free Strategy Call</span>
-            <div className="w-px h-8 bg-white/30 group-hover:h-12 transition-all duration-500" />
-            <ArrowRight size={14} className="-rotate-90 group-hover:translate-y-1 transition-transform" />
-          </div>
-        </motion.a>
-      )}
-    </AnimatePresence>
+    <>
+      <AnimatePresence>
+        {visible && (
+          <motion.a
+            href="https://calendly.com/forgedonebusiness/30min"
+            target="_blank"
+            rel="noopener noreferrer"
+            initial={{ opacity: 0, x: 100 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 100 }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            className="fixed right-0 top-1/2 -translate-y-1/2 z-[60] hidden md:flex items-center"
+          >
+            <div className="bg-accent text-white py-6 px-4 [writing-mode:vertical-lr] rotate-180 flex items-center gap-4 hover:pr-8 transition-all duration-500 group shadow-2xl border-l border-white/10 cursor-pointer">
+              <span className="text-[10px] uppercase tracking-[0.4em] font-mono font-bold whitespace-nowrap">book your strategy call</span>
+              <div className="w-px h-8 bg-white/30 group-hover:h-12 transition-all duration-500" />
+              <ArrowRight size={14} className="-rotate-90 group-hover:translate-y-1 transition-transform" />
+            </div>
+          </motion.a>
+        )}
+      </AnimatePresence>
+
+      {/* Mobile and Tablet Floating CTA - Small, orange/accent, bottom-right, always accessible */}
+      <motion.a
+        href="https://calendly.com/forgedonebusiness/30min"
+        target="_blank"
+        rel="noopener noreferrer"
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 1, duration: 0.5 }}
+        className="fixed right-4 bottom-4 z-[40] md:hidden flex items-center"
+      >
+        <div className="bg-accent text-white text-[10px] font-mono font-medium tracking-wider uppercase py-2 px-3.5 rounded-full flex items-center gap-1.5 shadow-2xl border border-white/10 active:scale-95 hover:bg-[#ff5146] transition-all duration-200 cursor-pointer">
+          <span>Book Call</span>
+          <ArrowRight size={10} />
+        </div>
+      </motion.a>
+    </>
   );
 };
 
