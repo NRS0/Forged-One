@@ -783,8 +783,17 @@ const Footer = ({ onOpenLegal }: { onOpenLegal: (type: "Privacy" | "Terms" | "Ac
         <span className="text-[9px] uppercase tracking-[0.5em] font-mono text-accent mb-6 block">Contact</span>
         <a href="mailto:forgedonebusiness@gmail.com" className="text-lg font-serif text-secondary hover:text-accent transition-colors">forgedonebusiness@gmail.com</a>
         <div className="flex flex-wrap gap-4 md:gap-8 mt-8">
-          {["LinkedIn", "X / Twitter", "YouTube"].map(s => (
-            <a key={s} href="#" className="text-[9px] uppercase tracking-widest font-mono text-accent hover:text-accent transition-colors">{s}</a>
+          {[
+            { name: "LinkedIn", href: "https://www.linkedin.com/company/forgedone/" },
+            { name: "Instagram", href: "https://www.instagram.com/forgedone.xyz" },
+            { name: "YouTube", href: "#" }
+          ].map(s => (
+            <a
+              key={s.name}
+              href={s.href}
+              {...(s.href.startsWith("http") && { target: "_blank", rel: "noopener noreferrer" })}
+              className="text-[9px] uppercase tracking-widest font-mono text-accent hover:text-accent transition-colors"
+            >{s.name}</a>
           ))}
         </div>
       </div>
