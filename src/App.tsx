@@ -512,7 +512,7 @@ const WorkflowCard = ({ id, title, category, description, detail }: {
 
 const ServicesSection = () => {
   const services = [
-    { n: "01", name: "Intelligent Chatbots", desc: "Automate internal and external communications with advanced conversational models trained on your proprietary data.", color: "#FFFFFF" },
+    { n: "01", name: "Custom Applications & Tools", desc: "Build bespoke software, internal tools, and AI-powered interfaces engineered around how your business actually operates.", color: "#FFFFFF" },
     { n: "02", name: "AI Advertising", desc: "Scale your outreach and conversion with self-optimizing, high-impact algorithmic campaigns.", color: "#FFFFFF" },
     { n: "03", name: "Data Pipelines", desc: "Scrape, structure, and synthesize critical industry datasets to feed your decision-making engines.", color: "#FFFFFF" },
     { n: "04", name: "Autonomous Agents", desc: "Deploy self-governing digital workforces that execute multi-step operational loops.", color: "#FFFFFF" },
