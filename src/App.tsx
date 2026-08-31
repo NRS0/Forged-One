@@ -227,90 +227,90 @@ const Hero = () => {
       {/* Foreground content wrapper */}
       <div className="relative h-full w-full max-w-[1440px] mx-auto z-10">
         {/* Desktop-only: Three giant staggered headline words */}
-        <div className="hidden lg:block">
-          <motion.div 
+        <h1 className="hidden lg:block">
+          <motion.span 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
             className="hero-title absolute text-white font-bold font-sans lg:text-[13vw] lg:left-[160px] top-[18%] uppercase tracking-tighter"
           >
             ai
-          </motion.div>
+          </motion.span>
           
-          <motion.div 
+          <motion.span 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
             className="hero-title absolute text-white font-bold font-sans lg:text-[13vw] lg:right-[712px] top-[38%] uppercase tracking-tighter"
           >
             for
-          </motion.div>
+          </motion.span>
           
-          <motion.div 
+          <motion.span 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
             className="hero-title absolute text-white font-bold font-sans lg:text-[13vw] lg:left-[28%] top-[58%] uppercase tracking-tighter"
           >
             businesses
-          </motion.div>
-        </div>
+          </motion.span>
+        </h1>
 
         {/* Tablet-only: Uniform & well-structured headline layout */}
-        <div className="absolute left-12 top-[22%] hidden md:flex lg:hidden flex-col gap-2 z-10">
-          <motion.div 
+        <h1 className="absolute left-12 top-[22%] hidden md:flex lg:hidden flex-col gap-2 z-10">
+          <motion.span 
             initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
             className="hero-title text-white font-bold font-sans text-[11vw] uppercase tracking-tighter leading-[0.85]"
           >
             ai
-          </motion.div>
-          <motion.div 
+          </motion.span>
+          <motion.span 
             initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
             className="hero-title text-white font-bold font-sans text-[11vw] uppercase tracking-tighter leading-[0.85]"
           >
             for
-          </motion.div>
-          <motion.div 
+          </motion.span>
+          <motion.span 
             initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
             className="hero-title text-white font-bold font-sans text-[11vw] uppercase tracking-tighter leading-[0.85]"
           >
             businesses
-          </motion.div>
-        </div>
+          </motion.span>
+        </h1>
 
         {/* Mobile-only: Uniform & well-structured headline layout */}
-        <div className="absolute left-6 top-[20%] md:hidden flex flex-col gap-1 z-10">
-          <motion.div 
+        <h1 className="absolute left-6 top-[20%] md:hidden flex flex-col gap-1 z-10">
+          <motion.span 
             initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
             className="hero-title text-white font-bold font-sans text-[15vw] xs:text-[16vw] uppercase tracking-tighter leading-[0.85]"
           >
             ai
-          </motion.div>
-          <motion.div 
+          </motion.span>
+          <motion.span 
             initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
             className="hero-title text-white font-bold font-sans text-[15vw] xs:text-[16vw] uppercase tracking-tighter leading-[0.85]"
           >
             for
-          </motion.div>
-          <motion.div 
+          </motion.span>
+          <motion.span 
             initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
             className="hero-title text-white font-bold font-sans text-[15vw] xs:text-[16vw] uppercase tracking-tighter leading-[0.85]"
           >
             businesses
-          </motion.div>
-        </div>
+          </motion.span>
+        </h1>
 
         {/* Description paragraph */}
         <motion.p 
