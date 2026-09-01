@@ -108,6 +108,7 @@ const Navbar = () => {
           {[
             { name: "Workflows", href: "#workflows" },
             { name: "Services", href: "#services" },
+            { name: "The Brief", href: "#brief" },
             { name: "The Edge", href: "#edge" },
             { name: "FAQ", href: "#faq" }
           ].map((item) => (
@@ -171,6 +172,7 @@ const Navbar = () => {
               {[
                 { name: "Workflows", href: "#workflows" },
                 { name: "Services", href: "#services" },
+                { name: "The Brief", href: "#brief" },
                 { name: "The Edge", href: "#edge" },
                 { name: "FAQ", href: "#faq" }
               ].map((item, index) => (
@@ -567,6 +569,68 @@ const ServicesSection = () => {
   );
 };
 
+/* ─────────────────────────────── THE BRIEF ─────────────────────────────── */
+
+const BuildBrief = () => {
+  const points = [
+    { k: "About 12 minutes", v: "It saves in your browser as you go, so you can start it now and finish it later." },
+    { k: "Nothing is sent until you send it", v: "Your answers stay on your device. At the end you copy it, download it, or send it over." },
+    { k: "The brief is yours either way", v: "Ranked opportunities with the hours behind them, whether or not you work with us." },
+  ];
+
+  return (
+    <section id="brief" className="py-16 md:py-28 px-0 md:px-0 border-t border-line">
+      <SectionHeader number="03" title="the brief" subtitle="tell us what's slow, we'll tell you what's buildable" className="px-8 md:px-16" />
+
+      <div className="px-8 md:px-16 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
+        <Reveal className="lg:col-span-7 flex flex-col gap-6">
+          <h3 className="font-serif text-3xl md:text-5xl uppercase tracking-wide text-secondary leading-[0.9]">
+            Twelve minutes instead of two discovery calls.
+          </h3>
+          <p className="text-secondary text-sm md:text-base font-light leading-relaxed max-w-xl">
+            The Build Brief turns a vague sense that something should be automated into a scoped
+            piece of work. You describe the jobs eating your team's time: how often they run, how
+            long they take, and how much of that is copying, retyping and chasing.
+          </p>
+          <p className="text-muted text-sm md:text-base font-light leading-relaxed max-w-xl">
+            It scores each job on the hours you would get back against how buildable it looks, ranks
+            them against each other, and hands you the brief at the end. Send it over and we come
+            back with a scope, not a sales call.
+          </p>
+
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5 mt-2">
+            <a href="https://brief.forgedone.xyz" target="_blank" rel="noopener noreferrer">
+              <button className="group bg-accent text-white text-sm font-normal rounded-full px-8 py-4 hover:bg-[#ff5146] transition-colors cursor-pointer inline-flex items-center gap-3">
+                Start the brief
+                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+              </button>
+            </a>
+            <a
+              href="https://calendly.com/forgedonebusiness/30min"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[9px] uppercase tracking-[0.4em] font-mono text-muted hover:text-accent transition-colors"
+            >
+              or talk it through first
+            </a>
+          </div>
+        </Reveal>
+
+        <Reveal delay={0.1} className="lg:col-span-5 w-full">
+          <div className="border border-line">
+            {points.map((row, i) => (
+              <div key={row.k} className={`p-6 md:p-8 flex flex-col gap-2 ${i < points.length - 1 ? "border-b border-line" : ""}`}>
+                <span className="text-[9px] uppercase tracking-[0.4em] font-mono text-accent">{row.k}</span>
+                <p className="text-sm text-secondary font-light leading-relaxed">{row.v}</p>
+              </div>
+            ))}
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+};
+
 /* ─────────────────────────────── THE EDGE ─────────────────────────────── */
 
 const CompetitiveEdge = () => {
@@ -578,7 +642,7 @@ const CompetitiveEdge = () => {
     <section id="edge" ref={ref} className="py-16 md:py-28 px-0 md:px-0 bg-surface border-t border-line relative overflow-hidden">
       <div className="absolute top-0 right-0 w-[40vw] h-[40vw] rounded-full bg-accent/2 blur-[180px] pointer-events-none" />
 
-      <SectionHeader number="03" title="the edge" subtitle="why ai literacy is the new baseline" className="px-8 md:px-16" />
+      <SectionHeader number="04" title="the edge" subtitle="why ai literacy is the new baseline" className="px-8 md:px-16" />
 
       <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-10 lg:gap-12 mt-12 items-center px-8 md:px-16">
         {/* video */}
@@ -705,7 +769,7 @@ const FAQ = () => {
 
   return (
     <section id="faq" className="py-16 md:py-28 px-0 md:px-0 border-t border-line bg-surface">
-      <SectionHeader number="04" title="faq" subtitle="common questions answered" className="px-8 md:px-16" />
+      <SectionHeader number="05" title="faq" subtitle="common questions answered" className="px-8 md:px-16" />
       <div className="max-w-3xl px-8 md:px-16">
         {faqs.map((faq, i) => (
           <Reveal key={i} delay={i * 0.04}>
@@ -745,6 +809,7 @@ const AccordionItem = ({ question, answer }: { question: string, answer: string 
 
 /* ─────────────────────────────── FOOTER ─────────────────────────────── */
 
+
 const Footer = ({ onOpenLegal }: { onOpenLegal: (type: "Privacy" | "Terms" | "Accessibility") => void }) => (
     <footer className="py-12 md:py-20 px-0 md:px-0 border-t border-line">
       <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-16 px-8 md:px-16">
@@ -771,6 +836,7 @@ const Footer = ({ onOpenLegal }: { onOpenLegal: (type: "Privacy" | "Terms" | "Ac
           {[
             { name: "Workflows", href: "#workflows" },
             { name: "Services", href: "#services" },
+            { name: "The Brief", href: "#brief" },
             { name: "The Edge", href: "#edge" },
             { name: "FAQ", href: "#faq" }
           ].map(item => (
@@ -1108,6 +1174,7 @@ export default function App() {
         <MarqueeDivider />
         <Workflows />
         <ServicesSection />
+        <BuildBrief />
         <CompetitiveEdge />
         <Manifesto />
         <FAQ />
