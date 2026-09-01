@@ -192,7 +192,7 @@ const Navbar = () => {
 
             {/* Bottom info / CTA */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 border-t border-line pt-8">
-              <span className="text-[10px] uppercase tracking-[0.4em] font-mono text-accent">AI for Business Leaders</span>
+              <span className="text-[10px] uppercase tracking-[0.4em] font-mono text-accent">AI for Business Leaders · Barbados</span>
               <a 
                 href="https://calendly.com/forgedonebusiness/30min" 
                 target="_blank" 
@@ -376,7 +376,7 @@ const Hero = () => {
 /* ─────────────────────────────── MARQUEE ─────────────────────────────── */
 
 const MarqueeDivider = () => {
-  const items = ["Strategy", "Generative AI", "Leadership", "Prompt Engineering", "AI Ethics", "ROI Measurement", "Team Building", "ML Lifecycle"];
+  const items = ["Strategy", "Generative AI", "Based in Barbados", "Leadership", "Prompt Engineering", "Serving the Caribbean", "AI Ethics", "ROI Measurement", "Team Building", "ML Lifecycle"];
   const doubled = [...items, ...items];
   return (
     <div className="-mt-6 md:-mt-12 lg:-mt-[59px] mb-12 md:mb-16 py-8 border-y border-line bg-surface marquee-container relative z-30">
@@ -746,6 +746,10 @@ const Word = ({ word, index, total, accent }: { word: string, index: number, tot
 const FAQ = () => {
   const faqs = [
     {
+      q: "Where are you based?",
+      a: "Barbados. We work with businesses across the Caribbean and further afield, and everything we build is delivered remotely. Being in the region means we are in your timezone and we understand how business actually runs here."
+    },
+    {
       q: "Who is this course designed for?",
       a: "Business leaders, executives, and elite operators who need to move past AI theory and master real, production-ready workflows that drive organizational efficiency."
     },
@@ -827,6 +831,9 @@ const Footer = ({ onOpenLegal }: { onOpenLegal: (type: "Privacy" | "Terms" | "Ac
         </div>
         <p className="text-secondary text-sm leading-relaxed max-w-xs">
           The definitive AI business leadership course for the industrial age. Master the workflows that define the next decade of industry leadership.
+        </p>
+        <p className="text-muted text-sm leading-relaxed max-w-xs mt-4">
+          Based in Barbados, building for businesses across the Caribbean and beyond.
         </p>
       </div>
 
