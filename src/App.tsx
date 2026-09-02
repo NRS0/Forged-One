@@ -1150,7 +1150,7 @@ const FloatingCTA = () => {
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 1, duration: 0.5 }}
-        className="fixed right-4 bottom-4 z-[40] lg:hidden flex items-center gap-1 bg-neutral-900/95 backdrop-blur rounded-full p-1 shadow-2xl border border-white/10"
+        className="fixed right-4 bottom-4 z-[40] sm:hidden flex items-center gap-1 bg-neutral-900/95 backdrop-blur rounded-full p-1 shadow-2xl border border-white/10"
       >
         <a
           href="https://brief.forgedone.xyz/"
