@@ -104,7 +104,7 @@ const Navbar = () => {
         </div>
 
         {/* Center pill (hidden on mobile) */}
-        <div className="hidden md:flex items-center gap-1 bg-neutral-900/90 backdrop-blur rounded-full px-3 py-2">
+        <div className="hidden lg:flex items-center gap-1 bg-neutral-900/90 backdrop-blur rounded-full px-3 py-2">
           {[
             { name: "Services", href: "#services" },
             { name: "The Brief", href: "#brief" },
@@ -139,7 +139,7 @@ const Navbar = () => {
           {/* Hamburger Menu Button for mobile/tablet */}
           <button 
             onClick={() => setMenuOpen(!menuOpen)}
-            className="md:hidden bg-neutral-900/90 backdrop-blur text-white p-3 rounded-full hover:text-accent transition-colors cursor-pointer flex items-center justify-center"
+            className="lg:hidden bg-neutral-900/90 backdrop-blur text-white p-3 rounded-full hover:text-accent transition-colors cursor-pointer flex items-center justify-center"
             aria-label="Toggle Menu"
           >
             <Menu size={18} />
@@ -568,26 +568,6 @@ const ServicesSection = () => {
         ))}
       </div>
 
-      {/* total stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 mt-16 border border-line">
-        {[
-          { n: "100+", label: "Leaders Trained" },
-          { n: "24/7", label: "Agent Execution" },
-          { n: "14", label: "Custom Workflows" },
-        ].map(({ n, label }, index) => (
-          <Reveal 
-            key={label}
-            className={`bg-main p-10 flex flex-col gap-2 text-center border-line
-              ${index < 2 ? "border-b md:border-b-0 md:border-r" : ""}
-            `}
-          >
-            <span className="font-serif text-5xl md:text-6xl text-secondary">
-              <Counter value={n} />
-            </span>
-            <span className="text-[9px] uppercase tracking-[0.5em] font-mono text-accent">{label}</span>
-          </Reveal>
-        ))}
-      </div>
     </section>
   );
 };
@@ -667,9 +647,9 @@ const CompetitiveEdge = () => {
 
       <SectionHeader number="04" title="the edge" subtitle="why waiting costs more than starting" className="px-8 md:px-16" />
 
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-10 lg:gap-12 mt-12 items-center px-8 md:px-16">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 mt-12 items-center px-8 md:px-16">
         {/* video */}
-        <div className="md:col-span-12 lg:col-span-7 mb-8 lg:mb-0">
+        <div className="lg:col-span-12 lg:col-span-7 mb-8 lg:mb-0">
           <div className="relative aspect-video overflow-hidden border border-line shadow-2xl">
             <video
               autoPlay
@@ -689,7 +669,7 @@ const CompetitiveEdge = () => {
         </div>
 
         {/* statement */}
-        <div className="md:col-span-12 lg:col-span-5 flex flex-col justify-center gap-8 lg:gap-10">
+        <div className="lg:col-span-12 lg:col-span-5 flex flex-col justify-center gap-8 lg:gap-10">
           <Reveal>
             <p className="text-3xl md:text-4xl lg:text-[2.6rem] font-serif leading-[1.05] tracking-wide text-secondary">
               "The greatest risk isn't <span className="text-accent">AI itself</span>, it's being the last to understand its potential."
@@ -839,8 +819,8 @@ const AccordionItem = ({ question, answer }: { question: string, answer: string 
 
 const Footer = ({ onOpenLegal }: { onOpenLegal: (type: "Privacy" | "Terms" | "Accessibility") => void }) => (
     <footer className="py-12 md:py-20 px-0 md:px-0 border-t border-line">
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-16 px-8 md:px-16">
-      <div className="md:col-span-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-16 px-8 md:px-16">
+      <div className="lg:col-span-4">
         <div className="flex flex-col gap-4 mb-8">
           <div className="flex items-center">
             <img 
@@ -860,7 +840,7 @@ const Footer = ({ onOpenLegal }: { onOpenLegal: (type: "Privacy" | "Terms" | "Ac
         </p>
       </div>
 
-      <div className="md:col-span-2 md:col-start-6">
+      <div className="lg:col-span-2 lg:col-start-6">
         <span className="text-[9px] uppercase tracking-[0.5em] font-mono text-accent mb-6 block">Navigate</span>
         <div className="flex flex-col gap-3">
           {[
@@ -875,7 +855,7 @@ const Footer = ({ onOpenLegal }: { onOpenLegal: (type: "Privacy" | "Terms" | "Ac
         </div>
       </div>
 
-      <div className="md:col-span-3 md:col-start-8">
+      <div className="lg:col-span-3 lg:col-start-8">
         <span className="text-[9px] uppercase tracking-[0.5em] font-mono text-accent mb-6 block">Contact</span>
         <a href="mailto:forgedonebusiness@gmail.com" className="text-lg font-serif text-secondary hover:text-accent transition-colors">forgedonebusiness@gmail.com</a>
         <div className="flex flex-wrap gap-4 md:gap-8 mt-8">
@@ -894,7 +874,7 @@ const Footer = ({ onOpenLegal }: { onOpenLegal: (type: "Privacy" | "Terms" | "Ac
         </div>
       </div>
 
-      <div className="md:col-span-2 md:col-start-11 flex flex-col justify-between">
+      <div className="lg:col-span-2 lg:col-start-11 flex flex-col justify-between">
         <a href="#workflows" className="group inline-flex items-center gap-3 text-[9px] uppercase tracking-[0.5em] font-mono font-medium text-accent hover:text-accent transition-colors">
           <span>Our Workflows</span>
           <div className="w-10 h-10 border border-secondary/10 flex items-center justify-center group-hover:border-accent group-hover:bg-accent transition-all duration-300">
@@ -1154,7 +1134,7 @@ const FloatingCTA = () => {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 100 }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed right-0 top-1/2 -translate-y-1/2 z-[60] hidden md:flex items-center"
+            className="fixed right-0 top-1/2 -translate-y-1/2 z-[60] hidden lg:flex items-center"
           >
             <div className="bg-accent text-white py-6 px-4 [writing-mode:vertical-lr] rotate-180 flex items-center gap-4 hover:pr-8 transition-all duration-500 group shadow-2xl border-l border-white/10 cursor-pointer">
               <span className="text-[10px] uppercase tracking-[0.4em] font-mono font-bold whitespace-nowrap">book your strategy call</span>
@@ -1170,7 +1150,7 @@ const FloatingCTA = () => {
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 1, duration: 0.5 }}
-        className="fixed right-4 bottom-4 z-[40] md:hidden flex items-center gap-1 bg-neutral-900/95 backdrop-blur rounded-full p-1 shadow-2xl border border-white/10"
+        className="fixed right-4 bottom-4 z-[40] lg:hidden flex items-center gap-1 bg-neutral-900/95 backdrop-blur rounded-full p-1 shadow-2xl border border-white/10"
       >
         <a
           href="https://brief.forgedone.xyz/"
