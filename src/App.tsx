@@ -514,11 +514,11 @@ const WorkflowCard = ({ id, title, category, description, detail }: {
 
 const ServicesSection = () => {
   const services = [
-    { n: "01", name: "Custom Software & Tools", desc: "Software built around the way you already work, instead of changing how you work to suit something you bought off the shelf.", color: "#FFFFFF" },
-    { n: "02", name: "AI Advertising", desc: "Ads that test themselves, drop what is not working and put the money behind what is. You see what each dollar brought back.", color: "#FFFFFF" },
-    { n: "03", name: "Getting Your Data Straight", desc: "Getting your numbers out of the places they are stuck, cleaned up, and in one place you can actually look at.", color: "#FFFFFF" },
-    { n: "04", name: "AI Agents", desc: "Software that handles a job start to finish on its own. It reads the message, checks your system, replies, and knows when to pass it to a person.", color: "#FFFFFF" },
-    { n: "05", name: "AI Courses", desc: "Teaching your team what these tools can and cannot do, so nobody is guessing when they make a decision.", color: "#FFFFFF" },
+    { n: "01", name: "Custom Software & Tools", desc: "Software built around the way you already work, instead of changing how you work to suit something you bought off the shelf.", color: "#FFFFFF", need: "software" },
+    { n: "02", name: "AI Advertising", desc: "Ads that test themselves, drop what is not working and put the money behind what is. You see what each dollar brought back.", color: "#FFFFFF", need: "" },
+    { n: "03", name: "Getting Your Data Straight", desc: "Getting your numbers out of the places they are stuck, cleaned up, and in one place you can actually look at.", color: "#FFFFFF", need: "automations" },
+    { n: "04", name: "AI Agents", desc: "Software that handles a job start to finish on its own. It reads the message, checks your system, replies, and knows when to pass it to a person.", color: "#FFFFFF", need: "agents" },
+    { n: "05", name: "AI Courses", desc: "Teaching your team what these tools can and cannot do, so nobody is guessing when they make a decision.", color: "#FFFFFF", need: "" },
   ];
 
   return (
@@ -529,7 +529,10 @@ const ServicesSection = () => {
       <div className="flex flex-col px-8 md:px-16 border-b border-line">
         {services.map((s, i) => (
           <Reveal key={s.n} delay={i * 0.04}>
-            <div className="group border-t border-line flex items-center gap-4 sm:gap-6 md:gap-8 lg:gap-12 py-8 md:py-10 lg:py-12 cursor-default hover:bg-secondary/[0.02] transition-colors duration-500 px-0 md:px-4">
+            <a
+              href={`https://brief.forgedone.xyz/${s.need ? `?need=${s.need}` : ""}`}
+              aria-label={`Start a build brief for ${s.name}`}
+              className="group border-t border-line flex items-center gap-4 sm:gap-6 md:gap-8 lg:gap-12 py-8 md:py-10 lg:py-12 cursor-pointer hover:bg-secondary/[0.02] transition-colors duration-500 px-0 md:px-4 no-underline">
               <span className="font-serif text-3xl md:text-5xl leading-none shrink-0" style={{ color: s.color }}>{s.n}</span>
               <div className="flex-1 flex flex-col md:flex-row md:items-center gap-4 md:gap-8 lg:gap-12">
                 <h3 className="text-xl md:text-2xl lg:text-3xl font-serif tracking-tight text-secondary group-hover:text-accent transition-colors duration-400 md:w-[40%] lg:w-1/3">
@@ -539,8 +542,13 @@ const ServicesSection = () => {
                   {s.desc}
                 </p>
               </div>
-              <div className="hidden sm:block w-12 md:w-16 lg:w-24 h-px bg-secondary/5 group-hover:bg-accent/40 transition-all duration-500 shrink-0" />
-            </div>
+              <span className="hidden sm:flex items-center gap-3 shrink-0">
+                <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent opacity-0 group-hover:opacity-100 transition-opacity duration-400 whitespace-nowrap">
+                  Start a brief
+                </span>
+                <span className="w-12 md:w-16 lg:w-24 h-px bg-secondary/5 group-hover:bg-accent/40 transition-all duration-500 block" />
+              </span>
+            </a>
           </Reveal>
         ))}
       </div>
@@ -588,7 +596,7 @@ const BuildBrief = () => {
             Twelve minutes instead of two discovery calls.
           </h3>
           <p className="text-secondary text-sm md:text-base font-light leading-relaxed max-w-xl">
-            The Build Brief turns a vague sense that something should be automated into a scoped
+            The Build Brief turns a vague sense that something should be better into a scoped
             piece of work. You describe the jobs eating your team's time: how often they run, how
             long they take, and how much of that is copying, retyping and chasing.
           </p>
