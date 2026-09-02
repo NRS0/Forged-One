@@ -549,15 +549,15 @@ const ServicesSection = () => {
               aria-label={`Start a build brief for ${s.name}`}
               className="group border-t border-line flex items-center gap-4 sm:gap-6 md:gap-8 lg:gap-12 py-8 md:py-10 lg:py-12 cursor-pointer hover:bg-secondary/[0.02] transition-colors duration-500 px-0 md:px-4 no-underline">
               <span className="font-serif text-3xl md:text-5xl leading-none shrink-0" style={{ color: s.color }}>{s.n}</span>
-              <div className="flex-1 flex flex-col md:flex-row md:items-center gap-4 md:gap-8 lg:gap-12">
-                <h3 className="text-xl md:text-2xl lg:text-3xl font-serif tracking-tight text-secondary group-hover:text-accent transition-colors duration-400 md:w-[40%] lg:w-1/3">
+              <div className="flex-1 flex flex-col lg:flex-row lg:items-center gap-3 lg:gap-12">
+                <h3 className="text-xl md:text-2xl lg:text-3xl font-serif tracking-tight text-secondary group-hover:text-accent transition-colors duration-400 lg:w-1/3">
                   {s.name}
                 </h3>
                 <p className="text-sm text-secondary font-light leading-relaxed max-w-lg flex-1">
                   {s.desc}
                 </p>
               </div>
-              <span className="hidden sm:flex items-center gap-3 shrink-0">
+              <span className="hidden lg:flex items-center gap-3 shrink-0">
                 <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-accent opacity-0 group-hover:opacity-100 transition-opacity duration-400 whitespace-nowrap">
                   Start a brief
                 </span>
