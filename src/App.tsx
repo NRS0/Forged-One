@@ -122,10 +122,16 @@ const Navbar = () => {
           ))}
         </div>
 
-        {/* Right actions */}
-        <div className="flex items-center gap-3">
+        {/* Right actions: scope it yourself, or talk to us */}
+        <div className="flex items-center gap-2 sm:gap-3 bg-neutral-900/90 backdrop-blur rounded-full p-1 sm:p-1.5">
+          <a
+            href="https://brief.forgedone.xyz/"
+            className="hidden sm:block text-neutral-300 hover:text-white transition-colors text-sm px-5 py-2 rounded-full cursor-pointer whitespace-nowrap no-underline"
+          >
+            Start the brief
+          </a>
           <a href="https://calendly.com/forgedonebusiness/30min" target="_blank" rel="noopener noreferrer" className="hidden sm:block">
-            <button className="bg-accent text-white text-sm font-normal rounded-full px-6 py-3 hover:bg-[#ff5146] transition-colors cursor-pointer">
+            <button className="bg-accent text-white text-sm font-normal rounded-full px-6 py-3 hover:bg-[#ff5146] transition-colors cursor-pointer whitespace-nowrap">
               Book Call
             </button>
           </a>
@@ -193,6 +199,14 @@ const Navbar = () => {
             {/* Bottom info / CTA */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 border-t border-line pt-8">
               <span className="text-[10px] uppercase tracking-[0.4em] font-mono text-accent">AI for Business Leaders · Barbados</span>
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
+              <a
+                href="https://brief.forgedone.xyz/"
+                onClick={() => setMenuOpen(false)}
+                className="w-full sm:w-auto text-center border border-line text-secondary hover:text-accent hover:border-accent transition-colors text-sm rounded-full px-8 py-4 no-underline"
+              >
+                Start the brief
+              </a>
               <a 
                 href="https://calendly.com/forgedonebusiness/30min" 
                 target="_blank" 
@@ -204,6 +218,7 @@ const Navbar = () => {
                   Book Strategy Call
                 </button>
               </a>
+              </div>
             </div>
           </motion.div>
         )}
@@ -321,7 +336,7 @@ const Hero = () => {
           transition={{ duration: 1.5, delay: 0.7 }}
           className="absolute right-6 md:right-10 top-[46%] max-w-[180px] xs:max-w-[220px] md:max-w-[240px] text-xs xs:text-[14px] md:text-[15px] leading-snug text-white/90 lowercase text-right"
         >
-          we build the autonomous systems that define the next decade of industrial dominance
+          we build the software that takes the repetitive half of the work off your team
         </motion.p>
 
         {/* Stat block — top-right */}
