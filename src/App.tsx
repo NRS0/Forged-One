@@ -106,9 +106,9 @@ const Navbar = () => {
         {/* Center pill (hidden on mobile) */}
         <div className="hidden md:flex items-center gap-1 bg-neutral-900/90 backdrop-blur rounded-full px-3 py-2">
           {[
-            { name: "Workflows", href: "#workflows" },
             { name: "Services", href: "#services" },
             { name: "The Brief", href: "#brief" },
+            { name: "Workflows", href: "#workflows" },
             { name: "The Edge", href: "#edge" },
             { name: "FAQ", href: "#faq" }
           ].map((item) => (
@@ -176,9 +176,9 @@ const Navbar = () => {
             {/* Navigation links */}
             <div className="flex flex-col gap-6 my-auto">
               {[
-                { name: "Workflows", href: "#workflows" },
                 { name: "Services", href: "#services" },
                 { name: "The Brief", href: "#brief" },
+                { name: "Workflows", href: "#workflows" },
                 { name: "The Edge", href: "#edge" },
                 { name: "FAQ", href: "#faq" }
               ].map((item, index) => (
@@ -461,7 +461,7 @@ const Workflows = () => {
 
   return (
     <section id="workflows" className="py-16 md:py-28 px-0 md:px-0">
-      <SectionHeader number="01" title="workflows" subtitle="where ai actually earns its keep" className="px-8 md:px-16" />
+      <SectionHeader number="03" title="workflows" subtitle="where ai actually earns its keep" className="px-8 md:px-16" />
       <div className="flex flex-col px-8 md:px-16 border-b border-line">
         {cases.map((c, i) => (
           <Reveal key={c.id} delay={i * 0.06}>
@@ -538,7 +538,7 @@ const ServicesSection = () => {
 
   return (
     <section id="services" className="py-16 md:py-28 px-0 md:px-0 border-t border-line">
-      <SectionHeader number="02" title="services" subtitle="what we build, in plain terms" className="px-8 md:px-16" />
+      <SectionHeader number="01" title="services" subtitle="what we build, in plain terms" className="px-8 md:px-16" />
 
       {/* vertical card list */}
       <div className="flex flex-col px-8 md:px-16 border-b border-line">
@@ -603,7 +603,7 @@ const BuildBrief = () => {
 
   return (
     <section id="brief" className="py-16 md:py-28 px-0 md:px-0 border-t border-line">
-      <SectionHeader number="03" title="the brief" subtitle="tell us what's slow, we'll tell you what's buildable" className="px-8 md:px-16" />
+      <SectionHeader number="02" title="the brief" subtitle="tell us what's slow, we'll tell you what's buildable" className="px-8 md:px-16" />
 
       <div className="px-8 md:px-16 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
         <Reveal className="lg:col-span-7 flex flex-col gap-6">
@@ -864,9 +864,9 @@ const Footer = ({ onOpenLegal }: { onOpenLegal: (type: "Privacy" | "Terms" | "Ac
         <span className="text-[9px] uppercase tracking-[0.5em] font-mono text-accent mb-6 block">Navigate</span>
         <div className="flex flex-col gap-3">
           {[
-            { name: "Workflows", href: "#workflows" },
             { name: "Services", href: "#services" },
             { name: "The Brief", href: "#brief" },
+            { name: "Workflows", href: "#workflows" },
             { name: "The Edge", href: "#edge" },
             { name: "FAQ", href: "#faq" }
           ].map(item => (
@@ -1165,21 +1165,29 @@ const FloatingCTA = () => {
         )}
       </AnimatePresence>
 
-      {/* Mobile and Tablet Floating CTA - Small, orange/accent, bottom-right, always accessible */}
-      <motion.a
-        href="https://calendly.com/forgedonebusiness/30min"
-        target="_blank"
-        rel="noopener noreferrer"
+      {/* Mobile and tablet: both ways in, bottom-right, same pairing as the desktop corner */}
+      <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 1, duration: 0.5 }}
-        className="fixed right-4 bottom-4 z-[40] md:hidden flex items-center"
+        className="fixed right-4 bottom-4 z-[40] md:hidden flex items-center gap-1 bg-neutral-900/95 backdrop-blur rounded-full p-1 shadow-2xl border border-white/10"
       >
-        <div className="bg-accent text-white text-[10px] font-mono font-medium tracking-wider uppercase py-2 px-3.5 rounded-full flex items-center gap-1.5 shadow-2xl border border-white/10 active:scale-95 hover:bg-[#ff5146] transition-all duration-200 cursor-pointer">
+        <a
+          href="https://brief.forgedone.xyz/"
+          className="text-neutral-300 text-[10px] font-mono font-medium tracking-wider uppercase py-2 px-3 rounded-full active:scale-95 transition-all duration-200 cursor-pointer no-underline whitespace-nowrap"
+        >
+          Start the brief
+        </a>
+        <a
+          href="https://calendly.com/forgedonebusiness/30min"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="bg-accent text-white text-[10px] font-mono font-medium tracking-wider uppercase py-2 px-3.5 rounded-full flex items-center gap-1.5 active:scale-95 hover:bg-[#ff5146] transition-all duration-200 cursor-pointer no-underline whitespace-nowrap"
+        >
           <span>Book Call</span>
           <ArrowRight size={10} />
-        </div>
-      </motion.a>
+        </a>
+      </motion.div>
     </>
   );
 };
@@ -1202,9 +1210,9 @@ export default function App() {
       <main className="relative z-10">
         <Hero />
         <MarqueeDivider />
-        <Workflows />
         <ServicesSection />
         <BuildBrief />
+        <Workflows />
         <CompetitiveEdge />
         <Manifesto />
         <FAQ />
