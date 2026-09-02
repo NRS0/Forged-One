@@ -514,10 +514,10 @@ const WorkflowCard = ({ id, title, category, description, detail }: {
 
 const ServicesSection = () => {
   const services = [
-    { n: "01", name: "Custom Software & Tools", desc: "Software built around the way you already work, instead of changing how you work to suit something you bought off the shelf.", color: "#FFFFFF", need: "software" },
-    { n: "02", name: "AI Advertising", desc: "Ads that test themselves, drop what is not working and put the money behind what is. You see what each dollar brought back.", color: "#FFFFFF", need: "" },
-    { n: "03", name: "Getting Your Data Straight", desc: "Getting your numbers out of the places they are stuck, cleaned up, and in one place you can actually look at.", color: "#FFFFFF", need: "automations" },
-    { n: "04", name: "AI Agents", desc: "Software that handles a job start to finish on its own. It reads the message, checks your system, replies, and knows when to pass it to a person.", color: "#FFFFFF", need: "agents" },
+{ n: "01", name: "Custom Software & Tools", desc: "Software built around the way you already work, instead of changing how you work to suit something you bought off the shelf.", color: "#FFFFFF", need: "software" },
+    { n: "02", name: "AI Agents", desc: "Software that handles a job start to finish on its own. It reads the message, checks your system, replies, and knows when to pass it to a person.", color: "#FFFFFF", need: "agents" },
+    { n: "03", name: "AI Advertising", desc: "Ads that test themselves, drop what is not working and put the money behind what is. You see what each dollar brought back.", color: "#FFFFFF", need: "" },
+    { n: "04", name: "Getting Your Data Straight", desc: "Getting your numbers out of the places they are stuck, cleaned up, and in one place you can actually look at.", color: "#FFFFFF", need: "automations" },
     { n: "05", name: "AI Courses", desc: "Teaching your team what these tools can and cannot do, so nobody is guessing when they make a decision.", color: "#FFFFFF", need: "" },
   ];
 
