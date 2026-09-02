@@ -376,7 +376,7 @@ const Hero = () => {
 /* ─────────────────────────────── MARQUEE ─────────────────────────────── */
 
 const MarqueeDivider = () => {
-  const items = ["Strategy", "Generative AI", "Based in Barbados", "Leadership", "Prompt Engineering", "Serving the Caribbean", "AI Ethics", "ROI Measurement", "Team Building", "ML Lifecycle"];
+  const items = ["Custom software", "AI agents", "Based in Barbados", "Fewer manual hours", "Ads that learn", "Serving the Caribbean", "Data you can trust", "Built, not bought", "Same-day quotes", "Training your team"];
   const doubled = [...items, ...items];
   return (
     <div className="-mt-6 md:-mt-12 lg:-mt-[59px] mb-12 md:mb-16 py-8 border-y border-line bg-surface marquee-container relative z-30">
@@ -423,30 +423,30 @@ const SectionHeader = ({ number, title, subtitle, className = "" }: { number: st
 const Workflows = () => {
   const cases = [
     {
-      id: "01", title: "Decision Support", category: "Strategy",
-      description: "Are You Tracking the AI Developments That Will Define Your Industry?",
-      detail: "AI is not evolving evenly, it's advancing in sharp, uneven bursts across specific domains. The developments that matter most to you are not the headlines everyone is sharing, but the niche breakthroughs that directly impact your workflows, costs, and output quality. This course builds the radar you need."
+      id: "01", title: "Knowing What Matters", category: "Strategy",
+      description: "Most of what you read about AI will never touch your business. A little of it will change it.",
+      detail: "The things that matter to you are rarely the ones making headlines. They are the small, specific tools that happen to fit the way your business runs. Our job is to know which is which, so you are not chasing every new thing or missing the one that mattered."
     },
     {
-      id: "02", title: "Customer Intelligence", category: "Marketing",
-      description: "Transform customer data into actionable insights with AI-powered analytics and predictive modeling.",
-      detail: "Leverage generative AI to understand customer behavior patterns, predict churn, and personalize engagement at scale, turning your marketing from reactive to anticipatory."
+      id: "02", title: "Knowing Your Customers", category: "Marketing",
+      description: "You already hold the answers about your customers. They are just spread across four systems and nobody has time to look.",
+      detail: "Who buys twice, who never came back, who is about to leave, and what they all have in common. Once that is in one place, you stop guessing who to call and what to say to them."
     },
     {
-      id: "03", title: "Process Autonomy", category: "Operations",
-      description: "Automate complex operational workflows while maintaining strategic oversight and quality control.",
-      detail: "From supply chain optimization to intelligent document processing, AI can handle the repetitive while you focus on the strategic. Learn to identify which processes are ripe for autonomy."
+      id: "03", title: "Taking Work Off People", category: "Operations",
+      description: "The jobs nobody enjoys and everybody does anyway: copying, chasing, retyping, checking.",
+      detail: "Invoices that file themselves, orders that reach the warehouse without a phone call, quotes that go out the same day. The work still gets done, your people just stop being the ones doing the boring half of it."
     },
     {
-      id: "04", title: "Talent Optimization", category: "HR",
-      description: "Reshape how your organization attracts, develops, and retains talent in an AI-augmented workplace.",
-      detail: "AI is redefining job roles, skill requirements, and team structures. Understand how to build teams that combine human creativity with AI capability for maximum output."
+      id: "04", title: "Your Team's Time", category: "Your Team",
+      description: "Nobody wants to be replaced. Most people want their worst two hours of the day back.",
+      detail: "The point is not fewer people. It is that the person you hired for judgment spends their day using it, instead of pasting between two spreadsheets. That is also the version your team will actually adopt."
     },
   ];
 
   return (
     <section id="workflows" className="py-16 md:py-28 px-0 md:px-0">
-      <SectionHeader number="01" title="workflows" subtitle="the workflows of elite operators" className="px-8 md:px-16" />
+      <SectionHeader number="01" title="workflows" subtitle="where ai actually earns its keep" className="px-8 md:px-16" />
       <div className="flex flex-col px-8 md:px-16 border-b border-line">
         {cases.map((c, i) => (
           <Reveal key={c.id} delay={i * 0.06}>
@@ -514,16 +514,16 @@ const WorkflowCard = ({ id, title, category, description, detail }: {
 
 const ServicesSection = () => {
   const services = [
-    { n: "01", name: "Custom Applications & Tools", desc: "Build bespoke software, internal tools, and AI-powered interfaces engineered around how your business actually operates.", color: "#FFFFFF" },
-    { n: "02", name: "AI Advertising", desc: "Scale your outreach and conversion with self-optimizing, high-impact algorithmic campaigns.", color: "#FFFFFF" },
-    { n: "03", name: "Data Pipelines", desc: "Scrape, structure, and synthesize critical industry datasets to feed your decision-making engines.", color: "#FFFFFF" },
-    { n: "04", name: "Autonomous Agents", desc: "Deploy self-governing digital workforces that execute multi-step operational loops.", color: "#FFFFFF" },
-    { n: "05", name: "AI Courses", desc: "Equip your leadership with the framework knowledge to guide technical implementation without losing strategic control.", color: "#FFFFFF" },
+    { n: "01", name: "Custom Software & Tools", desc: "Software built around the way you already work, instead of changing how you work to suit something you bought off the shelf.", color: "#FFFFFF" },
+    { n: "02", name: "AI Advertising", desc: "Ads that test themselves, drop what is not working and put the money behind what is. You see what each dollar brought back.", color: "#FFFFFF" },
+    { n: "03", name: "Getting Your Data Straight", desc: "Getting your numbers out of the places they are stuck, cleaned up, and in one place you can actually look at.", color: "#FFFFFF" },
+    { n: "04", name: "AI Agents", desc: "Software that handles a job start to finish on its own. It reads the message, checks your system, replies, and knows when to pass it to a person.", color: "#FFFFFF" },
+    { n: "05", name: "AI Courses", desc: "Teaching your team what these tools can and cannot do, so nobody is guessing when they make a decision.", color: "#FFFFFF" },
   ];
 
   return (
     <section id="services" className="py-16 md:py-28 px-0 md:px-0 border-t border-line">
-      <SectionHeader number="02" title="services" subtitle="strategic capabilities for the industrial age" className="px-8 md:px-16" />
+      <SectionHeader number="02" title="services" subtitle="what we build, in plain terms" className="px-8 md:px-16" />
 
       {/* vertical card list */}
       <div className="flex flex-col px-8 md:px-16 border-b border-line">
@@ -642,7 +642,7 @@ const CompetitiveEdge = () => {
     <section id="edge" ref={ref} className="py-16 md:py-28 px-0 md:px-0 bg-surface border-t border-line relative overflow-hidden">
       <div className="absolute top-0 right-0 w-[40vw] h-[40vw] rounded-full bg-accent/2 blur-[180px] pointer-events-none" />
 
-      <SectionHeader number="04" title="the edge" subtitle="why ai literacy is the new baseline" className="px-8 md:px-16" />
+      <SectionHeader number="04" title="the edge" subtitle="why waiting costs more than starting" className="px-8 md:px-16" />
 
       <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-10 lg:gap-12 mt-12 items-center px-8 md:px-16">
         {/* video */}
@@ -750,24 +750,24 @@ const FAQ = () => {
       a: "Barbados. We work with businesses across the Caribbean and further afield, and everything we build is delivered remotely. Being in the region means we are in your timezone and we understand how business actually runs here."
     },
     {
-      q: "Who is this course designed for?",
-      a: "Business leaders, executives, and elite operators who need to move past AI theory and master real, production-ready workflows that drive organizational efficiency."
+      q: "What does AI automation actually mean?",
+      a: "Software that does a job your team does by hand today. It reads the email, pulls the details out, puts them where they belong, and only asks a person when something is unusual. No robots, no replacing anyone: just the copying and chasing taken off the pile."
     },
     {
-      q: "How much time is required?",
-      a: "The program is designed for busy professionals. You can progress at your own pace, with structured modules that can be completed in under 4 hours per week."
+      q: "Do I need to understand any of the technology?",
+      a: "No. You tell us what takes too long and what it costs you when it goes wrong. Picking the tools is our job, and you should not have to care which one we used any more than you care which brand of wrench a mechanic owns."
     },
     {
-      q: "Do I need a technical background?",
-      a: "No. This course is built specifically for leaders. We focus on strategic implementation, high-level architectures, and decision frameworks, not writing code."
+      q: "How do we start, and what does it cost?",
+      a: "Start with the Build Brief. It takes about twelve minutes, asks what is slow or what you need built, and comes back with a scope and a price rather than a sales call. Small builds start in the low thousands; the brief asks for a budget band so we scope something real instead of guessing."
     },
     {
-      q: "What makes Forged 1 different?",
-      a: "Unlike theoretical courses, Forged 1 provides exact, operational blueprints. You will see real-world systems, cost breakdowns, and live deployments that you can clone immediately."
+      q: "How long does something like this take?",
+      a: "A single automation is usually two to four weeks from brief to running. A custom tool or an agent handling live conversations is longer, and we would rather ship a first version you can use in a month than a perfect one in six."
     },
     {
-      q: "Is there post-program support?",
-      a: "Yes. Every participant gets access to our exclusive network of alumni, ongoing workflow updates, and monthly live strategy calls to review custom implementations."
+      q: "We tried something like this before and it did not stick. Why would this be different?",
+      a: "Usually it did not stick because it was bought, not built: a subscription that assumed a way of working nobody here uses. We start from your process, agree one number that has to move, and hand over something your team can run without us."
     },
   ];
 
@@ -830,7 +830,7 @@ const Footer = ({ onOpenLegal }: { onOpenLegal: (type: "Privacy" | "Terms" | "Ac
           <span className="text-[8px] uppercase tracking-[0.4em] font-mono text-accent">AI for Business Leaders</span>
         </div>
         <p className="text-secondary text-sm leading-relaxed max-w-xs">
-          The definitive AI business leadership course for the industrial age. Master the workflows that define the next decade of industry leadership.
+          We build AI that takes real work off your team: software made to fit how you run, agents that handle the back and forth, and ads that improve themselves.
         </p>
         <p className="text-muted text-sm leading-relaxed max-w-xs mt-4">
           Based in Barbados, building for businesses across the Caribbean and beyond.
