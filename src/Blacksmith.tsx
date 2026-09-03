@@ -201,12 +201,12 @@ export const Blacksmith = () => {
         transition={{ delay: 1.2, duration: 0.5 }}
         aria-label={open ? "Close Blacksmith" : "Ask Blacksmith"}
         aria-expanded={open}
-        className={`fixed left-4 bottom-4 z-[70] items-center gap-2.5 rounded-full bg-[#161616] backdrop-blur border border-white/25 shadow-[0_8px_30px_rgba(0,0,0,0.6)] py-2 pl-2 pr-5 hover:border-accent hover:bg-[#1d1d1d] transition-colors cursor-pointer ${open ? "hidden sm:flex" : "flex"}`}
+        className={`fixed left-4 bottom-4 z-[70] items-center gap-0 sm:gap-2.5 rounded-full bg-[#161616] backdrop-blur border border-white/25 shadow-[0_8px_30px_rgba(0,0,0,0.6)] p-1.5 sm:py-2 sm:pl-2 sm:pr-5 hover:border-accent hover:bg-[#1d1d1d] transition-colors cursor-pointer ${open ? "hidden sm:flex" : "flex"}`}
       >
         <span className="flex h-9 w-9 items-center justify-center rounded-full bg-accent text-white">
           {open ? <X size={16} /> : <Hammer size={16} />}
         </span>
-        <span className="flex flex-col items-start leading-none">
+        <span className="hidden sm:flex flex-col items-start leading-none">
           <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-white">Blacksmith</span>
           <span className="mt-1 font-mono text-[8px] uppercase tracking-[0.18em] text-accent">Ask us anything</span>
         </span>
