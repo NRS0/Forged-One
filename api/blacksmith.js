@@ -103,23 +103,46 @@ function rateLimited(ip) {
   const seen = (hits.get(ip) || []).filter((t) => now - t < HOUR_MS);
   const minute = seen.filter((t) => now - t < MINUTE_MS);
 
-  if (minute.length >= RATE_PER_MINUTE) {
+  const overMinute = minute.length >= RATE_PER_MINUTE;
+  const overHour = seen.length >= RATE_PER_HOUR;
+
+  if (overMinute || overHour) {
     hits.set(ip, seen);
-    return { window: "minute", retryAfter: secondsUntil(minute[0] + MINUTE_MS, now) };
-  }
-  if (seen.length >= RATE_PER_HOUR) {
-    hits.set(ip, seen);
-    return { window: "hour", retryAfter: secondsUntil(seen[0] + HOUR_MS, now) };
+    /* Report whichever window actually holds them up. Both can be at cap at
+       once, and naming the minute then would send someone back in 58 seconds
+       when nothing frees for another half hour. */
+    const minuteFree = overMinute ? minute[0] + MINUTE_MS : 0;
+    const hourFree = overHour ? seen[0] + HOUR_MS : 0;
+    return hourFree >= minuteFree
+      ? { window: "hour", retryAfter: secondsUntil(hourFree, now) }
+      : { window: "minute", retryAfter: secondsUntil(minuteFree, now) };
   }
 
   seen.push(now);
   hits.set(ip, seen);
-  if (hits.size > 5000) hits.clear();
+  prune(now);
   return null;
 }
 
 function secondsUntil(at, now) {
   return Math.max(1, Math.ceil((at - now) / 1000));
+}
+
+/* Bound the map without handing every capped caller a fresh allowance, which
+   is what clearing it wholesale used to do. Stale callers go first; if that is
+   not enough there are 5000 genuinely active ones on a single instance, which
+   is far past what this should be deciding alone, so the oldest are dropped. */
+function prune(now) {
+  if (hits.size <= 5000) return;
+  for (const [key, times] of hits) {
+    if (!times.length || now - times[times.length - 1] >= HOUR_MS) hits.delete(key);
+  }
+  if (hits.size > 5000) {
+    const oldestFirst = [...hits.entries()].sort(
+      (a, b) => a[1][a[1].length - 1] - b[1][b[1].length - 1]
+    );
+    for (const [key] of oldestFirst.slice(0, hits.size - 5000)) hits.delete(key);
+  }
 }
 
 async function readBody(req) {
