@@ -339,8 +339,11 @@ const Hero = () => {
           </motion.span>
         </h1>
 
-        {/* Tablet-only: Uniform & well-structured headline layout */}
-        <h1 className="absolute left-12 top-[22%] hidden md:flex lg:hidden flex-col gap-2 z-10">
+        {/* Tablet-only: Uniform & well-structured headline layout.
+            A div, not an h1: CSS shows one of these three at a time, but the
+            accessibility tree sees the document, and three h1s reading "ai for
+            businesses" is three headings, not one. */}
+        <div role="presentation" className="absolute left-12 top-[22%] hidden md:flex lg:hidden flex-col gap-2 z-10">
           <motion.span 
             initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
@@ -365,10 +368,10 @@ const Hero = () => {
           >
             businesses
           </motion.span>
-        </h1>
+        </div>
 
         {/* Mobile-only: Uniform & well-structured headline layout */}
-        <h1 className="absolute left-6 top-[20%] md:hidden flex flex-col gap-1 z-10">
+        <div role="presentation" className="absolute left-6 top-[20%] md:hidden flex flex-col gap-1 z-10">
           <motion.span 
             initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
@@ -393,7 +396,7 @@ const Hero = () => {
           >
             businesses
           </motion.span>
-        </h1>
+        </div>
 
         {/* Description paragraph */}
         <motion.p 
