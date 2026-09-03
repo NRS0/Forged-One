@@ -31,10 +31,11 @@ const RATE_PER_HOUR = 40;
 const hits = new Map();
 
 /* The brief lives on its own Vercel project and its own domain, and calls this
-   endpoint rather than carrying a second copy of the key. Origins are an
-   allowlist, not a wildcard, so this stays one studio's assistant. Override
-   with BLACKSMITH_ORIGINS, comma separated, to add a local page while working. */
-const ORIGINS = (process.env.BLACKSMITH_ORIGINS || "https://brief.forgedone.xyz")
+   endpoint rather than carrying a second copy of the key. A POST from anywhere
+   else is refused outright: setting a CORS header only asks a browser not to
+   read the reply, and a script never asked. Override with BLACKSMITH_ORIGINS,
+   comma separated, to add a local page while working. */
+const ORIGINS = (process.env.BLACKSMITH_ORIGINS || "https://forgedone.xyz,https://brief.forgedone.xyz")
   .split(",")
   .map((o) => o.trim())
   .filter(Boolean);
@@ -274,6 +275,15 @@ export default async function handler(req, res) {
   if (req.method !== "POST") {
     res.setHeader("Allow", "GET, POST, OPTIONS");
     return res.status(405).json({ error: "Use POST." });
+  }
+
+  /* The real gate, before any work is done. Every generation is billed to the
+     studio's key, and the per-IP limiter below only counts one warm instance,
+     so the endpoint cannot be left open to anything that can spell curl. */
+  const origin = req.headers.origin;
+  if (!origin || ORIGINS.indexOf(origin) === -1) {
+    console.warn("Blacksmith refused an off-site POST from origin:", String(origin || "none").slice(0, 120));
+    return res.status(403).json({ error: "This assistant only answers from forgedone.xyz." });
   }
 
   if (!process.env.OLLAMA_API_KEY) {

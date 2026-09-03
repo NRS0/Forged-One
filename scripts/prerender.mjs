@@ -44,7 +44,10 @@ markup = markup.replace(/<h1(\s|>)|<\/h1>/g, (m) => {
 
 const html = readFileSync(dist, 'utf8');
 const out = html.replace(
-  /<div id="root">[\s\S]*?<\/div>\s*(?=<script)/,
+  /* Vite 6 hoists the entry script into <head>, so the old lookahead for a
+     following <script> could never match and the step exited 1. The root div
+     is unambiguous on its own. */
+  /<div id="root">[\s\S]*?<\/div>/,
   `<div id="root">${markup}</div>\n    `,
 );
 

@@ -1,4 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,200;0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,200;1,9..40,300&family=JetBrains+Mono:wght@400;500&display=swap');
+/* Fonts are linked from index.html, not imported here. An @import inside the
+   bundled stylesheet cannot be discovered until that stylesheet is parsed, so
+   the request chain runs serially and first paint waits on all of it. */
 @import "tailwindcss";
 
 @theme {

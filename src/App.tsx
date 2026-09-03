@@ -8,6 +8,42 @@ import { ArrowRight, ArrowDown, Plus, X, Menu } from "lucide-react";
 import { Blacksmith, blacksmith } from "./Blacksmith";
 import { useState, useRef, useEffect, ReactNode } from "react";
 
+/**
+ * Fetches a heavy asset only when it is worth the visitor's data.
+ *
+ * The two hero loops are 7.7 MB and 4.7 MB from a third-party host. Rendering
+ * a <video> downloads it whether or not anyone sees it, so the wide-screen
+ * check keeps the hero off phones entirely and the observer keeps the second
+ * one off anybody who never scrolls that far.
+ */
+function useWideViewport(minWidth = 768) {
+  const [wide, setWide] = useState(false);
+  useEffect(() => {
+    const q = window.matchMedia(`(min-width: ${minWidth}px)`);
+    const apply = () => setWide(q.matches);
+    apply();
+    q.addEventListener("change", apply);
+    return () => q.removeEventListener("change", apply);
+  }, [minWidth]);
+  return wide;
+}
+
+function useNearViewport<T extends Element>() {
+  const ref = useRef<T | null>(null);
+  const [near, setNear] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || near) return;
+    const io = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) { setNear(true); io.disconnect(); } },
+      { rootMargin: "300px" },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [near]);
+  return [ref, near] as const;
+}
+
 /* ─────────────────────────────── UTILS ─────────────────────────────── */
 
 function useInView() {
@@ -252,16 +288,24 @@ const Navbar = () => {
 /* ─────────────────────────────── HERO ─────────────────────────────── */
 
 const Hero = () => {
+  /* 7.7 MB of ambience is the wrong first purchase on a metered phone bundle,
+     and the section already sits on black, so a narrow screen gets the ground
+     without the download. A poster still would let this run everywhere; there
+     isn't one yet. */
+  const wide = useWideViewport();
   return (
     <section className="relative h-screen w-full overflow-hidden bg-black">
-      <video
-        autoPlay
-        loop
-        muted
-        playsInline
-        className="absolute inset-0 w-full h-full object-cover"
-        src="https://imglink.cc/cdn/yilKLu3tUf.mp4"
-      />
+      {wide && (
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          aria-hidden="true"
+          className="absolute inset-0 w-full h-full object-cover"
+          src="https://imglink.cc/cdn/yilKLu3tUf.mp4"
+        />
+      )}
 
       {/* Foreground content wrapper */}
       <div className="relative h-full w-full max-w-[1440px] mx-auto z-10">
@@ -361,21 +405,9 @@ const Hero = () => {
           we build the software that takes the repetitive half of the work off your team
         </motion.p>
 
-        {/* Stat block — top-right */}
-        <motion.div 
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
-          className="absolute right-6 md:right-24 top-[24%] sm:top-[26%] flex flex-col items-end"
-        >
-          <div className="flex items-center gap-3 justify-end">
-            <div className="hidden md:block h-px w-24 bg-white/40 rotate-[20deg]" />
-            <span className="text-3xl md:text-5xl font-medium tracking-tight text-white">3x</span>
-          </div>
-          <span className="text-[10px] md:text-sm text-white/70 mt-0.5 text-right lowercase">efficiency increase</span>
-        </motion.div>
-
-        {/* Stat block — bottom-left */}
+        {/* The three figures that used to sit here (3x efficiency, 75% outreach,
+            1st in market rank) named no market, no period and no source. What is
+            left is the one number we control and already promise on the brief. */}
         <motion.div 
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -383,24 +415,10 @@ const Hero = () => {
           className="absolute left-6 md:left-20 bottom-24 md:bottom-24 flex flex-col items-start"
         >
           <div className="flex items-center gap-3 justify-start">
-            <span className="text-3xl md:text-5xl font-medium tracking-tight text-white">75%</span>
+            <span className="text-3xl md:text-5xl font-medium tracking-tight text-white">2 days</span>
             <div className="hidden md:block h-px w-24 bg-white/40 rotate-[-20deg]" />
           </div>
-          <span className="text-[10px] md:text-sm text-white/70 mt-0.5 lowercase">boost sales outreach</span>
-        </motion.div>
-
-        {/* Stat block — bottom-right */}
-        <motion.div 
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.8 }}
-          className="absolute right-6 md:right-20 bottom-12 md:bottom-20 flex flex-col items-end"
-        >
-          <div className="flex items-center gap-3 justify-end">
-            <div className="h-px w-24 bg-white/40 rotate-[-20deg] hidden md:block" />
-            <span className="text-3xl md:text-5xl font-medium tracking-tight text-white">1st</span>
-          </div>
-          <span className="text-[10px] md:text-sm text-white/70 mt-0.5 text-right lowercase">in market rank</span>
+          <span className="text-[10px] md:text-sm text-white/70 mt-0.5 lowercase">from brief to a written scope</span>
         </motion.div>
 
         {/* Bottom gradient overlay */}
@@ -553,9 +571,12 @@ const ServicesSection = () => {
   const services = [
 { n: "01", name: "Custom Software & Tools", desc: "Software built around the way you already work, instead of changing how you work to suit something you bought off the shelf.", color: "#FFFFFF", need: "software" },
     { n: "02", name: "AI Agents", desc: "Software that handles a job start to finish on its own. It reads the message, checks your system, replies, and knows when to pass it to a person.", color: "#FFFFFF", need: "agents" },
-    { n: "03", name: "AI Advertising", desc: "Ads that test themselves, drop what is not working and put the money behind what is. You see what each dollar brought back.", color: "#FFFFFF", need: "" },
+    { n: "03", name: "AI Advertising", desc: "Ads that test themselves, drop what is not working and put the money behind what is. You see what each dollar brought back.", color: "#FFFFFF", need: "content" },
     { n: "04", name: "Getting Your Data Straight", desc: "Getting your numbers out of the places they are stuck, cleaned up, and in one place you can actually look at.", color: "#FFFFFF", need: "automations" },
-    { n: "05", name: "AI Courses", desc: "Teaching your team what these tools can and cannot do, so nobody is guessing when they make a decision.", color: "#FFFFFF", need: "" },
+    /* No track in the brief fits training a team, and twelve minutes of process
+       mapping is the wrong ask for a course enquiry, so this row books a call
+       instead of dropping someone into a form with no box for them. */
+    { n: "05", name: "AI Courses", desc: "Teaching your team what these tools can and cannot do, so nobody is guessing when they make a decision.", color: "#FFFFFF", need: "", href: "https://calendly.com/forgedonebusiness/30min", cta: "Book a call about" },
   ];
 
   return (
@@ -567,8 +588,9 @@ const ServicesSection = () => {
         {services.map((s, i) => (
           <Reveal key={s.n} delay={i * 0.04}>
             <a
-              href={`https://brief.forgedone.xyz/${s.need ? `?need=${s.need}` : ""}`}
-              aria-label={`Start a build brief for ${s.name}`}
+              href={s.href ?? `https://brief.forgedone.xyz/${s.need ? `?need=${s.need}` : ""}`}
+              aria-label={`${s.cta ?? "Start a build brief for"} ${s.name}`}
+              {...(s.href ? { target: "_blank", rel: "noopener noreferrer" } : {})}
               className="group border-t border-line flex items-center gap-4 sm:gap-6 md:gap-8 lg:gap-12 py-8 md:py-10 lg:py-12 cursor-pointer hover:bg-secondary/[0.02] transition-colors duration-500 px-0 md:px-4 no-underline">
               <span className="font-serif text-3xl md:text-5xl leading-none shrink-0" style={{ color: s.color }}>{s.n}</span>
               <div className="flex-1 flex flex-col lg:flex-row lg:items-center gap-3 lg:gap-12">
@@ -662,6 +684,7 @@ const CompetitiveEdge = () => {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
   const imgY = useTransform(scrollYProgress, [0, 1], [-30, 30]);
+  const [edgeVideo, edgeVideoNear] = useNearViewport<HTMLDivElement>();
 
   return (
     <section id="edge" ref={ref} className="py-16 md:py-28 px-0 md:px-0 bg-surface border-t border-line relative overflow-hidden">
@@ -672,16 +695,20 @@ const CompetitiveEdge = () => {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 mt-12 items-center px-8 md:px-16">
         {/* video */}
         <div className="lg:col-span-12 lg:col-span-7 mb-8 lg:mb-0">
-          <div className="relative aspect-video overflow-hidden border border-line shadow-2xl">
-            <video
-              autoPlay
-              muted
-              loop
-              playsInline
-              className="w-full h-full object-cover"
-            >
-              <source src="https://imglink.cc/cdn/uk2b_8PwJk.mp4" type="video/mp4" />
-            </video>
+          <div ref={edgeVideo} className="relative aspect-video overflow-hidden border border-line shadow-2xl bg-black">
+            {edgeVideoNear && (
+              <video
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="none"
+                aria-hidden="true"
+                className="w-full h-full object-cover"
+              >
+                <source src="https://imglink.cc/cdn/uk2b_8PwJk.mp4" type="video/mp4" />
+              </video>
+            )}
             <div className="absolute inset-0 flex items-end p-6 bg-linear-to-t from-main/60 to-transparent">
               <span className="text-[9px] uppercase tracking-[0.5em] font-mono text-accent">Visual Intelligence</span>
             </div>
@@ -694,26 +721,29 @@ const CompetitiveEdge = () => {
         <div className="lg:col-span-12 lg:col-span-5 flex flex-col justify-center gap-8 lg:gap-10">
           <Reveal>
             <p className="text-3xl md:text-4xl lg:text-[2.6rem] font-serif leading-[1.05] tracking-wide text-secondary">
-              "The greatest risk isn't <span className="text-accent">AI itself</span>, it's being the last to understand its potential."
+              The greatest risk isn't <span className="text-accent">AI itself</span>. It's being the last in your market to work out what it is actually for.
             </p>
           </Reveal>
 
           <Reveal delay={0.15}>
             <div className="flex items-center gap-4">
               <div className="w-8 h-px bg-accent" />
-              <span className="text-[9px] uppercase tracking-[0.5em] font-mono text-accent">Market Dominance</span>
+              <span className="text-[9px] uppercase tracking-[0.5em] font-mono text-accent">Where the edge is</span>
             </div>
             <p className="text-secondary font-light leading-relaxed mt-4">
-              Early adopters are capturing 3× more market share through AI-driven insights and automated decision cycles.
+              The advantage is not the model everyone can rent by the month. It is knowing which half of your own work is worth handing to it, and that answer is different in every business.
             </p>
           </Reveal>
 
           <Reveal delay={0.25}>
+            {/* Was 3x more market share / 60% cost reduction / 18mo ahead of
+                laggards, none of them sourced. These three are things we do,
+                which is a claim we can answer questions about. */}
             <div className="grid grid-cols-3 gap-4 sm:gap-8 md:gap-12">
               {[
-                { n: "3×", label: "More market share" },
-                { n: "60%", label: "Cost reduction" },
-                { n: "18mo", label: "Ahead of laggards" },
+                { n: "01", label: "Find the repetitive half" },
+                { n: "02", label: "Build only that" },
+                { n: "03", label: "Measure one number" },
               ].map(({ n, label }) => (
                 <div key={label} className="flex flex-col gap-1">
                   <span className="font-serif text-3xl sm:text-4xl text-accent leading-none">{n}</span>
