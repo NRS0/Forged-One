@@ -11,23 +11,10 @@ import { useState, useRef, useEffect, ReactNode } from "react";
 /**
  * Fetches a heavy asset only when it is worth the visitor's data.
  *
- * The two hero loops are 7.7 MB and 4.7 MB from a third-party host. Rendering
- * a <video> downloads it whether or not anyone sees it, so the wide-screen
- * check keeps the hero off phones entirely and the observer keeps the second
- * one off anybody who never scrolls that far.
+ * The second hero loop is 4.7 MB from a third-party host, and rendering a
+ * <video> downloads it whether or not anyone sees it, so this holds it back
+ * until the panel is nearly in view. A poster still covers the gap.
  */
-function useWideViewport(minWidth = 768) {
-  const [wide, setWide] = useState(false);
-  useEffect(() => {
-    const q = window.matchMedia(`(min-width: ${minWidth}px)`);
-    const apply = () => setWide(q.matches);
-    apply();
-    q.addEventListener("change", apply);
-    return () => q.removeEventListener("change", apply);
-  }, [minWidth]);
-  return wide;
-}
-
 function useNearViewport<T extends Element>() {
   const ref = useRef<T | null>(null);
   const [near, setNear] = useState(false);
@@ -288,24 +275,21 @@ const Navbar = () => {
 /* ─────────────────────────────── HERO ─────────────────────────────── */
 
 const Hero = () => {
-  /* 7.7 MB of ambience is the wrong first purchase on a metered phone bundle,
-     and the section already sits on black, so a narrow screen gets the ground
-     without the download. A poster still would let this run everywhere; there
-     isn't one yet. */
-  const wide = useWideViewport();
+  /* The poster is a real frame lifted from the loop, so the hero shows the
+     artwork from the first paint instead of a black rectangle while 7.7 MB
+     buffers. 50 KB, and it is what a phone sees until the video catches up. */
   return (
     <section className="relative h-screen w-full overflow-hidden bg-black">
-      {wide && (
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          aria-hidden="true"
-          className="absolute inset-0 w-full h-full object-cover"
-          src="https://imglink.cc/cdn/yilKLu3tUf.mp4"
-        />
-      )}
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        aria-hidden="true"
+        poster="/hero-poster.jpg"
+        className="absolute inset-0 w-full h-full object-cover"
+        src="https://imglink.cc/cdn/yilKLu3tUf.mp4"
+      />
 
       {/* Foreground content wrapper */}
       <div className="relative h-full w-full max-w-[1440px] mx-auto z-10">
@@ -699,15 +683,23 @@ const CompetitiveEdge = () => {
         {/* video */}
         <div className="lg:col-span-12 lg:col-span-7 mb-8 lg:mb-0">
           <div ref={edgeVideo} className="relative aspect-video overflow-hidden border border-line shadow-2xl bg-black">
+            {/* The still sits underneath, so this panel shows the artwork
+                immediately and the 4.7 MB only downloads once it is scrolled to. */}
+            <img
+              src="/edge-poster.jpg"
+              alt=""
+              aria-hidden="true"
+              className="absolute inset-0 w-full h-full object-cover"
+            />
             {edgeVideoNear && (
               <video
                 autoPlay
                 muted
                 loop
                 playsInline
-                preload="none"
+                poster="/edge-poster.jpg"
                 aria-hidden="true"
-                className="w-full h-full object-cover"
+                className="relative w-full h-full object-cover"
               >
                 <source src="https://imglink.cc/cdn/uk2b_8PwJk.mp4" type="video/mp4" />
               </video>
