@@ -32,27 +32,34 @@ api/blacksmith.js     the endpoint: system prompt, guards, SSE stream
 **It needs one environment variable and will not appear without it.**
 
 ```bash
-vercel env add ANTHROPIC_API_KEY production
+vercel env add OLLAMA_API_KEY production
 ```
 
-Paste a key from console.anthropic.com, then redeploy. On mount the widget
+Paste an Ollama Cloud key from ollama.com, then redeploy. On mount the widget
 calls `GET /api/blacksmith`, which reports whether the key is set; if it is
 not, the widget renders nothing at all. An unconfigured deployment therefore
 shows no button rather than a button that fails.
 
 ### How it works
 
-- `claude-opus-5`, streamed back as server-sent events so the answer appears
-  as it is written. Effort is set to `low` because this is a short-answer FAQ,
-  not a reasoning task.
+- `gemma4:31b` on Ollama Cloud, `POST https://ollama.com/api/chat` with a
+  bearer token. Ollama streams newline-delimited JSON; the function reassembles
+  those lines, including objects split across network reads, and re-emits the
+  text to the browser as server-sent events so the answer appears as it is
+  written.
+- Two optional overrides: `OLLAMA_MODEL` to run a different tag without a code
+  change, and `OLLAMA_ENDPOINT` to point at a self-hosted Ollama instead of the
+  cloud. `OLLAMA_TIMEOUT_MS` exists for tests.
 - The system prompt lives server-side only. It carries the services, the four
   brief tracks with their deep links, the location, the contact details, and
   the house voice, and it forbids invented prices, timelines, clients and
   statistics.
-- Refusal fallbacks are on (`fallbacks: "default"`), so a declined answer is
-  retried on another model inside the same call rather than dying.
 - Guards: POST only, at most 20 turns and 1500 characters a message, roles
-  restricted to user and assistant, 40 messages an hour per IP.
+  restricted to user and assistant, 40 messages an hour per IP, and a 60 second
+  ceiling on the upstream call.
+- Failures reach the visitor as a readable line: a rejected key, an unreachable
+  model, a hung upstream and an empty answer each say what to do next rather
+  than hanging or leaking a stack trace.
 - The conversation lives in `sessionStorage` (`forgedone.blacksmith.v1`), so it
   survives a page navigation but not a new tab. Clear wipes it.
 

@@ -6,16 +6,19 @@
  * back as server-sent events so the widget can render it as it arrives.
  *
  * Env:
- *   ANTHROPIC_API_KEY   sk-ant-... from console.anthropic.com
+ *   OLLAMA_API_KEY   an Ollama Cloud key from ollama.com
+ *   OLLAMA_MODEL     optional, defaults to gemma4:31b
+ *   OLLAMA_ENDPOINT  optional, to point at a self-hosted Ollama instead
  *
  * Written as .js on purpose: tsconfig has no `include`, so a .ts file here
  * would be pulled into `npm run lint` (tsc --noEmit) with DOM-only settings.
  */
 
-import Anthropic from "@anthropic-ai/sdk";
-
-const MODEL = "claude-opus-5";
-const MAX_TOKENS = 700;
+/* Override to point at a self-hosted Ollama, or at a stub in tests. */
+const ENDPOINT = process.env.OLLAMA_ENDPOINT || "https://ollama.com/api/chat";
+const MODEL = process.env.OLLAMA_MODEL || "gemma4:31b";
+const MAX_TOKENS = 400;
+const UPSTREAM_TIMEOUT_MS = Number(process.env.OLLAMA_TIMEOUT_MS) || 60000;
 
 /* Keep a lid on abuse and on the bill. Serverless instances come and go, so
    this stops a burst from one machine rather than a determined flood. */
@@ -98,7 +101,7 @@ export default async function handler(req, res) {
   /* The widget asks this on mount and stays hidden if the answer is no, so an
      unconfigured deployment shows nothing rather than a button that fails. */
   if (req.method === "GET") {
-    return res.status(200).json({ ready: Boolean(process.env.ANTHROPIC_API_KEY) });
+    return res.status(200).json({ ready: Boolean(process.env.OLLAMA_API_KEY), model: MODEL });
   }
 
   if (req.method !== "POST") {
@@ -106,8 +109,8 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Use POST." });
   }
 
-  if (!process.env.ANTHROPIC_API_KEY) {
-    console.error("ANTHROPIC_API_KEY is not set");
+  if (!process.env.OLLAMA_API_KEY) {
+    console.error("OLLAMA_API_KEY is not set");
     return res.status(503).json({ error: "Blacksmith is not switched on yet." });
   }
 
@@ -133,8 +136,6 @@ export default async function handler(req, res) {
     });
   }
 
-  const client = new Anthropic();
-
   res.writeHead(200, {
     "Content-Type": "text/event-stream; charset=utf-8",
     "Cache-Control": "no-cache, no-transform",
@@ -149,43 +150,96 @@ export default async function handler(req, res) {
   let closed = false;
   req.on("close", () => { closed = true; });
 
+  const cancel = new AbortController();
+  const timer = setTimeout(() => cancel.abort(), UPSTREAM_TIMEOUT_MS);
+
   try {
-    const stream = client.beta.messages.stream({
-      model: MODEL,
-      max_tokens: MAX_TOKENS,
-      betas: ["server-side-fallback-2026-07-01"],
-      fallbacks: "default",
-      output_config: { effort: "low" },
-      system: [{ type: "text", text: SYSTEM, cache_control: { type: "ephemeral" } }],
-      messages,
+    const upstream = await fetch(ENDPOINT, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${process.env.OLLAMA_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      signal: cancel.signal,
+      body: JSON.stringify({
+        model: MODEL,
+        stream: true,
+        options: { temperature: 0.4, num_predict: MAX_TOKENS },
+        messages: [{ role: "system", content: SYSTEM }, ...messages],
+      }),
     });
 
-    for await (const event of stream) {
-      if (closed) break;
-      if (event.type === "content_block_delta" && event.delta.type === "text_delta") {
-        send("delta", { text: event.delta.text });
+    if (!upstream.ok || !upstream.body) {
+      const detail = await upstream.text().catch(() => "");
+      console.error("Ollama rejected the call:", upstream.status, detail.slice(0, 500));
+      send("error", {
+        message:
+          upstream.status === 401
+            ? "My key is not being accepted. Email forgedonebusiness@gmail.com and someone will look."
+            : upstream.status === 404
+              ? "The model I run on is not reachable right now. Email forgedonebusiness@gmail.com."
+              : "Something went wrong at my end. Email forgedonebusiness@gmail.com and we'll pick it up.",
+      });
+      send("done", { stop: "error" });
+      return;
+    }
+
+    /* Ollama streams newline-delimited JSON, one object per chunk, so this
+       reassembles lines across arbitrary network boundaries. */
+    const reader = upstream.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = "";
+    let sawText = false;
+
+    for (;;) {
+      if (closed) { await reader.cancel().catch(() => {}); break; }
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split("\n");
+      buffer = lines.pop() || "";
+
+      for (const line of lines) {
+        const trimmed = line.trim();
+        if (!trimmed) continue;
+        let chunk;
+        try {
+          chunk = JSON.parse(trimmed);
+        } catch {
+          continue; /* a partial or keep-alive line; the next read completes it */
+        }
+        if (chunk.error) {
+          console.error("Ollama stream error:", chunk.error);
+          send("error", { message: "Something went wrong at my end. Email forgedonebusiness@gmail.com." });
+          continue;
+        }
+        const text = chunk.message?.content;
+        if (text) {
+          sawText = true;
+          send("delta", { text });
+        }
+        if (chunk.done && !closed) send("done", { stop: chunk.done_reason || "stop" });
       }
     }
 
-    if (!closed) {
-      const final = await stream.finalMessage();
-      if (final.stop_reason === "refusal") {
-        send("error", {
-          message: "I can't answer that one. Email forgedonebusiness@gmail.com and a person will.",
-        });
-      }
-      send("done", { stop: final.stop_reason });
+    if (!closed && !sawText) {
+      send("error", { message: "I came back empty on that one. Try asking it a different way." });
+      send("done", { stop: "empty" });
     }
   } catch (err) {
-    console.error("Blacksmith failed:", err);
+    const aborted = err?.name === "AbortError";
+    console.error("Blacksmith failed:", aborted ? `timed out after ${UPSTREAM_TIMEOUT_MS}ms` : err);
     if (!closed) {
-      const message =
-        err instanceof Anthropic.RateLimitError
-          ? "Too many questions at once. Try again in a minute."
-          : "Something went wrong at my end. Email forgedonebusiness@gmail.com and we'll pick it up.";
-      send("error", { message });
+      send("error", {
+        message: aborted
+          ? "That took too long to answer. Try a shorter question, or email forgedonebusiness@gmail.com."
+          : "Something went wrong at my end. Email forgedonebusiness@gmail.com and we'll pick it up.",
+      });
+      send("done", { stop: "error" });
     }
   } finally {
+    clearTimeout(timer);
     if (!closed) res.end();
   }
 }
