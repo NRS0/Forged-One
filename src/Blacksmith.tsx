@@ -81,6 +81,7 @@ export const Blacksmith = () => {
   const scroller = useRef<HTMLDivElement | null>(null);
   const input = useRef<HTMLTextAreaElement | null>(null);
   const abort = useRef<AbortController | null>(null);
+  const hydrated = useRef(false);
 
   useEffect(() => {
     let live = true;
@@ -96,7 +97,16 @@ export const Blacksmith = () => {
   }, []);
 
   useEffect(() => setMessages(load()), []);
-  useEffect(() => { if (messages.length) save(messages); }, [messages]);
+  useEffect(() => {
+    /* Skip the mount pass, which runs before the stored thread has landed. */
+    if (!hydrated.current) { hydrated.current = true; return; }
+    if (messages.length) save(messages);
+    else try { sessionStorage.removeItem(STORE_KEY); } catch { /* nothing to clear */ }
+  }, [messages]);
+
+  /* A refusal explains one moment. Closing the panel ends it, so the line
+     should not still be sitting there when someone comes back later. */
+  useEffect(() => { if (!open) setError(null); }, [open]);
 
   /* stick to the bottom as the answer streams in */
   useEffect(() => {
@@ -132,6 +142,7 @@ export const Blacksmith = () => {
 
     setError(null);
     setDraft("");
+    let refused = false;
     const history = [...messages, { role: "user" as const, content: text }];
     setMessages([...history, { role: "assistant", content: "" }]);
     setStreaming(true);
@@ -186,17 +197,27 @@ export const Blacksmith = () => {
       }
     } catch (err) {
       if ((err as Error).name !== "AbortError") {
+        refused = true;
         setError((err as Error).message || "Something went wrong at my end.");
       }
     } finally {
       abort.current = null;
       setStreaming(false);
-      /* drop the placeholder if nothing ever arrived */
-      setMessages((prev) =>
-        prev.length && prev[prev.length - 1].role === "assistant" && !prev[prev.length - 1].content
-          ? prev.slice(0, -1)
-          : prev,
-      );
+      setMessages((prev) => {
+        let next = prev;
+        /* drop the placeholder if nothing ever arrived */
+        if (next.length && next[next.length - 1].role === "assistant" && !next[next.length - 1].content) {
+          next = next.slice(0, -1);
+        }
+        /* A question that was refused was never asked. Leaving it in the thread
+           makes it look ignored, and it would be replayed on the next attempt
+           as a second user turn. Take it back out. */
+        if (refused && next.length && next[next.length - 1].role === "user" && next[next.length - 1].content === text) {
+          next = next.slice(0, -1);
+        }
+        return next;
+      });
+      if (refused) setDraft((d) => d || text);
     }
   }, [messages, streaming]);
 
@@ -323,7 +344,7 @@ export const Blacksmith = () => {
               )}
 
               {error && (
-                <p className="rounded-xl border border-accent/40 bg-accent/5 px-3 py-2 text-sm text-secondary">
+                <p role="alert" className="rounded-xl border border-accent/40 bg-accent/5 px-3 py-2 text-sm text-secondary">
                   {error}
                 </p>
               )}
