@@ -22,7 +22,7 @@ const STORE_KEY = "forgedone.blacksmith.v1";
 const MAX_CHARS = 1500;
 
 const OPENERS = [
-  "What does Forged.One actually do?",
+  "What does Forged One actually do?",
   "What is an AI agent?",
   "How do I get a quote?",
 ];
@@ -241,7 +241,7 @@ export const Blacksmith = () => {
             exit={{ opacity: 0, y: 16, scale: 0.98 }}
             transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
             role="dialog"
-            aria-label="Blacksmith, the Forged.One assistant"
+            aria-label="Blacksmith, the Forged One assistant"
             className="fixed z-[69] flex flex-col overflow-hidden border border-line bg-surface shadow-2xl
                        inset-x-0 bottom-0 top-0 rounded-none
                        sm:inset-auto sm:left-4 sm:bottom-20 sm:top-auto sm:w-[380px] sm:h-[min(560px,calc(100vh-8rem))] sm:rounded-2xl"
@@ -251,7 +251,7 @@ export const Blacksmith = () => {
               <div>
                 <p className="font-serif text-xl tracking-wide text-secondary leading-none">BLACKSMITH</p>
                 <p className="mt-1 font-mono text-[9px] uppercase tracking-[0.25em] text-accent">
-                  Forged.One, on call
+                  Forged One, on call
                 </p>
               </div>
               <div className="flex items-center gap-2">

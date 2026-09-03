@@ -1,5 +1,5 @@
 /**
- * FORGED 1, AI for Business Leaders
+ * Forged One, AI for Business Leaders
  * Redesigned: assertive minimalism inspired by missioncontrol.co
  */
 
@@ -108,7 +108,7 @@ const Navbar = () => {
           >
             <img
               src="https://imglink.cc/cdn/-G5PGyVsCf.png"
-              alt="FORGED 1 Logo"
+              alt="Forged One logo"
               className="h-6 w-auto object-contain invert brightness-200"
               referrerPolicy="no-referrer"
             />
@@ -118,7 +118,7 @@ const Navbar = () => {
           <div className="flex items-center bg-neutral-900/90 backdrop-blur rounded-full px-4 py-2">
             <img
               src="https://imglink.cc/cdn/-G5PGyVsCf.png"
-              alt="FORGED 1 Logo"
+              alt="Forged One logo"
               className="h-6 w-auto object-contain invert brightness-200"
               referrerPolicy="no-referrer"
             />
@@ -183,7 +183,7 @@ const Navbar = () => {
             <div className="flex items-center justify-between">
               <img 
                 src="https://imglink.cc/cdn/-G5PGyVsCf.png" 
-                alt="FORGED 1 Logo" 
+                alt="Forged One logo" 
                 className="h-6 w-auto object-contain invert brightness-200"
                 referrerPolicy="no-referrer"
               />
@@ -847,7 +847,7 @@ const Footer = ({ onOpenLegal }: { onOpenLegal: (type: "Privacy" | "Terms" | "Ac
           <div className="flex items-center">
             <img 
               src="https://imglink.cc/cdn/-G5PGyVsCf.png" 
-              alt="FORGED 1 Logo" 
+              alt="Forged One logo" 
               className="h-6 w-auto object-contain invert brightness-200"
               referrerPolicy="no-referrer"
             />
