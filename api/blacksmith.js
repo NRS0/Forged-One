@@ -235,12 +235,20 @@ function clean(messages) {
   return out;
 }
 
-/** Echoes the origin back only when it is one we published to. */
+/**
+ * Echoes the origin back only when it is one we published to.
+ *
+ * Vary and no-store go on every reply, matched or not. The health probe was
+ * cacheable, so an edge that had already stored the answer to a request with
+ * no Origin handed that copy to the brief page, without the header, and the
+ * browser blocked it. curl never saw it because curl kept missing the cache.
+ */
 function cors(req, res) {
+  res.setHeader("Vary", "Origin");
+  res.setHeader("Cache-Control", "no-store");
   const origin = req.headers.origin;
   if (origin && ORIGINS.indexOf(origin) !== -1) {
     res.setHeader("Access-Control-Allow-Origin", origin);
-    res.setHeader("Vary", "Origin");
   }
 }
 
