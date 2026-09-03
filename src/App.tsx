@@ -975,15 +975,16 @@ const LegalModal = ({ isOpen, onClose, type }: { isOpen: boolean, onClose: () =>
   const content = {
     Privacy: {
       title: "Privacy Policy",
-      text: `Forged One · forgedone.xyz · Last updated: April 13, 2025
+      text: `Forged One · forgedone.xyz · Last updated: 3 September 2026
 
 1. Who We Are
-Forged One ("we", "us", "our") operates the website at forgedone.xyz. This policy explains what information we collect, how we use it, and your rights regarding it.
+Forged One ("we", "us", "our") operates forgedone.xyz and the build brief at brief.forgedone.xyz. This policy covers both, and explains what information we collect, how we use it, and your rights regarding it.
 
 2. Information We Collect
 Information you provide directly:
-• Contact details (name, email) if you fill out a contact or sign-up form
-• Any messages or communications you send us
+• Contact details (name, role, business, email, phone) if you fill out a form or send us a message
+• The answers you give in the build brief, which describe how your business operates. These stay in your own browser until you press Send, and are then emailed to us
+• Anything you type to the Blacksmith assistant
 
 Information collected automatically:
 • IP address and general location (country/region)
@@ -993,21 +994,28 @@ Information collected automatically:
 • Device type and operating system
 
 Cookies and similar technologies:
-We use essential cookies to operate the site and, where applicable, analytics cookies to understand how visitors use it. You can disable cookies in your browser settings, though some site functionality may be affected.
+We do not use advertising or tracking cookies. The build brief stores your answers in your own browser so you can leave and come back; an untouched draft is discarded after thirty days, and you can clear it yourself at any time from the button on the last step. Our page analytics are cookieless and count visits rather than people.
 
 3. How We Use Your Information
 • To operate and improve the website
 • To respond to enquiries you send us
 • To monitor security and prevent abuse
-• To analyse usage patterns through aggregated, anonymised analytics
+• To analyse usage patterns through aggregated, cookieless analytics
 
 We do not sell, rent, or trade your personal information to third parties.
 
 4. Third-Party Services
-We may use third-party tools such as hosting providers and analytics services (e.g. Cloudflare, Google Analytics, or similar). These services may process data on our behalf under their own privacy policies.
+These are the services that actually handle your data, and no others:
+• Vercel, which hosts both sites, runs the functions behind them and provides the cookieless page analytics
+• Resend, which delivers a submitted build brief to our inbox by email
+• Ollama, which hosts the model behind the Blacksmith assistant and receives what you type to it. Your build brief answers are never sent to it
+
+Each processes data on our behalf under its own privacy policy. We do not sell, rent or trade your information, and nobody outside Forged One is copied on a brief.
 
 5. Data Retention
 We retain personal data only as long as necessary for the purposes described above, or as required by law. Analytics data is typically retained in aggregated form.
+
+We will sign a non-disclosure agreement before any real business data changes hands.
 
 6. Your Rights
 Depending on your location, you may have the right to:
@@ -1033,7 +1041,7 @@ Questions about this policy? Reach us at: forgedonebusiness@gmail.com`
     },
     Terms: {
       title: "Terms of Use",
-      text: `Forged One · forgedone.xyz · Last updated: April 13, 2025
+      text: `Forged One · forgedone.xyz · Last updated: 3 September 2026
 
 1. Acceptance of Terms
 By accessing or using forgedone.xyz ("the Site"), you agree to be bound by these Terms of Use. If you do not agree, please do not use the Site.
@@ -1076,7 +1084,7 @@ Questions about these Terms? Contact us at: forgedonebusiness@gmail.com`
     },
     Accessibility: {
       title: "Accessibility Statement",
-      text: `Forged One · forgedone.xyz · Last updated: April 13, 2025
+      text: `Forged One · forgedone.xyz · Last updated: 3 September 2026
 
 Our Commitment
 Forged One is committed to ensuring that forgedone.xyz is accessible to everyone, including people with disabilities. We aim to meet the Web Content Accessibility Guidelines (WCAG) 2.1 at Level AA as our baseline standard.
