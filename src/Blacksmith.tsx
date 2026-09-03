@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { Hammer, X, ArrowUp, Square } from "lucide-react";
+import { LiquidMetalButton } from "./components/ui/liquid-metal-button";
 
 /* Blacksmith: the assistant in the bottom-left corner.
    Talks to /api/blacksmith, which streams the reply back as SSE. */
@@ -236,23 +237,26 @@ export const Blacksmith = () => {
   return (
     <>
       {/* the button */}
-      <motion.button
-        onClick={() => setOpen((o) => !o)}
+      <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 1.2, duration: 0.5 }}
-        aria-label={open ? "Close Blacksmith" : "Ask Blacksmith"}
-        aria-expanded={open}
-        className={`fixed left-4 bottom-4 z-[70] items-center gap-2.5 rounded-full bg-[#161616] backdrop-blur border border-white/25 shadow-[0_8px_30px_rgba(0,0,0,0.6)] py-2 pl-2 pr-5 hover:border-accent hover:bg-[#1d1d1d] transition-colors cursor-pointer ${open ? "hidden" : "hidden sm:flex"}`}
+        className={`fixed left-4 bottom-4 z-[70] ${open ? "hidden" : "hidden sm:block"}`}
       >
-        <span className="flex h-9 w-9 items-center justify-center rounded-full bg-accent text-white">
-          {open ? <X size={16} /> : <Hammer size={16} />}
-        </span>
-        <span className="flex flex-col items-start leading-none">
-          <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-white">Blacksmith</span>
-          <span className="mt-1 font-mono text-[8px] uppercase tracking-[0.18em] text-accent">Ask us anything</span>
-        </span>
-      </motion.button>
+        <LiquidMetalButton
+          onClick={() => setOpen((o) => !o)}
+          aria-label={open ? "Close Blacksmith" : "Ask Blacksmith"}
+          aria-expanded={open}
+        >
+          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-accent text-white">
+            {open ? <X size={16} /> : <Hammer size={16} />}
+          </span>
+          <span className="flex flex-col items-start leading-none">
+            <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-white [text-shadow:0_1px_2px_rgba(0,0,0,.5)]">Blacksmith</span>
+            <span className="mt-1 font-mono text-[8px] uppercase tracking-[0.18em] text-accent">Ask us anything</span>
+          </span>
+        </LiquidMetalButton>
+      </motion.div>
 
       <AnimatePresence>
         {open && (

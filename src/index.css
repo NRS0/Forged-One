@@ -3,6 +3,13 @@
    the request chain runs serially and first paint waits on all of it. */
 @import "tailwindcss";
 
+/* Liquid metal launcher (src/components/ui/liquid-metal-button.tsx). The
+   shader library appends a canvas it sizes itself; these pin it to the rim. */
+.liquid-metal-host canvas{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;display:block!important;border-radius:9999px!important}
+.liquid-metal-ripple{animation:liquid-metal-ripple .6s ease-out;transform:translate(-50%,-50%)}
+@keyframes liquid-metal-ripple{from{transform:translate(-50%,-50%) scale(0);opacity:.6}to{transform:translate(-50%,-50%) scale(4);opacity:0}}
+@media (prefers-reduced-motion:reduce){.liquid-metal-ripple{animation:none;opacity:0}}
+
 @theme {
   --font-serif: "Bebas Neue", sans-serif;
   --font-sans: "DM Sans", sans-serif;
