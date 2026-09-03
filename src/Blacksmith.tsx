@@ -7,6 +7,17 @@ import { Hammer, X, ArrowUp, Square } from "lucide-react";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
+/* The navbar logo is the trigger on phones, so it needs to know whether
+   Blacksmith is configured and how to open it, without threading state
+   through App. */
+const readyListeners = new Set<() => void>();
+export const blacksmith = {
+  ready: false,
+  open() { window.dispatchEvent(new CustomEvent("blacksmith:open")); },
+  subscribe(fn: () => void) { readyListeners.add(fn); return () => { readyListeners.delete(fn); }; },
+  announce(value: boolean) { blacksmith.ready = value; readyListeners.forEach((fn) => fn()); },
+};
+
 const STORE_KEY = "forgedone.blacksmith.v1";
 const MAX_CHARS = 1500;
 
@@ -75,8 +86,12 @@ export const Blacksmith = () => {
     let live = true;
     fetch("/api/blacksmith")
       .then((r) => (r.ok ? r.json() : { ready: false }))
-      .then((d) => live && setReady(Boolean(d.ready)))
-      .catch(() => live && setReady(false));
+      .then((d) => {
+        if (!live) return;
+        setReady(Boolean(d.ready));
+        blacksmith.announce(Boolean(d.ready));
+      })
+      .catch(() => { if (live) { setReady(false); blacksmith.announce(false); } });
     return () => { live = false; };
   }, []);
 
@@ -92,6 +107,12 @@ export const Blacksmith = () => {
   useEffect(() => {
     if (open) setTimeout(() => input.current?.focus(), 120);
   }, [open]);
+
+  useEffect(() => {
+    const onOpen = () => setOpen(true);
+    window.addEventListener("blacksmith:open", onOpen);
+    return () => window.removeEventListener("blacksmith:open", onOpen);
+  }, []);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(false); };
@@ -201,12 +222,12 @@ export const Blacksmith = () => {
         transition={{ delay: 1.2, duration: 0.5 }}
         aria-label={open ? "Close Blacksmith" : "Ask Blacksmith"}
         aria-expanded={open}
-        className={`fixed left-4 bottom-4 z-[70] items-center gap-0 sm:gap-2.5 rounded-full bg-[#161616] backdrop-blur border border-white/25 shadow-[0_8px_30px_rgba(0,0,0,0.6)] p-1.5 sm:py-2 sm:pl-2 sm:pr-5 hover:border-accent hover:bg-[#1d1d1d] transition-colors cursor-pointer ${open ? "hidden sm:flex" : "flex"}`}
+        className={`fixed left-4 bottom-4 z-[70] items-center gap-2.5 rounded-full bg-[#161616] backdrop-blur border border-white/25 shadow-[0_8px_30px_rgba(0,0,0,0.6)] py-2 pl-2 pr-5 hover:border-accent hover:bg-[#1d1d1d] transition-colors cursor-pointer ${open ? "hidden" : "hidden sm:flex"}`}
       >
         <span className="flex h-9 w-9 items-center justify-center rounded-full bg-accent text-white">
           {open ? <X size={16} /> : <Hammer size={16} />}
         </span>
-        <span className="hidden sm:flex flex-col items-start leading-none">
+        <span className="flex flex-col items-start leading-none">
           <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-white">Blacksmith</span>
           <span className="mt-1 font-mono text-[8px] uppercase tracking-[0.18em] text-accent">Ask us anything</span>
         </span>

@@ -5,7 +5,7 @@
 
 import { motion, useScroll, useTransform, AnimatePresence, useMotionValue, animate } from "motion/react";
 import { ArrowRight, ArrowDown, Plus, X, Menu } from "lucide-react";
-import { Blacksmith } from "./Blacksmith";
+import { Blacksmith, blacksmith } from "./Blacksmith";
 import { useState, useRef, useEffect, ReactNode } from "react";
 
 /* ─────────────────────────────── UTILS ─────────────────────────────── */
@@ -80,6 +80,10 @@ const Counter = ({ value, duration = 2.5 }: { value: string, duration?: number }
 /* ─────────────────────────────── NAVBAR ─────────────────────────────── */
 
 const Navbar = () => {
+  /* On phones the logo is the way into Blacksmith, so the bottom edge keeps
+     just the two calls to action. */
+  const [askable, setAskable] = useState(blacksmith.ready);
+  useEffect(() => blacksmith.subscribe(() => setAskable(blacksmith.ready)), []);
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -94,15 +98,32 @@ const Navbar = () => {
   return (
     <>
       <nav className={`fixed z-50 px-6 md:px-10 left-0 right-0 top-0 flex items-center justify-between gap-4 transition-all duration-300 ${scrolled ? "pt-4 pb-4" : "pt-6"} bg-transparent`}>
-        {/* Left pill */}
-        <div className="flex items-center bg-neutral-900/90 backdrop-blur rounded-full px-4 py-2">
-          <img 
-            src="https://imglink.cc/cdn/-G5PGyVsCf.png" 
-            alt="FORGED 1 Logo" 
-            className="h-6 w-auto object-contain invert brightness-200"
-            referrerPolicy="no-referrer"
-          />
-        </div>
+        {/* Left pill. On phones this is also the way to reach Blacksmith. */}
+        {askable ? (
+          <button
+            onClick={() => blacksmith.open()}
+            aria-label="Ask Blacksmith"
+            title="Ask Blacksmith"
+            className="relative flex items-center bg-neutral-900/90 backdrop-blur rounded-full px-4 py-2 sm:cursor-default cursor-pointer"
+          >
+            <img
+              src="https://imglink.cc/cdn/-G5PGyVsCf.png"
+              alt="FORGED 1 Logo"
+              className="h-6 w-auto object-contain invert brightness-200"
+              referrerPolicy="no-referrer"
+            />
+            <span className="sm:hidden absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full bg-accent ring-2 ring-main" />
+          </button>
+        ) : (
+          <div className="flex items-center bg-neutral-900/90 backdrop-blur rounded-full px-4 py-2">
+            <img
+              src="https://imglink.cc/cdn/-G5PGyVsCf.png"
+              alt="FORGED 1 Logo"
+              className="h-6 w-auto object-contain invert brightness-200"
+              referrerPolicy="no-referrer"
+            />
+          </div>
+        )}
 
         {/* Center pill (hidden on mobile) */}
         <div className="hidden lg:flex items-center gap-1 bg-neutral-900/90 backdrop-blur rounded-full px-3 py-2">
