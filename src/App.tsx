@@ -5,6 +5,7 @@
 
 import { motion, useScroll, useTransform, AnimatePresence, useMotionValue, animate } from "motion/react";
 import { ArrowRight, ArrowDown, Plus, X, Menu } from "lucide-react";
+import { Blacksmith } from "./Blacksmith";
 import { useState, useRef, useEffect, ReactNode } from "react";
 
 /* ─────────────────────────────── UTILS ─────────────────────────────── */
@@ -1187,6 +1188,7 @@ export default function App() {
     <div className="min-h-screen overflow-x-clip">
       <Navbar />
       <FloatingCTA />
+      <Blacksmith />
       <main className="relative z-10">
         <Hero />
         <MarqueeDivider />
