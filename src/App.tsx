@@ -136,6 +136,16 @@ const Navbar = () => {
               referrerPolicy="no-referrer"
             />
             <span className="sm:hidden absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full bg-accent ring-2 ring-main" />
+            {/* On a phone the logo is the only way into Blacksmith, and a 10px
+                dot does not say so. The tag does. White on the accent is
+                3.6:1, so the label is near-black at 5.8:1. Hidden from screen
+                readers because the button's own aria-label already says it. */}
+            <span
+              aria-hidden="true"
+              className="sm:hidden absolute left-1 top-full mt-2 whitespace-nowrap rounded-full bg-accent px-2 py-[3px] font-mono text-[9.5px] uppercase tracking-[0.14em] text-main shadow-[0_2px_10px_rgba(0,0,0,0.45)]"
+            >
+              AI assistant
+            </span>
           </button>
         ) : (
           <div className="flex items-center bg-neutral-900/90 backdrop-blur rounded-full px-4 py-2">
