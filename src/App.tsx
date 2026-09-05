@@ -135,24 +135,30 @@ const Navbar = () => {
               className="h-6 w-auto object-contain invert brightness-200"
               referrerPolicy="no-referrer"
             />
-            <span className="sm:hidden absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full bg-accent ring-2 ring-main" />
             {/* On a phone the logo is the only way into Blacksmith, and a 10px
-                dot does not say so. This does: a message bubble with its tail
-                pointing back at the logo it belongs to, so it reads as the
-                logo speaking rather than as a badge stuck to the page.
+                dot never said so. A message bubble does, with its tail pointing
+                back at the logo, so it reads as the logo speaking.
 
-                Sentence case in the body face on purpose. Uppercase mono
-                reads as a system label; a text bubble should look like
-                something someone sent you.
+                It is a dark pill, not an orange one, and that is the whole
+                design decision. The hero behind it is orange lava: the accent
+                measures 1.05:1 against the mid tones of it, so an orange
+                bubble is not a weak shape, it is no shape at all. The dark
+                pill separates at 4.4:1 to 7.5:1, which is exactly why every
+                other element in this nav is one. The hairline border carries
+                it over the dark patches, where the fill alone would vanish,
+                and the accent survives as a small dot instead of a slab.
 
-                White on the accent is 3.6:1, so the type is near-black at
-                5.8:1. Hidden from screen readers because the button's own
-                aria-label already says Ask Blacksmith, and hearing it twice
-                helps nobody. */}
-            <span aria-hidden="true" className="sm:hidden absolute left-1.5 top-full mt-2.5">
-              <span className="absolute left-3 -top-[3px] h-2.5 w-2.5 rotate-45 rounded-[2px] bg-accent" />
-              <span className="relative block whitespace-nowrap rounded-[14px] rounded-tl-[5px] bg-accent px-3 py-[5px] text-[11.5px] font-medium leading-none text-main shadow-[0_3px_12px_rgba(0,0,0,0.4)]">
-                AI assistant
+                The orange dot that used to sit on the logo is gone. Two orange
+                marks twenty pixels apart, saying the same thing once each, was
+                the noise that made this look stuck on rather than designed.
+
+                White on the pill is 15:1. aria-hidden, because the button
+                already announces itself as Ask Blacksmith. */}
+            <span aria-hidden="true" className="assistant-bubble sm:hidden absolute left-0 top-full mt-2.5">
+              <span className="absolute left-4 -top-[5px] h-2.5 w-2.5 rotate-45 rounded-tl-[3px] border-l border-t border-white/15 bg-neutral-900/90" />
+              <span className="relative flex items-center gap-1.5 whitespace-nowrap rounded-[14px] rounded-tl-[6px] border border-white/15 bg-neutral-900/90 px-2.5 py-[5px] backdrop-blur">
+                <span className="h-1.5 w-1.5 rounded-full bg-accent" />
+                <span className="text-[11.5px] font-medium leading-none text-secondary">AI assistant</span>
               </span>
             </span>
           </button>
