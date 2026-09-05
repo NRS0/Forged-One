@@ -6,19 +6,12 @@
 /* Liquid metal launcher (src/components/ui/liquid-metal-button.tsx). The
    shader library appends a canvas it sizes itself; these pin it to the rim. */
 .liquid-metal-host canvas{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;display:block!important;border-radius:9999px!important}
-/* The bubble fades up on arrival, and that is all the animation is: decoration
-   over a resting state that is already visible.
-
-   It was written with a delay and fill:both, which parks the element at
-   opacity 0 until the timeline reaches it. Measured in a throttled tab, the
-   timeline did not advance at all: currentTime stuck at 0 forty seconds in,
-   with the bubble invisible. Whether that throttling happens on a real phone
-   or only in a preview pane, the label's whole job is to be seen, so it must
-   not depend on an animation running. No delay, no fill, and opacity is not
-   animated at all: a frozen timeline can hold a transform, but it can no
-   longer hold this thing invisible. */
-.assistant-bubble{animation:assistant-bubble-in .5s cubic-bezier(.16,1,.3,1)}
-@keyframes assistant-bubble-in{from{transform:translateY(-6px)}to{transform:none}}
+/* The bubble's showing and hiding is a transition driven by a class, not a
+   keyframe animation. That distinction matters here: an animation with
+   fill:both parks the element at its start frame until the timeline advances,
+   and in a throttled tab that timeline never advanced, leaving the label
+   invisible forty seconds in. A transition always resolves to whatever the
+   class says, so the worst a stalled frame can do is arrive late. */
 @media (prefers-reduced-motion:reduce){.assistant-bubble{animation:none}}
 .liquid-metal-ripple{animation:liquid-metal-ripple .6s ease-out;transform:translate(-50%,-50%)}
 @keyframes liquid-metal-ripple{from{transform:translate(-50%,-50%) scale(0);opacity:.6}to{transform:translate(-50%,-50%) scale(4);opacity:0}}

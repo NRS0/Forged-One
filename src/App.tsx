@@ -110,12 +110,32 @@ const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
+  /* The assistant label says its piece and then gets out of the way, rather
+     than sitting on the hero forever. Any scroll brings it back, so it is
+     still there the moment someone starts looking around, and it retires
+     again once they settle.
+
+     It starts shown, deliberately. If this effect never runs, the label is
+     simply always there, which is the harmless failure. */
+  const [labelUp, setLabelUp] = useState(true);
+
   useEffect(() => {
+    let retire: ReturnType<typeof setTimeout>;
+    const rest = () => {
+      clearTimeout(retire);
+      retire = setTimeout(() => setLabelUp(false), 5000);
+    };
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
+      setLabelUp(true);
+      rest();
     };
+    rest();
     window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      clearTimeout(retire);
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
 
   return (
@@ -154,7 +174,10 @@ const Navbar = () => {
 
                 White on the pill is 15:1. aria-hidden, because the button
                 already announces itself as Ask Blacksmith. */}
-            <span aria-hidden="true" className="assistant-bubble sm:hidden absolute left-0 top-full mt-2.5">
+            <span
+              aria-hidden="true"
+              className={`assistant-bubble sm:hidden absolute left-0 top-full mt-2.5 transition-[opacity,transform] duration-300 ease-out ${labelUp ? "opacity-100 translate-y-0" : "pointer-events-none -translate-y-1 opacity-0"}`}
+            >
               <span className="absolute left-4 -top-[5px] h-2.5 w-2.5 rotate-45 rounded-tl-[3px] border-l border-t border-white/15 bg-neutral-900/90" />
               <span className="relative flex items-center gap-1.5 whitespace-nowrap rounded-[14px] rounded-tl-[6px] border border-white/15 bg-neutral-900/90 px-2.5 py-[5px] backdrop-blur">
                 <span className="h-1.5 w-1.5 rounded-full bg-accent" />
