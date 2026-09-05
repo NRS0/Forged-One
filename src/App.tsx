@@ -137,14 +137,23 @@ const Navbar = () => {
             />
             <span className="sm:hidden absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full bg-accent ring-2 ring-main" />
             {/* On a phone the logo is the only way into Blacksmith, and a 10px
-                dot does not say so. The tag does. White on the accent is
-                3.6:1, so the label is near-black at 5.8:1. Hidden from screen
-                readers because the button's own aria-label already says it. */}
-            <span
-              aria-hidden="true"
-              className="sm:hidden absolute left-1 top-full mt-2 whitespace-nowrap rounded-full bg-accent px-2 py-[3px] font-mono text-[9.5px] uppercase tracking-[0.14em] text-main shadow-[0_2px_10px_rgba(0,0,0,0.45)]"
-            >
-              AI assistant
+                dot does not say so. This does: a message bubble with its tail
+                pointing back at the logo it belongs to, so it reads as the
+                logo speaking rather than as a badge stuck to the page.
+
+                Sentence case in the body face on purpose. Uppercase mono
+                reads as a system label; a text bubble should look like
+                something someone sent you.
+
+                White on the accent is 3.6:1, so the type is near-black at
+                5.8:1. Hidden from screen readers because the button's own
+                aria-label already says Ask Blacksmith, and hearing it twice
+                helps nobody. */}
+            <span aria-hidden="true" className="sm:hidden absolute left-1.5 top-full mt-2.5">
+              <span className="absolute left-3 -top-[3px] h-2.5 w-2.5 rotate-45 rounded-[2px] bg-accent" />
+              <span className="relative block whitespace-nowrap rounded-[14px] rounded-tl-[5px] bg-accent px-3 py-[5px] text-[11.5px] font-medium leading-none text-main shadow-[0_3px_12px_rgba(0,0,0,0.4)]">
+                AI assistant
+              </span>
             </span>
           </button>
         ) : (
