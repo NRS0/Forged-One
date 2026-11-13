@@ -140,22 +140,25 @@ export default function Page({ page }: { page: PageData }) {
           </section>
         ))}
 
-        {/* ── questions ── */}
+        {/* ── questions ──
+            Laid out as the home page lays out its FAQ: the title on top, the
+            list under it in one readable column on the left. It was a title
+            on the left and a list running to the right edge, which left a
+            wide gap between them on a big screen and put the plus buttons
+            underneath the "book your strategy call" tab. */}
         <section className="border-t border-line bg-surface py-14 md:py-24 px-8 md:px-16">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start">
-            <div className="lg:col-span-5 flex flex-col gap-4">
-              <span className={label}>{page.name}</span>
-              <h2 className="font-serif text-3xl md:text-5xl uppercase tracking-wide text-secondary leading-[0.9]">
-                Common questions
-              </h2>
-            </div>
-            <div className="lg:col-span-7 border-b border-line">
-              {page.faqs.map((faq) => (
-                <div key={faq.q}>
-                  <AccordionItem question={faq.q} answer={faq.a} />
-                </div>
-              ))}
-            </div>
+          <div className="flex flex-col gap-4 mb-10 md:mb-14">
+            <span className={label}>{page.name}</span>
+            <h2 className="font-serif text-3xl md:text-5xl uppercase tracking-wide text-secondary leading-[0.9]">
+              Common questions
+            </h2>
+          </div>
+          <div className="max-w-3xl border-b border-line">
+            {page.faqs.map((faq) => (
+              <div key={faq.q}>
+                <AccordionItem question={faq.q} answer={faq.a} />
+              </div>
+            ))}
           </div>
         </section>
 
