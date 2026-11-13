@@ -72,8 +72,8 @@ one.
 
 ## Pages
 
-The site is the home page plus one page per service and per country. They are
-all listed in `src/pages.ts`, and that file is the whole of each page: its
+The site is the home page, one page per service, a Caribbean page and a
+Barbados page. They are all listed in `src/pages.ts`, and that file is the whole of each page: its
 address, title, description, copy and questions.
 
 ```
@@ -88,8 +88,9 @@ adds it to the sitemap and `llms.txt`. There is no router: each page is a real
 file, and links between them are ordinary links.
 
 The copy follows one rule: nothing on a page that the home page, Blacksmith or
-the Build Brief does not already say. The country pages say where we are and
-how working together works. They do not claim clients or an office anywhere.
+the Build Brief does not already say. The Caribbean and Barbados pages say
+where we are and how working together works. They do not claim clients or an
+office anywhere, and there is deliberately no page per island.
 
 ## What search and answer engines read
 

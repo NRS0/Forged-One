@@ -66,7 +66,6 @@ export default function Page({ page }: { page: PageData }) {
     document.title = page.title;
   }, [page.title]);
 
-  const isService = page.kind === "service";
   const toBrief = page.cta.href.startsWith(SITE.briefUrl);
 
   return (
@@ -81,12 +80,12 @@ export default function Page({ page }: { page: PageData }) {
           <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-3 text-[9px] font-mono uppercase tracking-[0.4em] mb-10 md:mb-14">
             <a href="/" className="text-secondary hover:text-accent transition-colors">Forged One</a>
             <span className="text-muted" aria-hidden="true">/</span>
-            {isService ? (
-              <a href="/#services" className="text-secondary hover:text-accent transition-colors">Services</a>
-            ) : (
-              <span className="text-secondary">Caribbean</span>
+            {page.parent && (
+              <>
+                <a href={page.parent.href} className="text-secondary hover:text-accent transition-colors">{page.parent.name}</a>
+                <span className="text-muted" aria-hidden="true">/</span>
+              </>
             )}
-            <span className="text-muted" aria-hidden="true">/</span>
             <span className="text-accent" aria-current="page">{page.name}</span>
           </nav>
 

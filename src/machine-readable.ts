@@ -133,12 +133,9 @@ export function pageJsonLd(page: PageData, { modified }: Pick<PageFacts, "modifi
     {
       "@type": "BreadcrumbList",
       "@id": `${url}#breadcrumb`,
-      /* Every step but the last needs an address. Services has one, the
-         section on the home page. There is no Caribbean index page, so the
-         country trail is two steps rather than three with a dead middle. */
       itemListElement: [
         { name: SITE.name, item: SITE.url },
-        ...(isService ? [{ name: "Services", item: `${SITE.url}#services` }] : []),
+        ...(page.parent ? [{ name: page.parent.name, item: abs(page.parent.href) }] : []),
         { name: page.name, item: url },
       ].map((step, i) => ({ "@type": "ListItem", position: i + 1, ...step })),
     },
@@ -154,32 +151,23 @@ export function pageJsonLd(page: PageData, { modified }: Pick<PageFacts, "modifi
     },
   ];
 
-  if (isService) {
-    graph.push({
-      "@type": "Service",
-      "@id": `${url}#service`,
-      name: page.name,
-      serviceType: page.name,
-      description: page.lead,
-      url,
-      provider: { "@id": ORG },
-      areaServed: [
-        { "@type": "Place", name: "Caribbean" },
-        ...SITE.countries.map((name) => ({ "@type": "Country", name })),
-      ],
-    });
-  } else if (page.country) {
-    /* A country page is the same company's work, offered in one named place. */
-    graph.push({
-      "@type": "Service",
-      "@id": `${url}#service`,
-      name: page.h1,
-      description: page.lead,
-      url,
-      provider: { "@id": ORG },
-      areaServed: { "@type": "Country", name: page.country },
-    });
-  }
+  /* What the page offers and where. A service page and the Caribbean page
+     cover the whole region; the Barbados page names one country. */
+  graph.push({
+    "@type": "Service",
+    "@id": `${url}#service`,
+    name: isService ? page.name : page.h1,
+    ...(isService ? { serviceType: page.name } : {}),
+    description: page.lead,
+    url,
+    provider: { "@id": ORG },
+    areaServed: page.country
+      ? { "@type": "Country", name: page.country }
+      : [
+          { "@type": "Place", name: "Caribbean" },
+          ...SITE.countries.map((name) => ({ "@type": "Country", name })),
+        ],
+  });
 
   return stringify(graph);
 }

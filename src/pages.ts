@@ -1,18 +1,19 @@
 /**
- * The pages beyond the home page: one per service, one per country.
+ * The pages beyond the home page: one per service, plus the Caribbean and
+ * Barbados.
  *
  * The home page can only rank for one thing, and for months that one thing was
  * our own name. Someone searching "AI agents for business" or "AI automation
- * Jamaica" needs a page that is about exactly that, with its own address,
+ * Barbados" needs a page that is about exactly that, with its own address,
  * title and answers.
  *
  * The rule for the copy is the same as for the FAQ: nothing here is new
  * information. Every claim comes from the home page, from what Blacksmith is
  * told in api/blacksmith.js, or from what the Build Brief asks. No prices,
- * clients, timelines or numbers that were not already published. The country
+ * clients, timelines or numbers that were not already published. The two place
  * pages say where we are and how working together works from there; they do
- * not claim clients or an office in a country. The "for example" lists on them
- * are illustrations of repetitive work, not case studies.
+ * not claim clients or an office anywhere. The "for example" lists on them are
+ * illustrations of repetitive work, not case studies.
  */
 import { SITE, type Faq } from "./content";
 
@@ -41,7 +42,9 @@ export type PageData = {
   blocks: Block[];
   faqs: Faq[];
   cta: { heading: string; text: string; label: string; href: string };
-  /** For the place pages: the country, as schema.org wants it named. */
+  /** The step above this page in the trail, when it has an address. */
+  parent?: { name: string; href: string };
+  /** For a page about one country: its name, as schema.org wants it. */
   country?: string;
 };
 
@@ -457,12 +460,80 @@ const SMALL: Faq = {
   a: "Size matters less than repetition. If two people spend hours a week on the same task, there is something to build.",
 };
 
+/* Two place pages, not one per island. A page for every country would be the
+   same page ten times with the name swapped, and it would claim a presence we
+   do not have. One page says honestly what we are to the region. One says
+   what we are at home. */
 const placePages: PageData[] = [
+  {
+    path: "/caribbean",
+    kind: "place",
+    name: "Caribbean",
+    title: "AI Automation in the Caribbean | Forged One",
+    description:
+      "AI automation, AI agents, custom software and websites for businesses across the Caribbean, built by a studio based in Barbados. Delivered remotely.",
+    h1: "AI automation in the Caribbean",
+    lead: "Forged One builds AI automation, AI agents, custom software and websites for businesses across the Caribbean. We are a Caribbean studio based in Barbados, and everything is built and delivered remotely.",
+    blocks: [
+      {
+        h: "In the region, not overseas",
+        body: [
+          "We are based in Barbados and work with businesses across the Caribbean and further afield. Being in the region means we understand how business actually runs here.",
+          "Barbados keeps the same time as Trinidad and Tobago, Guyana and the Eastern Caribbean all year, and is one hour ahead of Jamaica. Your working day is ours.",
+        ],
+      },
+      {
+        h: "Where we work",
+        body: [
+          "Anywhere in the region. Everything is built and delivered remotely, so a business in Jamaica, Trinidad and Tobago, Guyana, The Bahamas, Saint Lucia, Grenada or Antigua and Barbuda gets the same service as one in Barbados.",
+        ],
+        links: [{ label: "Barbados", href: "/caribbean/barbados" }],
+      },
+      remoteSteps,
+      {
+        h: "The kind of work we mean",
+        body: [
+          "Size matters less than repetition. If two people spend hours a week on the same task, there is something to build. For example:",
+          [
+            "A hotel or tour operator answering the same questions on WhatsApp.",
+            "A distributor retyping orders from email into the accounts system.",
+            "A professional firm chasing the same documents from every new client.",
+            "A team pasting the same figures between two spreadsheets every Friday.",
+          ],
+        ],
+      },
+      whatWeBuild,
+    ],
+    faqs: [
+      {
+        q: "Is there an AI automation company in the Caribbean?",
+        a: "Yes. Forged One is an AI automation studio based in Barbados, building for businesses across the Caribbean. We build custom software, AI agents and websites, and make AI content.",
+      },
+      {
+        q: "Which Caribbean countries does Forged One work in?",
+        a: "Any of them. We are based in Barbados and everything is built and delivered remotely, so a business in Jamaica, Trinidad and Tobago, Guyana, The Bahamas, Saint Lucia, Grenada, Antigua and Barbuda or anywhere else in the region gets the same service as one in Barbados.",
+      },
+      {
+        q: "Does Forged One need to visit our office?",
+        a: "No. The Build Brief replaces the first two discovery calls, and everything we build is delivered remotely. If you would rather talk first, book a thirty-minute call.",
+      },
+      {
+        q: "What is the time difference between Barbados and the rest of the Caribbean?",
+        a: "None with Trinidad and Tobago, Guyana and the Eastern Caribbean, which keep the same time as Barbados all year. Jamaica is one hour behind.",
+      },
+      {
+        q: "Can an AI agent answer our customers on WhatsApp?",
+        a: "Yes. An agent can pick up enquiries wherever they arrive: WhatsApp, email, web chat or the phone. It hands over to a person when the judgment gets hard.",
+      },
+    ],
+    cta: briefCta(),
+  },
   {
     path: "/caribbean/barbados",
     kind: "place",
     name: "Barbados",
     country: "Barbados",
+    parent: { name: "Caribbean", href: "/caribbean" },
     title: "AI Automation in Barbados | Forged One",
     description:
       "Forged One is an AI automation studio based in Barbados. Custom software, AI agents, websites and AI content for Barbadian businesses.",
@@ -507,113 +578,10 @@ const placePages: PageData[] = [
     ],
     cta: briefCta(),
   },
-  {
-    path: "/caribbean/jamaica",
-    kind: "place",
-    name: "Jamaica",
-    country: "Jamaica",
-    title: "AI Automation in Jamaica | Forged One",
-    description:
-      "AI automation, AI agents, custom software and websites for businesses in Jamaica, built by a Caribbean studio one hour ahead of Kingston. Delivered remotely.",
-    h1: "AI automation in Jamaica",
-    lead: "Forged One builds AI automation, AI agents, custom software and websites for businesses in Jamaica. We are a Caribbean studio based in Barbados, and everything is built and delivered remotely.",
-    blocks: [
-      {
-        h: "In the region, not overseas",
-        body: [
-          "We are based in Barbados, not Kingston, and we will not pretend otherwise. What you get is a studio in the Caribbean: Barbados is one hour ahead of Jamaica all year, so your working day is ours.",
-          "Being in the region means we understand how business actually runs here.",
-        ],
-      },
-      remoteSteps,
-      {
-        h: "The kind of work we mean",
-        body: [
-          "Size matters less than repetition. For example:",
-          [
-            "A hotel or tour operator answering the same questions on WhatsApp.",
-            "A wholesaler retyping orders from email and WhatsApp into the accounts system.",
-            "A clinic or practice chasing appointment confirmations by phone.",
-            "A team pasting the same figures between two spreadsheets every Friday.",
-          ],
-        ],
-      },
-      whatWeBuild,
-    ],
-    faqs: [
-      {
-        q: "Does Forged One work with businesses in Jamaica?",
-        a: "Yes. Forged One is based in Barbados and works with businesses across the Caribbean, Jamaica included. Everything is built and delivered remotely.",
-      },
-      {
-        q: "Does Forged One have an office in Jamaica?",
-        a: "No. We are based in Barbados. The Build Brief replaces the first two discovery calls, and everything we build is delivered remotely.",
-      },
-      {
-        q: "What is the time difference between Jamaica and Forged One?",
-        a: "One hour. Barbados is one hour ahead of Jamaica all year, so a nine o'clock call in Kingston is ten o'clock for us.",
-      },
-      {
-        q: "Can an AI agent answer our customers on WhatsApp?",
-        a: "Yes. An agent can pick up enquiries wherever they arrive: WhatsApp, email, web chat or the phone. It hands over to a person when the judgment gets hard.",
-      },
-    ],
-    cta: briefCta(),
-  },
-  {
-    path: "/caribbean/trinidad-and-tobago",
-    kind: "place",
-    name: "Trinidad and Tobago",
-    country: "Trinidad and Tobago",
-    title: "AI Automation in Trinidad and Tobago | Forged One",
-    description:
-      "AI automation, AI agents, custom software and websites for businesses in Trinidad and Tobago, built by a Caribbean studio in the same timezone. Delivered remotely.",
-    h1: "AI automation in Trinidad and Tobago",
-    lead: "Forged One builds AI automation, AI agents, custom software and websites for businesses in Trinidad and Tobago. We are a Caribbean studio based in Barbados, on the same clock as Port of Spain, and everything is built and delivered remotely.",
-    blocks: [
-      {
-        h: "Next door, same clock",
-        body: [
-          "We are based in Barbados, not Port of Spain. Barbados and Trinidad and Tobago keep the same time all year, so there is no difference to work around.",
-          "Being in the region means we understand how business actually runs here.",
-        ],
-      },
-      remoteSteps,
-      {
-        h: "The kind of work we mean",
-        body: [
-          "Size matters less than repetition. For example:",
-          [
-            "A distributor retyping purchase orders into the accounts system.",
-            "A contractor chasing timesheets, job sheets and invoices.",
-            "An insurance or finance office answering the same questions by email and WhatsApp.",
-            "A manufacturer whose orders, stock and deliveries live in three different places.",
-          ],
-        ],
-      },
-      whatWeBuild,
-    ],
-    faqs: [
-      {
-        q: "Does Forged One work with businesses in Trinidad and Tobago?",
-        a: "Yes. Forged One is based in Barbados and works with businesses across the Caribbean, Trinidad and Tobago included. Everything is built and delivered remotely.",
-      },
-      {
-        q: "Does Forged One have an office in Trinidad?",
-        a: "No. We are based in Barbados. The Build Brief replaces the first two discovery calls, and everything we build is delivered remotely.",
-      },
-      {
-        q: "Is there a time difference between Trinidad and Barbados?",
-        a: "No. Barbados and Trinidad and Tobago keep the same time all year.",
-      },
-      {
-        q: "How do I start an AI project in Trinidad and Tobago?",
-        a: "Start with the Build Brief. It takes about twelve minutes, asks what is slow or what you need built, and comes back with a written scope within two working days.",
-      },
-    ],
-    cta: briefCta(),
-  },
 ];
+
+/* Every service sits under the Services section of the home page. */
+for (const p of servicePages) p.parent = { name: "Services", href: "/#services" };
 
 export const pages: PageData[] = [...servicePages, ...placePages];
 export const servicePageList = servicePages;
