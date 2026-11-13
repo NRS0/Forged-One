@@ -20,17 +20,17 @@ const BlockBody = ({ block }: { block: Block }) => (
   <div className="flex flex-col gap-6">
     {block.body.map((part, i) =>
       typeof part === "string" ? (
-        <p key={i} className="text-secondary text-base md:text-lg font-light leading-relaxed max-w-2xl">
+        <p key={i} className="text-secondary text-sm md:text-base font-light leading-relaxed max-w-xl">
           {part}
         </p>
       ) : (
-        <ul key={i} className="border-b border-line max-w-2xl">
+        <ul key={i} className="border-b border-line max-w-xl">
           {part.map((item, n) => (
             <li key={item} className="border-t border-line py-4 flex items-baseline gap-6">
               <span className="text-[9px] font-mono font-medium tracking-widest text-accent shrink-0">
                 {String(n + 1).padStart(2, "0")}
               </span>
-              <span className="text-secondary text-base md:text-lg font-light leading-snug">{item}</span>
+              <span className="text-secondary text-sm md:text-base font-light leading-snug">{item}</span>
             </li>
           ))}
         </ul>
@@ -41,7 +41,7 @@ const BlockBody = ({ block }: { block: Block }) => (
 );
 
 const LinkRows = ({ links }: { links: { label: string; href: string }[] }) => (
-  <div className="border-b border-line max-w-2xl">
+  <div className="border-b border-line max-w-xl">
     {links.map((l) => (
       <a
         key={l.href}
@@ -89,11 +89,15 @@ export default function Page({ page }: { page: PageData }) {
             <span className="text-accent" aria-current="page">{page.name}</span>
           </nav>
 
-          <h1 className="font-serif uppercase tracking-wider text-secondary leading-[0.88] text-5xl sm:text-6xl md:text-[5.5rem] lg:text-[7rem] max-w-6xl">
+          {/* The same face as the home page's headline: DM Sans, bold, tight,
+              upper case, white. `hero-title` is what carries it there, and it
+              also overrides the Bebas Neue every other heading gets by default.
+              Bebas stays where the home page uses it, on the section titles. */}
+          <h1 className="hero-title font-sans font-bold uppercase text-white text-[11vw] sm:text-6xl md:text-[5.5rem] lg:text-[7rem] max-w-6xl">
             {page.h1}
           </h1>
 
-          <p className="mt-8 md:mt-12 max-w-3xl text-lg md:text-2xl font-light leading-snug text-secondary">
+          <p className="mt-8 md:mt-12 max-w-2xl text-base md:text-xl font-light leading-snug text-secondary">
             {page.lead}
           </p>
 
