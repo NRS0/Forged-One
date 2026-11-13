@@ -92,8 +92,13 @@ export default function Page({ page }: { page: PageData }) {
           {/* The same face as the home page's headline: DM Sans, bold, tight,
               upper case, white. `hero-title` is what carries it there, and it
               also overrides the Bebas Neue every other heading gets by default.
-              Bebas stays where the home page uses it, on the section titles. */}
-          <h1 className="hero-title font-sans font-bold uppercase text-white text-[11vw] sm:text-6xl md:text-[5.5rem] lg:text-[7rem] max-w-6xl">
+              Bebas stays where the home page uses it, on the section titles.
+
+              The word spacing is the one thing the home page never needed: its
+              three words are placed one by one, so the tight tracking never
+              met a space. Here it closes them up until the words run together,
+              and this opens them again. */}
+          <h1 className="hero-title font-sans font-bold uppercase text-white [word-spacing:0.16em] text-[11vw] sm:text-6xl md:text-[5.5rem] lg:text-[7rem] max-w-6xl">
             {page.h1}
           </h1>
 
