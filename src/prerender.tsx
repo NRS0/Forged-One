@@ -11,3 +11,7 @@ import App from './App';
 export function render(): string {
   return renderToStaticMarkup(<App />);
 }
+
+/* The machine-readable half of the build, exported from the same bundle so
+   scripts/prerender.mjs has one thing to import. */
+export { jsonLd, llmsTxt } from './machine-readable';

@@ -1,0 +1,135 @@
+/**
+ * Everything on the site that is written for a machine rather than a person:
+ * the JSON-LD graph and /llms.txt. Both are built from src/content.ts at build
+ * time by scripts/prerender.mjs, so neither can say something the page does not.
+ */
+import { SITE, services, serviceUrl, faqs } from "./content";
+
+type PageFacts = {
+  /** <title> and meta description, read back out of index.html. */
+  title: string;
+  description: string;
+  /** YYYY-MM-DD of the build. Every deploy is a commit, so it tracks the last change. */
+  modified: string;
+};
+
+const ORG = `${SITE.url}#organization`;
+const WEBSITE = `${SITE.url}#website`;
+const WEBPAGE = `${SITE.url}#webpage`;
+
+export function jsonLd({ title, description, modified }: PageFacts): string {
+  const areaServed = [
+    { "@type": "Country", name: "Barbados" },
+    { "@type": "Place", name: "Caribbean" },
+  ];
+
+  const graph = [
+    {
+      "@type": "ProfessionalService",
+      "@id": ORG,
+      name: SITE.name,
+      alternateName: SITE.alternateNames,
+      url: SITE.url,
+      logo: `${SITE.url}android-chrome-512x512.png`,
+      image: `${SITE.url}og-image.png`,
+      description: SITE.summary,
+      email: SITE.email,
+      telephone: SITE.phone,
+      address: { "@type": "PostalAddress", addressCountry: "BB" },
+      areaServed,
+      knowsAbout: SITE.knowsAbout,
+      sameAs: SITE.sameAs,
+      contactPoint: {
+        "@type": "ContactPoint",
+        contactType: "sales",
+        email: SITE.email,
+        telephone: SITE.phone,
+        url: SITE.callUrl,
+        availableLanguage: "English",
+      },
+      hasOfferCatalog: {
+        "@type": "OfferCatalog",
+        name: "Services",
+        itemListElement: services.map((s) => ({
+          "@type": "Offer",
+          url: serviceUrl(s),
+          itemOffered: {
+            "@type": "Service",
+            name: s.name,
+            description: s.desc,
+            provider: { "@id": ORG },
+            areaServed,
+          },
+        })),
+      },
+    },
+    {
+      "@type": "WebSite",
+      "@id": WEBSITE,
+      url: SITE.url,
+      name: SITE.name,
+      alternateName: SITE.alternateNames,
+      inLanguage: "en",
+      publisher: { "@id": ORG },
+    },
+    {
+      /* FAQPage is a WebPage, so one node carries both the page facts and the answers. */
+      "@type": "FAQPage",
+      "@id": WEBPAGE,
+      url: SITE.url,
+      name: title,
+      description,
+      inLanguage: "en",
+      isPartOf: { "@id": WEBSITE },
+      about: { "@id": ORG },
+      primaryImageOfPage: `${SITE.url}og-image.png`,
+      dateModified: modified,
+      mainEntity: faqs.map((f) => ({
+        "@type": "Question",
+        name: f.q,
+        acceptedAnswer: { "@type": "Answer", text: f.a },
+      })),
+    },
+  ];
+
+  /* "<" is escaped so no answer can ever close the script tag it sits in. */
+  return JSON.stringify({ "@context": "https://schema.org", "@graph": graph }, null, 2).replace(
+    /</g,
+    "\\u003c",
+  );
+}
+
+/**
+ * /llms.txt, in the llmstxt.org shape: a title, a one-paragraph summary, then
+ * plain sections. It is the page with the layout taken off, for a model that
+ * would rather read 4 kB of markdown than 50 kB of markup.
+ */
+export function llmsTxt({ modified }: Pick<PageFacts, "modified">): string {
+  const lines = [
+    `# ${SITE.name}`,
+    "",
+    `> ${SITE.summary} Everything is delivered remotely.`,
+    "",
+    `Also written as ${SITE.alternateNames.join(" or ")}. Website: ${SITE.url}. Last updated ${modified}.`,
+    "",
+    "## Services",
+    "",
+    ...services.map((s) => `- [${s.name}](${serviceUrl(s)}): ${s.desc}`),
+    "",
+    "## How to start",
+    "",
+    `- [The Build Brief](${SITE.briefUrl}): A guided form that takes about twelve minutes. You describe the jobs eating your team's time or the thing you need built. It scores each job on the hours you would get back against how buildable it looks, ranks them, and hands you the brief. Answers stay in your browser until you send them, and the brief is yours whether or not you work with Forged One. What comes back is a written scope, within two working days, not a sales call.`,
+    `- [Book a call](${SITE.callUrl}): Thirty minutes, to talk it through first.`,
+    "",
+    "## Contact",
+    "",
+    `- Email: ${SITE.email}`,
+    `- Phone: ${SITE.phone}`,
+    ...SITE.sameAs.map((u) => `- ${u}`),
+    "",
+    "## Questions and answers",
+    "",
+    ...faqs.flatMap((f) => [`### ${f.q}`, "", f.a, ""]),
+  ];
+  return lines.join("\n").trimEnd() + "\n";
+}

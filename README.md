@@ -69,3 +69,18 @@ Edit `SYSTEM` in `api/blacksmith.js`. That string is the whole of its
 knowledge; it has no retrieval and no access to the page. If a service changes
 on the site, change it there too, or Blacksmith will keep describing the old
 one.
+
+## What search and answer engines read
+
+`src/content.ts` holds the services and the FAQ. The page renders from it, and
+at build time `scripts/prerender.mjs` writes three things from the same file:
+
+```
+<head> JSON-LD     the organisation, the services and every FAQ answer
+dist/llms.txt      the page as plain markdown, for models
+dist/sitemap.xml   public/sitemap.xml with the deploy date as <lastmod>
+```
+
+Edit an answer in `src/content.ts` and all of them follow. The schema is never
+typed by hand, so it cannot disagree with what a visitor sees. Blacksmith is
+the one copy that does not follow: its knowledge still lives in `api/blacksmith.js`.
