@@ -8,6 +8,7 @@ import { ArrowRight, ArrowDown, Plus, X, Menu } from "lucide-react";
 import { Blacksmith, blacksmith } from "./Blacksmith";
 import { useState, useRef, useEffect, ReactNode } from "react";
 import { services, serviceUrl, faqs } from "./content";
+import { servicePageList, placePageList } from "./pages";
 
 /**
  * Fetches a heavy asset only when it is worth the visitor's data.
@@ -57,7 +58,7 @@ function useInView() {
 
 /* ─────────────────────────────── SCROLL REVEAL ─────────────────────────────── */
 
-const Reveal = ({ children, delay = 0, className = "" }: { children: ReactNode, delay?: number, className?: string, key?: any }) => {
+export const Reveal = ({ children, delay = 0, className = "" }: { children: ReactNode, delay?: number, className?: string, key?: any }) => {
   const { ref, inView } = useInView();
   return (
     <motion.div ref={ref} initial={{ opacity: 0, y: 40 }} animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -103,7 +104,10 @@ const Counter = ({ value, duration = 2.5 }: { value: string, duration?: number }
 
 /* ─────────────────────────────── NAVBAR ─────────────────────────────── */
 
-const Navbar = () => {
+/* `home` is false on the service and country pages, where "#services" would
+   point at nothing: there the section links go back to the home page. */
+export const Navbar = ({ home = true }: { home?: boolean }) => {
+  const at = (hash: string) => (home ? hash : `/${hash}`);
   /* On phones the logo is the way into Blacksmith, so the bottom edge keeps
      just the two calls to action. */
   const [askable, setAskable] = useState(blacksmith.ready);
@@ -200,11 +204,11 @@ const Navbar = () => {
         {/* Center pill (hidden on mobile) */}
         <div className="hidden lg:flex items-center gap-1 bg-neutral-900/90 backdrop-blur rounded-full px-3 py-2">
           {[
-            { name: "Services", href: "#services" },
-            { name: "The Brief", href: "#brief" },
-            { name: "Workflows", href: "#workflows" },
-            { name: "The Edge", href: "#edge" },
-            { name: "FAQ", href: "#faq" }
+            { name: "Services", href: at("#services") },
+            { name: "The Brief", href: at("#brief") },
+            { name: "Workflows", href: at("#workflows") },
+            { name: "The Edge", href: at("#edge") },
+            { name: "FAQ", href: at("#faq") }
           ].map((item) => (
             <a
               key={item.name}
@@ -270,11 +274,11 @@ const Navbar = () => {
             {/* Navigation links */}
             <div className="flex flex-col gap-6 my-auto">
               {[
-                { name: "Services", href: "#services" },
-                { name: "The Brief", href: "#brief" },
-                { name: "Workflows", href: "#workflows" },
-                { name: "The Edge", href: "#edge" },
-                { name: "FAQ", href: "#faq" }
+                { name: "Services", href: at("#services") },
+                { name: "The Brief", href: at("#brief") },
+                { name: "Workflows", href: at("#workflows") },
+                { name: "The Edge", href: at("#edge") },
+                { name: "FAQ", href: at("#faq") }
               ].map((item, index) => (
                 <motion.a
                   initial={{ opacity: 0, x: -20 }}
@@ -640,6 +644,15 @@ const ServicesSection = () => {
         ))}
       </div>
 
+      {/* The rows above go straight to the brief, on purpose. These go to the
+          page about each service, for someone who wants to read first. */}
+      <p className="px-8 md:px-16 mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 text-[9px] font-mono uppercase tracking-[0.3em]">
+        <span className="text-muted">Read more</span>
+        {servicePageList.map((p) => (
+          <a key={p.path} href={p.path} className="text-secondary hover:text-accent transition-colors">{p.name}</a>
+        ))}
+      </p>
+
     </section>
   );
 };
@@ -849,7 +862,7 @@ const FAQ = () => {
   );
 };
 
-const AccordionItem = ({ question, answer }: { question: string, answer: string }) => {
+export const AccordionItem = ({ question, answer }: { question: string, answer: string }) => {
   const [open, setOpen] = useState(false);
   return (
     <div className="border-t border-line">
@@ -885,7 +898,9 @@ const AccordionItem = ({ question, answer }: { question: string, answer: string 
 /* ─────────────────────────────── FOOTER ─────────────────────────────── */
 
 
-const Footer = ({ onOpenLegal }: { onOpenLegal: (type: "Privacy" | "Terms" | "Accessibility") => void }) => (
+export const Footer = ({ onOpenLegal, home = true }: { onOpenLegal: (type: "Privacy" | "Terms" | "Accessibility") => void, home?: boolean }) => {
+  const at = (hash: string) => (home ? hash : `/${hash}`);
+  return (
     <footer className="py-12 md:py-20 px-0 md:px-0 border-t border-line">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-16 px-8 md:px-16">
       <div className="lg:col-span-4">
@@ -912,11 +927,11 @@ const Footer = ({ onOpenLegal }: { onOpenLegal: (type: "Privacy" | "Terms" | "Ac
         <span className="text-[9px] uppercase tracking-[0.5em] font-mono text-accent mb-6 block">Navigate</span>
         <div className="flex flex-col gap-3">
           {[
-            { name: "Services", href: "#services" },
-            { name: "The Brief", href: "#brief" },
-            { name: "Workflows", href: "#workflows" },
-            { name: "The Edge", href: "#edge" },
-            { name: "FAQ", href: "#faq" }
+            { name: "Services", href: at("#services") },
+            { name: "The Brief", href: at("#brief") },
+            { name: "Workflows", href: at("#workflows") },
+            { name: "The Edge", href: at("#edge") },
+            { name: "FAQ", href: at("#faq") }
           ].map(item => (
             <a key={item.name} href={item.href} className="text-sm text-secondary hover:text-accent transition-colors tracking-wide">{item.name}</a>
           ))}
@@ -943,7 +958,7 @@ const Footer = ({ onOpenLegal }: { onOpenLegal: (type: "Privacy" | "Terms" | "Ac
       </div>
 
       <div className="lg:col-span-2 lg:col-start-11 flex flex-col justify-between">
-        <a href="#workflows" className="group inline-flex items-center gap-3 text-[9px] uppercase tracking-[0.5em] font-mono font-medium text-accent hover:text-accent transition-colors">
+        <a href={at("#workflows")} className="group inline-flex items-center gap-3 text-[9px] uppercase tracking-[0.5em] font-mono font-medium text-accent hover:text-accent transition-colors">
           <span>Our Workflows</span>
           <div className="w-10 h-10 border border-secondary/10 flex items-center justify-center group-hover:border-accent group-hover:bg-accent transition-all duration-300">
             <ArrowRight size={12} className="group-hover:text-main transition-colors" />
@@ -952,7 +967,25 @@ const Footer = ({ onOpenLegal }: { onOpenLegal: (type: "Privacy" | "Terms" | "Ac
       </div>
     </div>
 
-    <div className="mt-16 pt-8 border-t border-line flex flex-col md:flex-row justify-between gap-8 md:gap-6 px-8 md:px-16">
+    {/* Every page links to every other page from here. A page nothing links
+        to is a page a crawler never finds. */}
+    <nav aria-label="Services and countries" className="mt-16 pt-8 border-t border-line grid grid-cols-1 md:grid-cols-12 gap-8 px-8 md:px-16">
+      {[
+        { label: "Services", items: servicePageList, span: "md:col-span-7" },
+        { label: "Where we work", items: placePageList, span: "md:col-span-5" },
+      ].map((group) => (
+        <div key={group.label} className={group.span}>
+          <span className="text-[9px] uppercase tracking-[0.5em] font-mono text-accent mb-4 block">{group.label}</span>
+          <div className="flex flex-wrap gap-x-6 gap-y-3">
+            {group.items.map((p) => (
+              <a key={p.path} href={p.path} className="text-sm text-secondary hover:text-accent transition-colors tracking-wide">{p.name}</a>
+            ))}
+          </div>
+        </div>
+      ))}
+    </nav>
+
+    <div className="mt-10 pt-8 border-t border-line flex flex-col md:flex-row justify-between gap-8 md:gap-6 px-8 md:px-16">
       <p className="text-[9px] uppercase tracking-[0.5em] font-mono text-secondary">© 2026, ALL RIGHTS RESERVED</p>
       <div className="flex gap-10">
         {["Privacy", "Terms", "Accessibility"].map(l => (
@@ -967,11 +1000,12 @@ const Footer = ({ onOpenLegal }: { onOpenLegal: (type: "Privacy" | "Terms" | "Ac
       </div>
     </div>
   </footer>
-);
+  );
+};
 
 /* ─────────────────────────────── LEGAL MODAL ─────────────────────────────── */
 
-const LegalModal = ({ isOpen, onClose, type }: { isOpen: boolean, onClose: () => void, type: "Privacy" | "Terms" | "Accessibility" | null }) => {
+export const LegalModal = ({ isOpen, onClose, type }: { isOpen: boolean, onClose: () => void, type: "Privacy" | "Terms" | "Accessibility" | null }) => {
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -1190,7 +1224,7 @@ If you are not satisfied with our response, you may contact the relevant nationa
 
 /* ─────────────────────────────── FLOATING CTA ─────────────────────────────── */
 
-const FloatingCTA = () => {
+export const FloatingCTA = () => {
   const { scrollY } = useScroll();
   const [visible, setVisible] = useState(false);
 

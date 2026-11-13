@@ -4,6 +4,7 @@
  * time by scripts/prerender.mjs, so neither can say something the page does not.
  */
 import { SITE, services, serviceUrl, faqs } from "./content";
+import { pages, type PageData } from "./pages";
 
 type PageFacts = {
   /** <title> and meta description, read back out of index.html. */
@@ -100,6 +101,110 @@ export function jsonLd({ title, description, modified }: PageFacts): string {
   );
 }
 
+const abs = (path: string) => `${SITE.url.replace(/\/$/, "")}${path}`;
+
+const stringify = (graph: unknown[]) =>
+  JSON.stringify({ "@context": "https://schema.org", "@graph": graph }, null, 2).replace(/</g, "\\u003c");
+
+/**
+ * The graph for a service or country page: the page itself with its trail
+ * back to the home page, the thing it is about, and its own questions. The
+ * organisation is a short stub that points at the full node on the home page
+ * by @id, so the facts about the company are stated once.
+ */
+export function pageJsonLd(page: PageData, { modified }: Pick<PageFacts, "modified">): string {
+  const url = abs(page.path);
+  const isService = page.kind === "service";
+
+  const graph: unknown[] = [
+    { "@type": "ProfessionalService", "@id": ORG, name: SITE.name, url: SITE.url },
+    {
+      "@type": "WebPage",
+      "@id": `${url}#webpage`,
+      url,
+      name: page.title,
+      description: page.description,
+      inLanguage: "en",
+      isPartOf: { "@id": WEBSITE },
+      about: { "@id": isService ? `${url}#service` : ORG },
+      breadcrumb: { "@id": `${url}#breadcrumb` },
+      dateModified: modified,
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": `${url}#breadcrumb`,
+      /* Every step but the last needs an address. Services has one, the
+         section on the home page. There is no Caribbean index page, so the
+         country trail is two steps rather than three with a dead middle. */
+      itemListElement: [
+        { name: SITE.name, item: SITE.url },
+        ...(isService ? [{ name: "Services", item: `${SITE.url}#services` }] : []),
+        { name: page.name, item: url },
+      ].map((step, i) => ({ "@type": "ListItem", position: i + 1, ...step })),
+    },
+    {
+      "@type": "FAQPage",
+      "@id": `${url}#faq`,
+      isPartOf: { "@id": `${url}#webpage` },
+      mainEntity: page.faqs.map((f) => ({
+        "@type": "Question",
+        name: f.q,
+        acceptedAnswer: { "@type": "Answer", text: f.a },
+      })),
+    },
+  ];
+
+  if (isService) {
+    graph.push({
+      "@type": "Service",
+      "@id": `${url}#service`,
+      name: page.name,
+      serviceType: page.name,
+      description: page.lead,
+      url,
+      provider: { "@id": ORG },
+      areaServed: [
+        { "@type": "Place", name: "Caribbean" },
+        ...SITE.countries.map((name) => ({ "@type": "Country", name })),
+      ],
+    });
+  } else if (page.country) {
+    /* A country page is the same company's work, offered in one named place. */
+    graph.push({
+      "@type": "Service",
+      "@id": `${url}#service`,
+      name: page.h1,
+      description: page.lead,
+      url,
+      provider: { "@id": ORG },
+      areaServed: { "@type": "Country", name: page.country },
+    });
+  }
+
+  return stringify(graph);
+}
+
+/** Every address the site has, with the date of this build. */
+export function sitemapXml({ modified }: Pick<PageFacts, "modified">): string {
+  const entry = (loc: string, priority: string, lastmod = true) =>
+    [
+      "  <url>",
+      `    <loc>${loc}</loc>`,
+      ...(lastmod ? [`    <lastmod>${modified}</lastmod>`] : []),
+      `    <priority>${priority}</priority>`,
+      "  </url>",
+    ].join("\n");
+
+  return [
+    '<?xml version="1.0" encoding="UTF-8"?>',
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+    entry(SITE.url, "1.0"),
+    ...pages.map((p) => entry(abs(p.path), "0.8")),
+    "</urlset>",
+    "",
+  ].join("\n");
+}
+
 /**
  * /llms.txt, in the llmstxt.org shape: a title, a one-paragraph summary, then
  * plain sections. It is the page with the layout taken off, for a model that
@@ -122,6 +227,10 @@ export function llmsTxt({ modified }: Pick<PageFacts, "modified">): string {
     "## Services",
     "",
     ...services.map((s) => `- [${s.name}](${serviceUrl(s)}): ${s.desc}`),
+    "",
+    "## Pages",
+    "",
+    ...pages.map((p) => `- [${p.kind === "place" ? p.h1 : p.name}](${abs(p.path)}): ${p.description}`),
     "",
     "## How to start",
     "",
