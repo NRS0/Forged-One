@@ -23,6 +23,24 @@ export const SITE = {
      quoted out of context, "we" has no subject. */
   summary:
     "Forged One is an AI automation studio based in Barbados. It builds custom software, AI agents and websites, and produces AI content and advertising, for businesses across the Caribbean and beyond.",
+  /* Where the work is offered, spelled out. "The Caribbean" is one word to a
+     person and no country at all to a search engine: someone in Kingston asks
+     for AI automation in Jamaica, not in the Caribbean. These are the
+     English-speaking CARICOM states. Trim the list if any is not served. */
+  countries: [
+    "Barbados",
+    "Jamaica",
+    "Trinidad and Tobago",
+    "Guyana",
+    "The Bahamas",
+    "Saint Lucia",
+    "Grenada",
+    "Saint Vincent and the Grenadines",
+    "Antigua and Barbuda",
+    "Dominica",
+    "Saint Kitts and Nevis",
+    "Belize",
+  ],
   sameAs: [
     "https://www.linkedin.com/company/forgedone/",
     "https://www.instagram.com/forgedone.xyz",
@@ -80,11 +98,15 @@ export type Faq = { q: string; a: string };
 export const faqs: Faq[] = [
   {
     q: "What does Forged One do?",
-    a: "Forged One is an AI automation studio based in Barbados. We build custom software, AI agents and websites, and we make AI content: product shots, brand films, video, copy and ads. We also get scattered data into one place and teach teams what these tools can and cannot do.",
+    a: "Forged One is an AI automation studio based in Barbados, building for businesses across the Caribbean. We build custom software, AI agents and websites, and we make AI content: product shots, brand films, video, copy and ads. We also get scattered data into one place and teach teams what these tools can and cannot do.",
   },
   {
     q: "Where is Forged One based?",
     a: "Barbados. We work with businesses across the Caribbean and further afield, and everything we build is delivered remotely. Being in the region means we are in your timezone and we understand how business actually runs here.",
+  },
+  {
+    q: "Which Caribbean countries does Forged One work with?",
+    a: "Any of them. We are based in Barbados and everything is built and delivered remotely, so a business in Jamaica, Trinidad and Tobago, Guyana, The Bahamas, Saint Lucia, Grenada, Antigua and Barbuda or anywhere else in the region gets the same service as one in Barbados. We take on work from further afield too.",
   },
   {
     q: "What does AI automation actually mean?",
@@ -93,6 +115,10 @@ export const faqs: Faq[] = [
   {
     q: "What is the difference between an AI automation, an AI agent and custom software?",
     a: "An automation fires on a trigger and finishes on its own, the same way every time. An agent handles a job that needs judgment, and stops when the judgment gets hard. Custom software is a tool your team opens and uses. Most real projects are a mix of the three.",
+  },
+  {
+    q: "Can an AI agent answer customers on WhatsApp?",
+    a: "Yes. An agent can pick up enquiries wherever they arrive: WhatsApp, email, web chat or the phone. It reads the message, checks your system, replies, and hands over to a person when the judgment gets hard. The Build Brief asks which channels it should work on and where it must stop.",
   },
   {
     q: "Do I need to understand any of the technology?",

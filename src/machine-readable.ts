@@ -19,8 +19,8 @@ const WEBPAGE = `${SITE.url}#webpage`;
 
 export function jsonLd({ title, description, modified }: PageFacts): string {
   const areaServed = [
-    { "@type": "Country", name: "Barbados" },
     { "@type": "Place", name: "Caribbean" },
+    ...SITE.countries.map((name) => ({ "@type": "Country", name })),
   ];
 
   const graph = [
@@ -58,7 +58,8 @@ export function jsonLd({ title, description, modified }: PageFacts): string {
             name: s.name,
             description: s.desc,
             provider: { "@id": ORG },
-            areaServed,
+            /* The country list lives once, on the organisation. */
+            areaServed: { "@type": "Place", name: "Caribbean" },
           },
         })),
       },
@@ -111,6 +112,12 @@ export function llmsTxt({ modified }: Pick<PageFacts, "modified">): string {
     `> ${SITE.summary} Everything is delivered remotely.`,
     "",
     `Also written as ${SITE.alternateNames.join(" or ")}. Website: ${SITE.url}. Last updated ${modified}.`,
+    "",
+    "## Where it works",
+    "",
+    "- Based in Barbados (Atlantic Standard Time, UTC-4). Works in English.",
+    `- Works with businesses in ${SITE.countries.join(", ")}, the rest of the Caribbean, and further afield.`,
+    "- Everything is built and delivered remotely.",
     "",
     "## Services",
     "",
