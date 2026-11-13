@@ -7,6 +7,7 @@ import { motion, useScroll, useTransform, AnimatePresence, useMotionValue, anima
 import { ArrowRight, ArrowDown, Plus, X, Menu } from "lucide-react";
 import { Blacksmith, blacksmith } from "./Blacksmith";
 import { useState, useRef, useEffect, ReactNode } from "react";
+import { services, serviceUrl, faqs } from "./content";
 
 /**
  * Fetches a heavy asset only when it is worth the visitor's data.
@@ -341,7 +342,10 @@ const Hero = () => {
 
       {/* Foreground content wrapper */}
       <div className="relative h-full w-full max-w-[1440px] mx-auto z-10">
-        {/* Desktop-only: Three giant staggered headline words */}
+        {/* Desktop-only: Three giant staggered headline words. The {" "} between
+            them is for whatever reads this without laying it out: a crawler or
+            a screen reader got "aiforbusinesses" as the page's one heading.
+            Whitespace between positioned or flex children draws nothing. */}
         <h1 className="hidden lg:block">
           <motion.span 
             initial={{ opacity: 0, y: 30 }}
@@ -350,7 +354,7 @@ const Hero = () => {
             className="hero-title absolute text-white font-bold font-sans lg:text-[13vw] lg:left-[160px] top-[18%] uppercase tracking-tighter"
           >
             ai
-          </motion.span>
+          </motion.span>{" "}
           
           <motion.span 
             initial={{ opacity: 0, y: 30 }}
@@ -359,7 +363,7 @@ const Hero = () => {
             className="hero-title absolute text-white font-bold font-sans lg:text-[13vw] lg:right-[712px] top-[38%] uppercase tracking-tighter"
           >
             for
-          </motion.span>
+          </motion.span>{" "}
           
           <motion.span 
             initial={{ opacity: 0, y: 30 }}
@@ -383,7 +387,7 @@ const Hero = () => {
             className="hero-title text-white font-bold font-sans text-[11vw] uppercase tracking-tighter leading-[0.85]"
           >
             ai
-          </motion.span>
+          </motion.span>{" "}
           <motion.span 
             initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
@@ -391,7 +395,7 @@ const Hero = () => {
             className="hero-title text-white font-bold font-sans text-[11vw] uppercase tracking-tighter leading-[0.85]"
           >
             for
-          </motion.span>
+          </motion.span>{" "}
           <motion.span 
             initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
@@ -411,7 +415,7 @@ const Hero = () => {
             className="hero-title text-white font-bold font-sans text-[15vw] xs:text-[16vw] uppercase tracking-tighter leading-[0.85]"
           >
             ai
-          </motion.span>
+          </motion.span>{" "}
           <motion.span 
             initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
@@ -419,7 +423,7 @@ const Hero = () => {
             className="hero-title text-white font-bold font-sans text-[15vw] xs:text-[16vw] uppercase tracking-tighter leading-[0.85]"
           >
             for
-          </motion.span>
+          </motion.span>{" "}
           <motion.span 
             initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
@@ -603,17 +607,6 @@ const WorkflowCard = ({ id, title, category, description, detail }: {
 /* ─────────────────────────────── SERVICES ─────────────────────────────── */
 
 const ServicesSection = () => {
-  const services = [
-{ n: "01", name: "Custom Software & Tools", desc: "Software built around the way you already work, instead of changing how you work to suit something you bought off the shelf.", color: "#FFFFFF", need: "software" },
-    { n: "02", name: "AI Agents", desc: "Software that handles a job start to finish on its own. It reads the message, checks your system, replies, and knows when to pass it to a person.", color: "#FFFFFF", need: "agents" },
-    { n: "03", name: "AI Content", desc: "Product shots, brand films, video and copy, made without a studio or a shoot day and finished to look shot rather than generated. Including the ads, which test themselves and put the money behind what works.", color: "#FFFFFF", need: "content" },
-    { n: "04", name: "Getting Your Data Straight", desc: "Getting your numbers out of the places they are stuck, cleaned up, and in one place you can actually look at.", color: "#FFFFFF", need: "automations" },
-    /* No track in the brief fits training a team, and twelve minutes of process
-       mapping is the wrong ask for a course enquiry, so this row books a call
-       instead of dropping someone into a form with no box for them. */
-    { n: "05", name: "AI Courses", desc: "Teaching your team what these tools can and cannot do, so nobody is guessing when they make a decision.", color: "#FFFFFF", need: "", href: "https://calendly.com/forgedonebusiness/30min", cta: "Book a call about" },
-  ];
-
   return (
     <section id="services" className="py-16 md:py-28 px-0 md:px-0 border-t border-line">
       <SectionHeader number="01" title="services" subtitle="what we build, in plain terms" className="px-8 md:px-16" />
@@ -623,11 +616,11 @@ const ServicesSection = () => {
         {services.map((s, i) => (
           <Reveal key={s.n} delay={i * 0.04}>
             <a
-              href={s.href ?? `https://brief.forgedone.xyz/${s.need ? `?need=${s.need}` : ""}`}
+              href={serviceUrl(s)}
               aria-label={`${s.cta ?? "Start a build brief for"} ${s.name}`}
               {...(s.href ? { target: "_blank", rel: "noopener noreferrer" } : {})}
               className="group border-t border-line flex items-center gap-4 sm:gap-6 md:gap-8 lg:gap-12 py-8 md:py-10 lg:py-12 cursor-pointer hover:bg-secondary/[0.02] transition-colors duration-500 px-0 md:px-4 no-underline">
-              <span className="font-serif text-3xl md:text-5xl leading-none shrink-0" style={{ color: s.color }}>{s.n}</span>
+              <span className="font-serif text-3xl md:text-5xl leading-none shrink-0" style={{ color: "#FFFFFF" }}>{s.n}</span>
               <div className="flex-1 flex flex-col lg:flex-row lg:items-center gap-3 lg:gap-12">
                 <h3 className="text-xl md:text-2xl lg:text-3xl font-serif tracking-tight text-secondary group-hover:text-accent transition-colors duration-400 lg:w-1/3">
                   {s.name}
@@ -842,33 +835,6 @@ const Word = ({ word, index, total, accent }: { word: string, index: number, tot
 /* ─────────────────────────────── FAQ ─────────────────────────────── */
 
 const FAQ = () => {
-  const faqs = [
-    {
-      q: "Where are you based?",
-      a: "Barbados. We work with businesses across the Caribbean and further afield, and everything we build is delivered remotely. Being in the region means we are in your timezone and we understand how business actually runs here."
-    },
-    {
-      q: "What does AI automation actually mean?",
-      a: "Software that does a job your team does by hand today. It reads the email, pulls the details out, puts them where they belong, and only asks a person when something is unusual. No robots, no replacing anyone: just the copying and chasing taken off the pile."
-    },
-    {
-      q: "Do I need to understand any of the technology?",
-      a: "No. You tell us what takes too long and what it costs you when it goes wrong. Picking the tools is our job, and you should not have to care which one we used any more than you care which brand of wrench a mechanic owns."
-    },
-    {
-      q: "How do we start, and what does it cost?",
-      a: "Start with the Build Brief. It takes about twelve minutes, asks what is slow or what you need built, and comes back with a scope and a price rather than a sales call. Small builds start in the low thousands; the brief asks for a budget band so we scope something real instead of guessing."
-    },
-    {
-      q: "How long does something like this take?",
-      a: "A single automation is usually two to four weeks from brief to running. A custom tool or an agent handling live conversations is longer, and we would rather ship a first version you can use in a month than a perfect one in six."
-    },
-    {
-      q: "We tried something like this before and it did not stick. Why would this be different?",
-      a: "Usually it did not stick because it was bought, not built: a subscription that assumed a way of working nobody here uses. We start from your process, agree one number that has to move, and hand over something your team can run without us."
-    },
-  ];
-
   return (
     <section id="faq" className="py-16 md:py-28 px-0 md:px-0 border-t border-line bg-surface">
       <SectionHeader number="05" title="faq" subtitle="common questions answered" className="px-8 md:px-16" />
@@ -887,8 +853,14 @@ const AccordionItem = ({ question, answer }: { question: string, answer: string 
   const [open, setOpen] = useState(false);
   return (
     <div className="border-t border-line">
+      {/* The question is a heading, so a crawler or a screen reader can find
+          the questions without guessing which button text is one. The base
+          layer sets every heading in Bebas Neue, so the classes put this one
+          back in the body face it was always drawn in. */}
+      <h3 className="font-sans tracking-normal">
       <button
         onClick={() => setOpen(!open)}
+        aria-expanded={open}
         className="w-full flex items-center justify-between py-8 text-left group"
       >
         <span className="text-base md:text-lg text-secondary/80 group-hover:text-accent transition-colors duration-300 max-w-[85%]">{question}</span>
@@ -900,6 +872,7 @@ const AccordionItem = ({ question, answer }: { question: string, answer: string 
           <Plus size={12} className="text-accent group-hover:text-accent transition-colors" />
         </motion.div>
       </button>
+      </h3>
       <div className={`accordion-content ${open ? "open" : ""}`}>
         <div className="accordion-inner">
           <p className="text-sm text-secondary font-light leading-relaxed pb-8 max-w-xl">{answer}</p>
