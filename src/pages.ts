@@ -186,17 +186,25 @@ const servicePages: PageData[] = [
     path: "/services/custom-software",
     kind: "service",
     name: "Custom Software",
-    title: "Custom Software and Business Tools | Forged One, Barbados",
+    title: "Custom Business Software, With or Without AI | Forged One",
     description:
-      "Software built around the way you already work: quoting tools, customer portals, internal dashboards and booking systems. Built in Barbados for Caribbean businesses.",
-    h1: "Custom software and tools",
-    lead: "Custom software is a tool built around the way you already work, instead of changing how you work to suit something you bought off the shelf. Forged One builds it for businesses in Barbados and across the Caribbean.",
+      "Custom software built around the way your business runs, with AI built in where it helps or none at all. Quoting tools, portals, dashboards and booking systems, built in Barbados.",
+    h1: "Custom software, with AI or without",
+    lead: "Custom software is a tool built around the way you already work, instead of changing how you work to suit something you bought off the shelf. Forged One builds it with AI inside where AI does the job better, and without it where it does not, for businesses in Barbados and across the Caribbean.",
     blocks: [
       {
         h: "What we build",
         body: [
           ["Quoting tools.", "Customer portals.", "Internal dashboards.", "Booking systems."],
           "Anything that is currently a spreadsheet nobody trusts.",
+        ],
+      },
+      {
+        h: "With AI, or without",
+        body: [
+          "Not every problem needs AI. A quoting tool that gets the maths right, a portal your customers can log into, a dashboard that shows the real numbers: none of that needs a model behind it, and it is better without one.",
+          "Where AI does earn its place, we build it in. Reading documents that arrive in every format, sorting what comes in, drafting the reply, finding the answer in your own records.",
+          "You do not need to know which one you need before you start. Picking the tools is our job.",
         ],
       },
       {
@@ -224,6 +232,10 @@ const servicePages: PageData[] = [
       {
         q: "When does a business need custom software?",
         a: "When no tool does the job, or the tool you have does not fit.",
+      },
+      {
+        q: "Does custom software have to use AI?",
+        a: "No. Plenty of good business software has no AI in it at all. We build AI in only where it does a job better than plain software would, such as reading documents or sorting enquiries, and leave it out everywhere else.",
       },
       { q: "How long does custom software take to build?", a: TIMELINE_LONGER },
       {

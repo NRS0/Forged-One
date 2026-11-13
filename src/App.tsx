@@ -474,7 +474,7 @@ const Hero = () => {
 /* ─────────────────────────────── MARQUEE ─────────────────────────────── */
 
 const MarqueeDivider = () => {
-  const items = ["Custom software", "AI agents", "Based in Barbados", "Fewer manual hours", "Ads that learn", "Serving the Caribbean", "Data you can trust", "Built, not bought", "Same-day quotes", "Training your team"];
+  const items = ["Custom software", "With AI or without", "AI agents", "Based in Barbados", "Fewer manual hours", "Ads that learn", "Serving the Caribbean", "Data you can trust", "Built, not bought", "Same-day quotes", "Training your team"];
   const doubled = [...items, ...items];
   return (
     <div className="-mt-6 md:-mt-12 lg:-mt-[59px] mb-12 md:mb-16 py-8 border-y border-line bg-surface marquee-container relative z-30">
@@ -916,7 +916,7 @@ export const Footer = ({ onOpenLegal, home = true }: { onOpenLegal: (type: "Priv
           <span className="text-[8px] uppercase tracking-[0.4em] font-mono text-accent">AI for Business Leaders</span>
         </div>
         <p className="text-secondary text-sm leading-relaxed max-w-xs">
-          We build AI that takes real work off your team: software made to fit how you run, agents that handle the back and forth, and ads that improve themselves.
+          We build what takes real work off your team: software made to fit how you run, AI inside or not; agents that handle the back and forth; and ads that improve themselves.
         </p>
         <p className="text-muted text-sm leading-relaxed max-w-xs mt-4">
           Based in Barbados, building for businesses across the Caribbean and beyond.
