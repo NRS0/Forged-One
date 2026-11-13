@@ -22,7 +22,7 @@ export const SITE = {
   /* One sentence an answer engine can lift whole. Third person on purpose:
      quoted out of context, "we" has no subject. */
   summary:
-    "Forged One is an AI automation studio based in Barbados. It builds custom software, AI agents and websites, and produces AI content and advertising, for businesses across the Caribbean and beyond.",
+    "Forged One is an AI automation studio based in Barbados. It builds custom software, with AI built in or without it, plus AI agents and websites, and produces AI content and advertising, for businesses across the Caribbean and beyond.",
   /* Where the work is offered, spelled out. "The Caribbean" is one word to a
      person and no country at all to a search engine: someone in Kingston asks
      for AI automation in Jamaica, not in the Caribbean. These are the
@@ -70,7 +70,7 @@ export type Service = {
 };
 
 export const services: Service[] = [
-  { n: "01", name: "Custom Software & Tools", desc: "Software built around the way you already work, instead of changing how you work to suit something you bought off the shelf.", need: "software" },
+  { n: "01", name: "Custom Software & Tools", desc: "Software built around the way you already work, instead of changing how you work to suit something you bought off the shelf. With AI built in where it does the job better, and without it where it does not.", need: "software" },
   { n: "02", name: "AI Agents", desc: "Software that handles a job start to finish on its own. It reads the message, checks your system, replies, and knows when to pass it to a person.", need: "agents" },
   { n: "03", name: "AI Content", desc: "Product shots, brand films, video and copy, made without a studio or a shoot day and finished to look shot rather than generated. Including the ads, which test themselves and put the money behind what works.", need: "content" },
   { n: "04", name: "Getting Your Data Straight", desc: "Getting your numbers out of the places they are stuck, cleaned up, and in one place you can actually look at.", need: "automations" },
@@ -98,7 +98,7 @@ export type Faq = { q: string; a: string };
 export const faqs: Faq[] = [
   {
     q: "What does Forged One do?",
-    a: "Forged One is an AI automation studio based in Barbados, building for businesses across the Caribbean. We build custom software, AI agents and websites, and we make AI content: product shots, brand films, video, copy and ads. We also get scattered data into one place and teach teams what these tools can and cannot do.",
+    a: "Forged One is an AI automation studio based in Barbados, building for businesses across the Caribbean. We build custom software, with AI built in or without it, plus AI agents and websites, and we make AI content: product shots, brand films, video, copy and ads. We also get scattered data into one place and teach teams what these tools can and cannot do.",
   },
   {
     q: "Where is Forged One based?",
@@ -115,6 +115,10 @@ export const faqs: Faq[] = [
   {
     q: "What is the difference between an AI automation, an AI agent and custom software?",
     a: "An automation fires on a trigger and finishes on its own, the same way every time. An agent handles a job that needs judgment, and stops when the judgment gets hard. Custom software is a tool your team opens and uses. Most real projects are a mix of the three.",
+  },
+  {
+    q: "Does Forged One build software without AI?",
+    a: "Yes. Plenty of good business software has no AI in it at all: a quoting tool that gets the maths right, a portal customers can log into, a dashboard that shows the real numbers. We build AI in only where it does a job better than plain software would, and leave it out everywhere else.",
   },
   {
     q: "Can an AI agent answer customers on WhatsApp?",

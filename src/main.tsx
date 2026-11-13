@@ -1,7 +1,7 @@
 import {StrictMode} from 'react';
 import {createRoot} from 'react-dom/client';
 import Lenis from 'lenis';
-import App from './App.tsx';
+import Root from './Root.tsx';
 import './index.css';
 
 const lenis = new Lenis({
@@ -17,6 +17,6 @@ requestAnimationFrame(raf);
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <Root path={window.location.pathname} />
   </StrictMode>,
 );

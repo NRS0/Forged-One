@@ -70,6 +70,28 @@ knowledge; it has no retrieval and no access to the page. If a service changes
 on the site, change it there too, or Blacksmith will keep describing the old
 one.
 
+## Pages
+
+The site is the home page, one page per service, a Caribbean page and a
+Barbados page. They are all listed in `src/pages.ts`, and that file is the whole of each page: its
+address, title, description, copy and questions.
+
+```
+src/pages.ts     the content of every page that is not the home page
+src/Page.tsx     how one of them is drawn
+src/Root.tsx     picks the page for the address
+```
+
+To add a page, add an entry to `src/pages.ts`. The build writes it to its own
+HTML file, gives it its own title and schema, links it from every footer, and
+adds it to the sitemap and `llms.txt`. There is no router: each page is a real
+file, and links between them are ordinary links.
+
+The copy follows one rule: nothing on a page that the home page, Blacksmith or
+the Build Brief does not already say. The Caribbean and Barbados pages say
+where we are and how working together works. They do not claim clients or an
+office anywhere, and there is deliberately no page per island.
+
 ## What search and answer engines read
 
 `src/content.ts` holds the services and the FAQ. The page renders from it, and
@@ -78,7 +100,7 @@ at build time `scripts/prerender.mjs` writes three things from the same file:
 ```
 <head> JSON-LD     the organisation, the services and every FAQ answer
 dist/llms.txt      the page as plain markdown, for models
-dist/sitemap.xml   public/sitemap.xml with the deploy date as <lastmod>
+dist/sitemap.xml   every page, with the deploy date as <lastmod>
 ```
 
 Edit an answer in `src/content.ts` and all of them follow. The schema is never
