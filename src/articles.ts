@@ -31,6 +31,25 @@ export type ArticleSection = {
   body: Body;
 };
 
+/**
+ * The person who wrote an article. Optional: an article without one is
+ * credited to Forged One. With one, the page shows a byline and a short bio,
+ * and the schema names this person as the author, working for Forged One.
+ * Only use real details the person has agreed to publish.
+ */
+export type ArticleAuthor = {
+  /** Their name as it should appear in the byline. */
+  name: string;
+  /** Their role at Forged One, for example "Founder". */
+  jobTitle?: string;
+  /** A page about them: a profile on this site, or their own site. */
+  url?: string;
+  /** Their profiles elsewhere (LinkedIn and the like), full addresses. */
+  sameAs?: string[];
+  /** One or two sentences, third person, shown under the article. */
+  bio?: string;
+};
+
 export type Article = {
   /** The last part of the address: /articles/<slug>. Lower case, hyphens. */
   slug: string;
@@ -46,6 +65,8 @@ export type Article = {
   published: string;
   /** YYYY-MM-DD, only when the article was changed after it went out. */
   updated?: string;
+  /** Who wrote it. Leave it out and the article is credited to Forged One. */
+  author?: ArticleAuthor;
   /** A few words for search engines and the schema, most important first. */
   keywords: string[];
   sections: ArticleSection[];

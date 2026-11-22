@@ -12,7 +12,16 @@ import { ArrowRight } from "lucide-react";
 import { Navbar, Footer, FloatingCTA, LegalModal, Reveal } from "./App";
 import { Blacksmith } from "./Blacksmith";
 import { SITE } from "./content";
-import { articles, articlePath, readingMinutes, longDate, ARTICLES_PATH, ARTICLES_TITLE, type Article } from "./articles";
+import {
+  articles,
+  articlePath,
+  readingMinutes,
+  longDate,
+  ARTICLES_PATH,
+  ARTICLES_TITLE,
+  type Article,
+  type ArticleAuthor,
+} from "./articles";
 
 const label = "text-[9px] uppercase tracking-[0.5em] font-mono text-accent";
 const crumb = "text-secondary hover:text-accent transition-colors";
@@ -66,13 +75,47 @@ const Shell = ({ children }: { children: ReactNode }) => {
   );
 };
 
-const Meta = ({ article }: { article: Article }) => (
+/** The date line. On the article itself it starts with the author, when there is one. */
+const Meta = ({ article, byline = false }: { article: Article; byline?: boolean }) => (
   <p className="text-[9px] uppercase tracking-[0.4em] font-mono text-muted">
+    {byline && article.author && (
+      <>
+        By {article.author.name}
+        <span aria-hidden="true"> · </span>
+      </>
+    )}
     <time dateTime={article.published}>{longDate(article.published)}</time>
     <span aria-hidden="true"> · </span>
     {readingMinutes(article)} min read
   </p>
 );
+
+/** Who wrote it, under the last section: name, role and a line or two about them. */
+const AuthorNote = ({ author }: { author: ArticleAuthor }) => {
+  const away = !!author.url && /^https?:\/\//.test(author.url) && !author.url.startsWith(SITE.url);
+  return (
+    <aside aria-label="About the author" className="border-t border-line pt-10 flex flex-col gap-4">
+      <span className={label}>Written by</span>
+      <p className="font-serif text-2xl md:text-3xl uppercase tracking-wide text-secondary leading-[0.95]">
+        {author.url ? (
+          <a
+            href={author.url}
+            {...(away ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+            className="hover:text-accent transition-colors"
+          >
+            {author.name}
+          </a>
+        ) : (
+          author.name
+        )}
+      </p>
+      {author.jobTitle && (
+        <p className="text-[9px] uppercase tracking-[0.4em] font-mono text-muted">{author.jobTitle}</p>
+      )}
+      {author.bio && <p className="text-secondary text-base md:text-lg font-light leading-relaxed">{author.bio}</p>}
+    </aside>
+  );
+};
 
 const BriefButton = () => (
   <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5 mt-2">
@@ -156,7 +199,7 @@ export function ArticleView({ article }: { article: Article }) {
             {article.h1}
           </h1>
           <div className="mt-8 md:mt-10">
-            <Meta article={article} />
+            <Meta article={article} byline />
           </div>
           <p className="mt-8 md:mt-10 max-w-2xl text-lg md:text-2xl font-light leading-snug text-secondary">
             <Rich text={article.lead} />
@@ -190,6 +233,7 @@ export function ArticleView({ article }: { article: Article }) {
                 )}
               </section>
             ))}
+            {article.author && <AuthorNote author={article.author} />}
           </div>
         </div>
       </article>
