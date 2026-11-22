@@ -921,6 +921,24 @@ export const Footer = ({ onOpenLegal, home = true }: { onOpenLegal: (type: "Priv
         <p className="text-muted text-sm leading-relaxed max-w-xs mt-4">
           Based in Barbados, building for businesses across the Caribbean and beyond.
         </p>
+        {/* Google's own "preferred source" badge, as the plain deeplink Google
+            documents. A link needs no script, so it prerenders like the rest
+            of the footer. */}
+        <a
+          href="https://www.google.com/preferences/source?q=forgedone.xyz"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-block mt-8 opacity-90 hover:opacity-100 transition-opacity"
+        >
+          <img
+            src="/google-preferred-source.png"
+            srcSet="/google-preferred-source.png 1x, /google-preferred-source@2x.png 2x"
+            width={169}
+            height={54}
+            loading="lazy"
+            alt="Add Forged One as a preferred source on Google"
+          />
+        </a>
       </div>
 
       <div className="lg:col-span-2 lg:col-start-6">
