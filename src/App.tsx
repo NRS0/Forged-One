@@ -741,8 +741,7 @@ const CompetitiveEdge = () => {
                 immediately and the 4.7 MB only downloads once it is scrolled to. */}
             <img
               src="/edge-poster.jpg"
-              alt=""
-              aria-hidden="true"
+              alt="Forged One timeline from 2018 to 2026"
               className="absolute inset-0 w-full h-full object-cover"
             />
             {edgeVideoNear && (

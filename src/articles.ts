@@ -80,7 +80,7 @@ export const articles: Article[] = [whatToAutomateFirst];
 export const ARTICLES_PATH = "/articles";
 export const ARTICLES_TITLE = "Articles on AI for Caribbean Business | Forged One";
 export const ARTICLES_DESCRIPTION =
-  "Practical articles from Forged One on AI automation, AI agents and software for businesses in Barbados and across the Caribbean: what to build, and what to leave alone.";
+  "Practical articles from Forged One on AI automation, AI agents and software for Caribbean businesses: what to build, and what to leave alone.";
 export const articlePath = (a: Article) => `${ARTICLES_PATH}/${a.slug}`;
 
 /** The article at this address, if there is one. */

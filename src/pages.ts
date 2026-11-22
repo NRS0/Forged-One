@@ -73,7 +73,7 @@ const servicePages: PageData[] = [
     name: "AI Automation",
     title: "AI Automation for Caribbean Businesses | Forged One",
     description:
-      "AI automation takes the copying, retyping and chasing off your team. Forged One builds it around your process, from Barbados, for businesses across the Caribbean.",
+      "AI automation takes the copying, retyping and chasing off your team. Forged One builds it around your process, for businesses across the Caribbean.",
     h1: "AI automation",
     lead: "AI automation is software that does a job your team does by hand today. Forged One builds it around the way your business already runs, for companies in Barbados and across the Caribbean.",
     blocks: [
@@ -131,7 +131,7 @@ const servicePages: PageData[] = [
     name: "AI Agents",
     title: "AI Agents for Business in the Caribbean | Forged One",
     description:
-      "An AI agent handles a job start to finish: it reads the message, checks your system, replies, and knows when to pass it to a person. Built in Barbados by Forged One.",
+      "An AI agent handles a job start to finish: it reads the message, checks your system, replies, and knows when to pass it to a person. By Forged One.",
     h1: "AI agents",
     lead: "An AI agent is software that handles a job start to finish on its own. It reads the message, checks your system, replies, and knows when to pass it to a person. Forged One builds agents for businesses in Barbados and across the Caribbean.",
     blocks: [
@@ -188,7 +188,7 @@ const servicePages: PageData[] = [
     name: "Custom Software",
     title: "Custom Business Software, With or Without AI | Forged One",
     description:
-      "Custom software built around the way your business runs, with AI built in where it helps or none at all. Quoting tools, portals, dashboards and booking systems, built in Barbados.",
+      "Custom software built around how your business runs, with AI where it helps or none at all. Quoting tools, portals, dashboards and booking systems.",
     h1: "Custom software, with AI or without",
     lead: "Custom software is a tool built around the way you already work, instead of changing how you work to suit something you bought off the shelf. Forged One builds it with AI inside where AI does the job better, and without it where it does not, for businesses in Barbados and across the Caribbean.",
     blocks: [
@@ -251,7 +251,7 @@ const servicePages: PageData[] = [
     name: "AI Content",
     title: "AI Content, Product Photography and Video | Forged One",
     description:
-      "Product shots, brand films, video and copy made without a studio or a shoot day, finished to look shot rather than generated. AI content from Forged One, Barbados.",
+      "Product shots, brand films, video and copy made without a studio or shoot day, finished to look shot, not generated. AI content from Forged One, Barbados.",
     h1: "AI content and advertising",
     lead: "AI content is product shots, brand films, video and copy made without a studio or a shoot day, and finished to look shot rather than generated. Forged One makes it for brands in Barbados and across the Caribbean.",
     blocks: [
@@ -350,7 +350,7 @@ const servicePages: PageData[] = [
     name: "Websites",
     title: "Web Design in Barbados and the Caribbean | Forged One",
     description:
-      "Websites of every kind: marketing sites, shops, booking systems, customer portals, and sites with software running behind them. Built in Barbados by Forged One.",
+      "Websites of every kind: marketing sites, shops, booking systems, customer portals, and sites with software running behind them. By Forged One.",
     h1: "Websites",
     lead: "Forged One builds websites of every kind, from a few pages that have to look right and load fast to a site with a system running behind it. If it lives at a web address, we build it.",
     blocks: [
@@ -412,7 +412,7 @@ const servicePages: PageData[] = [
     name: "AI Courses",
     title: "AI Courses for Business Teams | Forged One, Barbados",
     description:
-      "AI courses that teach your team what these tools can and cannot do. Built for leaders, not engineers. No technical background needed. From Forged One, Barbados.",
+      "AI courses that teach your team what these tools can and cannot do. Built for leaders, not engineers. From Forged One, Barbados.",
     h1: "AI courses for teams",
     lead: "Forged One teaches teams what AI tools can and cannot do, so nobody is guessing when they make a decision. The courses are built for leaders, not engineers.",
     blocks: [
