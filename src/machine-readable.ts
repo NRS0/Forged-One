@@ -27,6 +27,29 @@ const ORG = `${SITE.url}#organization`;
 const WEBSITE = `${SITE.url}#website`;
 const WEBPAGE = `${SITE.url}#webpage`;
 
+/**
+ * Who the company is, on every page that names it. The home page carries the
+ * full node; every other page carries this much and points at the rest by
+ * @id. The logo is the square mark from public/, the same file the site uses
+ * as its app icon.
+ */
+const ORG_IDENTITY = {
+  "@type": "ProfessionalService",
+  "@id": ORG,
+  name: SITE.name,
+  url: SITE.url,
+  logo: {
+    "@type": "ImageObject",
+    url: `${SITE.url}android-chrome-512x512.png`,
+    contentUrl: `${SITE.url}android-chrome-512x512.png`,
+    width: 512,
+    height: 512,
+    caption: SITE.name,
+  },
+  image: `${SITE.url}og-image.png`,
+  sameAs: SITE.sameAs,
+};
+
 export function jsonLd({ title, description, modified }: PageFacts): string {
   const areaServed = [
     { "@type": "Place", name: "Caribbean" },
@@ -35,20 +58,14 @@ export function jsonLd({ title, description, modified }: PageFacts): string {
 
   const graph = [
     {
-      "@type": "ProfessionalService",
-      "@id": ORG,
-      name: SITE.name,
+      ...ORG_IDENTITY,
       alternateName: SITE.alternateNames,
-      url: SITE.url,
-      logo: `${SITE.url}android-chrome-512x512.png`,
-      image: `${SITE.url}og-image.png`,
       description: SITE.summary,
       email: SITE.email,
       telephone: SITE.phone,
       address: { "@type": "PostalAddress", addressCountry: "BB" },
       areaServed,
       knowsAbout: SITE.knowsAbout,
-      sameAs: SITE.sameAs,
       contactPoint: {
         "@type": "ContactPoint",
         contactType: "sales",
@@ -118,15 +135,15 @@ const stringify = (graph: unknown[]) =>
 /**
  * The graph for a service or country page: the page itself with its trail
  * back to the home page, the thing it is about, and its own questions. The
- * organisation is a short stub that points at the full node on the home page
- * by @id, so the facts about the company are stated once.
+ * organisation is its identity only (name, logo, profiles) and points at the
+ * full node on the home page by @id, so the rest of the facts are stated once.
  */
 export function pageJsonLd(page: PageData, { modified }: Pick<PageFacts, "modified">): string {
   const url = abs(page.path);
   const isService = page.kind === "service";
 
   const graph: unknown[] = [
-    { "@type": "ProfessionalService", "@id": ORG, name: SITE.name, url: SITE.url },
+    ORG_IDENTITY,
     {
       "@type": "WebPage",
       "@id": `${url}#webpage`,
@@ -197,6 +214,25 @@ const lastChange = (a: Article) => a.updated ?? a.published;
 
 const articleUrl = (a: Article) => abs(articlePath(a));
 
+/**
+ * An article with a named author credits that person, as someone who works
+ * for Forged One. Without one, the company is the author, as before. Fields
+ * the article leaves out stay out of the schema rather than going in empty.
+ */
+const articleAuthor = (a: Article) => {
+  const who = a.author;
+  if (!who) return { "@id": ORG };
+  return {
+    "@type": "Person",
+    name: who.name,
+    ...(who.jobTitle ? { jobTitle: who.jobTitle } : {}),
+    ...(who.url ? { url: who.url } : {}),
+    ...(who.sameAs?.length ? { sameAs: who.sameAs } : {}),
+    ...(who.bio ? { description: who.bio } : {}),
+    worksFor: { "@id": ORG },
+  };
+};
+
 /** The article list, then every article, ready for scripts/prerender.mjs. */
 export function articleRoutes(): ExtraRoute[] {
   const indexUrl = abs(ARTICLES_PATH);
@@ -209,7 +245,7 @@ export function articleRoutes(): ExtraRoute[] {
     description: ARTICLES_DESCRIPTION,
     ogType: "website",
     ld: stringify([
-      { "@type": "ProfessionalService", "@id": ORG, name: SITE.name, url: SITE.url },
+      ORG_IDENTITY,
       {
         "@type": "Blog",
         "@id": `${indexUrl}#blog`,
@@ -241,7 +277,7 @@ export function articleRoutes(): ExtraRoute[] {
       description: a.description,
       ogType: "article",
       ld: stringify([
-        { "@type": "ProfessionalService", "@id": ORG, name: SITE.name, url: SITE.url },
+        ORG_IDENTITY,
         {
           "@type": "BlogPosting",
           "@id": `${url}#article`,
@@ -255,7 +291,7 @@ export function articleRoutes(): ExtraRoute[] {
           dateModified: lastChange(a),
           inLanguage: "en",
           keywords: a.keywords.join(", "),
-          author: { "@id": ORG },
+          author: articleAuthor(a),
           publisher: { "@id": ORG },
           isPartOf: { "@id": `${indexUrl}#blog` },
           breadcrumb: { "@id": `${url}#breadcrumb` },

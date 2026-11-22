@@ -1,0 +1,21 @@
+# After Vercel reports a production deploy as live, tell IndexNow the site's
+# addresses. Optional: `npm run indexnow` does the same thing by hand, and is
+# the way to do it if Actions is not running on this account.
+name: IndexNow
+
+on: deployment_status
+
+permissions:
+  contents: read
+
+jobs:
+  ping:
+    if: github.event.deployment_status.state == 'success' && github.event.deployment.environment == 'Production'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scripts/indexnow.mjs
