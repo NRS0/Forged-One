@@ -106,3 +106,21 @@ dist/sitemap.xml   every page, with the deploy date as <lastmod>
 Edit an answer in `src/content.ts` and all of them follow. The schema is never
 typed by hand, so it cannot disagree with what a visitor sees. Blacksmith is
 the one copy that does not follow: its knowledge still lives in `api/blacksmith.js`.
+
+### IndexNow
+
+Bing and the other IndexNow engines can be told to recrawl straight after a
+deploy, instead of waiting for them to notice:
+
+```bash
+npm run indexnow               # send every forgedone.xyz address in the live sitemap
+npm run indexnow -- --dry-run  # show what would be sent, send nothing
+```
+
+Run it once the deploy is live, not before: it reads the live
+`/sitemap.xml`, and IndexNow checks the key at
+`https://forgedone.xyz/<key>.txt`, which only exists once deployed. The key
+is in `scripts/indexnow.mjs` and the file of the same name in `public/`;
+change both together. The Build Brief serves the same key file. A GitHub
+Actions workflow (`.github/workflows/indexnow.yml`) runs the same script after
+each production deploy, when Actions is running on this account.
