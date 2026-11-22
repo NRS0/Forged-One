@@ -5,6 +5,15 @@
  */
 import { SITE, services, serviceUrl, faqs } from "./content";
 import { pages, type PageData } from "./pages";
+import {
+  articles,
+  articlePath,
+  plain,
+  ARTICLES_PATH,
+  ARTICLES_TITLE,
+  ARTICLES_DESCRIPTION,
+  type Article,
+} from "./articles";
 
 type PageFacts = {
   /** <title> and meta description, read back out of index.html. */
@@ -172,13 +181,145 @@ export function pageJsonLd(page: PageData, { modified }: Pick<PageFacts, "modifi
   return stringify(graph);
 }
 
+/**
+ * An address the prerender writes that is not in src/pages.ts: the article
+ * list and each article. Each carries everything its <head> needs.
+ */
+export type ExtraRoute = {
+  path: string;
+  title: string;
+  description: string;
+  ogType: "website" | "article";
+  ld: string;
+};
+
+const lastChange = (a: Article) => a.updated ?? a.published;
+
+const articleUrl = (a: Article) => abs(articlePath(a));
+
+/** The article list, then every article, ready for scripts/prerender.mjs. */
+export function articleRoutes(): ExtraRoute[] {
+  const indexUrl = abs(ARTICLES_PATH);
+  const crumbs = (steps: { name: string; item: string }[]) =>
+    steps.map((step, i) => ({ "@type": "ListItem", position: i + 1, ...step }));
+
+  const index: ExtraRoute = {
+    path: ARTICLES_PATH,
+    title: ARTICLES_TITLE,
+    description: ARTICLES_DESCRIPTION,
+    ogType: "website",
+    ld: stringify([
+      { "@type": "ProfessionalService", "@id": ORG, name: SITE.name, url: SITE.url },
+      {
+        "@type": "Blog",
+        "@id": `${indexUrl}#blog`,
+        url: indexUrl,
+        name: ARTICLES_TITLE,
+        description: ARTICLES_DESCRIPTION,
+        inLanguage: "en",
+        isPartOf: { "@id": WEBSITE },
+        publisher: { "@id": ORG },
+        breadcrumb: { "@id": `${indexUrl}#breadcrumb` },
+        blogPost: articles.map((a) => ({ "@id": `${articleUrl(a)}#article` })),
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": `${indexUrl}#breadcrumb`,
+        itemListElement: crumbs([
+          { name: SITE.name, item: SITE.url },
+          { name: "Articles", item: indexUrl },
+        ]),
+      },
+    ]),
+  };
+
+  const each = articles.map((a): ExtraRoute => {
+    const url = articleUrl(a);
+    return {
+      path: articlePath(a),
+      title: a.title,
+      description: a.description,
+      ogType: "article",
+      ld: stringify([
+        { "@type": "ProfessionalService", "@id": ORG, name: SITE.name, url: SITE.url },
+        {
+          "@type": "BlogPosting",
+          "@id": `${url}#article`,
+          url,
+          mainEntityOfPage: url,
+          headline: a.h1,
+          description: a.description,
+          abstract: plain(a.lead),
+          image: `${SITE.url}og-image.png`,
+          datePublished: a.published,
+          dateModified: lastChange(a),
+          inLanguage: "en",
+          keywords: a.keywords.join(", "),
+          author: { "@id": ORG },
+          publisher: { "@id": ORG },
+          isPartOf: { "@id": `${indexUrl}#blog` },
+          breadcrumb: { "@id": `${url}#breadcrumb` },
+        },
+        {
+          "@type": "BreadcrumbList",
+          "@id": `${url}#breadcrumb`,
+          itemListElement: crumbs([
+            { name: SITE.name, item: SITE.url },
+            { name: "Articles", item: indexUrl },
+            { name: a.h1, item: url },
+          ]),
+        },
+      ]),
+    };
+  });
+
+  return [index, ...each];
+}
+
+const xml = (t: string) =>
+  t.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
+/**
+ * /articles/feed.xml, RSS 2.0. Feed readers, Google and anything that wants
+ * to repost an article can follow the site from here.
+ */
+export function rssXml(): string {
+  const rfc822 = (iso: string) => new Date(`${iso}T12:00:00Z`).toUTCString();
+  const newest = articles.length ? lastChange(articles[0]) : undefined;
+  return [
+    '<?xml version="1.0" encoding="UTF-8"?>',
+    '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">',
+    "  <channel>",
+    `    <title>${xml(`${SITE.name}: Articles`)}</title>`,
+    `    <link>${abs(ARTICLES_PATH)}</link>`,
+    `    <description>${xml(ARTICLES_DESCRIPTION)}</description>`,
+    "    <language>en</language>",
+    `    <atom:link href="${abs(`${ARTICLES_PATH}/feed.xml`)}" rel="self" type="application/rss+xml" />`,
+    ...(newest ? [`    <lastBuildDate>${rfc822(newest)}</lastBuildDate>`] : []),
+    ...articles.flatMap((a) => [
+      "    <item>",
+      `      <title>${xml(a.h1)}</title>`,
+      `      <link>${articleUrl(a)}</link>`,
+      `      <guid isPermaLink="true">${articleUrl(a)}</guid>`,
+      `      <pubDate>${rfc822(a.published)}</pubDate>`,
+      `      <description>${xml(plain(a.lead))}</description>`,
+      "    </item>",
+    ]),
+    "  </channel>",
+    "</rss>",
+    "",
+  ].join("\n");
+}
+
 /** Every address the site has, with the date of this build. */
 export function sitemapXml({ modified }: Pick<PageFacts, "modified">): string {
-  const entry = (loc: string, priority: string, lastmod = true) =>
+  /* An article's date is its own, not the build's: rebuilding the site does
+     not change what the article says. */
+  const entry = (loc: string, priority: string, lastmod: string = modified) =>
     [
       "  <url>",
       `    <loc>${loc}</loc>`,
-      ...(lastmod ? [`    <lastmod>${modified}</lastmod>`] : []),
+      `    <lastmod>${lastmod}</lastmod>`,
       `    <priority>${priority}</priority>`,
       "  </url>",
     ].join("\n");
@@ -188,6 +329,8 @@ export function sitemapXml({ modified }: Pick<PageFacts, "modified">): string {
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
     entry(SITE.url, "1.0"),
     ...pages.map((p) => entry(abs(p.path), "0.8")),
+    entry(abs(ARTICLES_PATH), "0.7"),
+    ...articles.map((a) => entry(articleUrl(a), "0.6", lastChange(a))),
     "</urlset>",
     "",
   ].join("\n");
@@ -219,6 +362,10 @@ export function llmsTxt({ modified }: Pick<PageFacts, "modified">): string {
     "## Pages",
     "",
     ...pages.map((p) => `- [${p.kind === "place" ? p.h1 : p.name}](${abs(p.path)}): ${p.description}`),
+    "",
+    "## Articles",
+    "",
+    ...articles.map((a) => `- [${a.h1}](${articleUrl(a)}) (${a.published}): ${a.description}`),
     "",
     "## How to start",
     "",

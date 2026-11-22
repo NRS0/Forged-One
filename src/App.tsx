@@ -208,7 +208,8 @@ export const Navbar = ({ home = true }: { home?: boolean }) => {
             { name: "The Brief", href: at("#brief") },
             { name: "Workflows", href: at("#workflows") },
             { name: "The Edge", href: at("#edge") },
-            { name: "FAQ", href: at("#faq") }
+            { name: "FAQ", href: at("#faq") },
+            { name: "Articles", href: "/articles" }
           ].map((item) => (
             <a
               key={item.name}
@@ -278,7 +279,8 @@ export const Navbar = ({ home = true }: { home?: boolean }) => {
                 { name: "The Brief", href: at("#brief") },
                 { name: "Workflows", href: at("#workflows") },
                 { name: "The Edge", href: at("#edge") },
-                { name: "FAQ", href: at("#faq") }
+                { name: "FAQ", href: at("#faq") },
+                { name: "Articles", href: "/articles" }
               ].map((item, index) => (
                 <motion.a
                   initial={{ opacity: 0, x: -20 }}
@@ -949,7 +951,8 @@ export const Footer = ({ onOpenLegal, home = true }: { onOpenLegal: (type: "Priv
             { name: "The Brief", href: at("#brief") },
             { name: "Workflows", href: at("#workflows") },
             { name: "The Edge", href: at("#edge") },
-            { name: "FAQ", href: at("#faq") }
+            { name: "FAQ", href: at("#faq") },
+            { name: "Articles", href: "/articles" }
           ].map(item => (
             <a key={item.name} href={item.href} className="text-sm text-secondary hover:text-accent transition-colors tracking-wide">{item.name}</a>
           ))}
