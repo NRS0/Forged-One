@@ -314,12 +314,13 @@ export function rssXml(): string {
 /** Every address the site has, with the date of this build. */
 export function sitemapXml({ modified }: Pick<PageFacts, "modified">): string {
   /* An article's date is its own, not the build's: rebuilding the site does
-     not change what the article says. */
-  const entry = (loc: string, priority: string, lastmod: string = modified) =>
+     not change what the article says. null leaves the date out, for a page
+     this build does not make. */
+  const entry = (loc: string, priority: string, lastmod: string | null = modified) =>
     [
       "  <url>",
       `    <loc>${loc}</loc>`,
-      `    <lastmod>${lastmod}</lastmod>`,
+      ...(lastmod ? [`    <lastmod>${lastmod}</lastmod>`] : []),
       `    <priority>${priority}</priority>`,
       "  </url>",
     ].join("\n");
@@ -331,6 +332,10 @@ export function sitemapXml({ modified }: Pick<PageFacts, "modified">): string {
     ...pages.map((p) => entry(abs(p.path), "0.8")),
     entry(abs(ARTICLES_PATH), "0.7"),
     ...articles.map((a) => entry(articleUrl(a), "0.6", lastChange(a))),
+    /* The Build Brief is its own site on brief.forgedone.xyz, with no sitemap
+       of its own. Its robots.txt points here, which is what lets this sitemap
+       list it. */
+    entry(SITE.briefUrl, "0.9", null),
     "</urlset>",
     "",
   ].join("\n");
