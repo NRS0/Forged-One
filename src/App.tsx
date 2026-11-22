@@ -208,8 +208,7 @@ export const Navbar = ({ home = true }: { home?: boolean }) => {
             { name: "The Brief", href: at("#brief") },
             { name: "Workflows", href: at("#workflows") },
             { name: "The Edge", href: at("#edge") },
-            { name: "FAQ", href: at("#faq") },
-            { name: "Articles", href: "/articles" }
+            { name: "FAQ", href: at("#faq") }
           ].map((item) => (
             <a
               key={item.name}
@@ -279,8 +278,7 @@ export const Navbar = ({ home = true }: { home?: boolean }) => {
                 { name: "The Brief", href: at("#brief") },
                 { name: "Workflows", href: at("#workflows") },
                 { name: "The Edge", href: at("#edge") },
-                { name: "FAQ", href: at("#faq") },
-                { name: "Articles", href: "/articles" }
+                { name: "FAQ", href: at("#faq") }
               ].map((item, index) => (
                 <motion.a
                   initial={{ opacity: 0, x: -20 }}
