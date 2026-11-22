@@ -15,5 +15,5 @@ export function render(path: string = '/'): string {
 
 /* The machine-readable half of the build, exported from the same bundle so
    scripts/prerender.mjs has one thing to import. */
-export { jsonLd, pageJsonLd, llmsTxt, sitemapXml } from './machine-readable';
+export { jsonLd, pageJsonLd, llmsTxt, sitemapXml, articleRoutes, rssXml } from './machine-readable';
 export { pages } from './pages';

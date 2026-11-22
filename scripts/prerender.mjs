@@ -9,10 +9,11 @@
  *   /                          dist/index.html
  *   /services/ai-agents        dist/services/ai-agents/index.html
  *   /caribbean/jamaica         dist/caribbean/jamaica/index.html
+ *   /articles/<slug>           dist/articles/<slug>/index.html
  *
  * Each file gets its own <title>, description, canonical and JSON-LD. Then it
- * writes the things meant for machines from the same content: dist/llms.txt
- * and dist/sitemap.xml.
+ * writes the things meant for machines from the same content: dist/llms.txt,
+ * dist/sitemap.xml and the article feed at dist/articles/feed.xml.
  *
  * Two post-processing passes run over every snapshot:
  *   1. Motion's entrance styles (opacity:0 / translate) are stripped, so the
@@ -34,7 +35,7 @@ const fail = (message) => {
 
 if (!existsSync(ssr)) fail('missing SSR bundle at dist-ssr/prerender.js');
 
-const { render, jsonLd, pageJsonLd, llmsTxt, sitemapXml, pages } = await import(`file://${ssr}`);
+const { render, jsonLd, pageJsonLd, llmsTxt, sitemapXml, articleRoutes, rssXml, pages } = await import(`file://${ssr}`);
 
 function snapshot(path) {
   let markup = render(path)
@@ -101,32 +102,41 @@ writeFileSync(dist, fill(template, homeMarkup, homeLd));
    copies. Each swap has to land, or the page would ship claiming to be the
    home page. */
 let written = 0;
-for (const page of pages) {
-  const url = `${HOME.replace(/\/$/, '')}${page.path}`;
+function writePage({ path, title, description, ogType = 'website' }, ld) {
+  const url = `${HOME.replace(/\/$/, '')}${path}`;
   const swaps = [
-    [`<title>${homeTitle}</title>`, `<title>${escape(page.title)}</title>`, 1],
-    [`content="${homeTitle}"`, `content="${escape(page.title)}"`, 2],
-    [`content="${homeDescription}"`, `content="${escape(page.description)}"`, 3],
+    [`<title>${homeTitle}</title>`, `<title>${escape(title)}</title>`, 1],
+    [`content="${homeTitle}"`, `content="${escape(title)}"`, 2],
+    [`content="${homeDescription}"`, `content="${escape(description)}"`, 3],
     [`<link rel="canonical" href="${HOME}" />`, `<link rel="canonical" href="${url}" />`, 1],
     [`<meta property="og:url" content="${HOME}" />`, `<meta property="og:url" content="${url}" />`, 1],
+    ...(ogType === 'website' ? [] : [
+      ['<meta property="og:type" content="website" />', `<meta property="og:type" content="${ogType}" />`, 1],
+    ]),
   ];
 
   let html = template;
   for (const [from, to, times] of swaps) {
     const found = html.split(from).length - 1;
-    if (found !== times) fail(`${page.path}: expected ${times} of ${from.slice(0, 40)}… in <head>, found ${found}`);
+    if (found !== times) fail(`${path}: expected ${times} of ${from.slice(0, 40)}… in <head>, found ${found}`);
     html = html.split(from).join(to);
   }
 
-  const out = resolve(`dist${page.path}/index.html`);
+  const out = resolve(`dist${path}/index.html`);
   mkdirSync(dirname(out), { recursive: true });
-  writeFileSync(out, fill(html, snapshot(page.path), pageJsonLd(page, { modified })));
+  writeFileSync(out, fill(html, snapshot(path), ld));
   written += 1;
 }
 
+for (const page of pages) writePage(page, pageJsonLd(page, { modified }));
+
+/* ── the article list and every article ── */
+for (const route of articleRoutes()) writePage(route, route.ld);
+
 writeFileSync(resolve('dist/llms.txt'), llmsTxt({ modified }));
 writeFileSync(resolve('dist/sitemap.xml'), sitemapXml({ modified }));
+writeFileSync(resolve('dist/articles/feed.xml'), rssXml());
 
 rmSync(resolve('dist-ssr'), { recursive: true, force: true });
 console.log(`[prerender] home page: ${(homeMarkup.length / 1024).toFixed(1)} kB of static markup`);
-console.log(`[prerender] wrote ${written} more pages, llms.txt and sitemap.xml (${modified})`);
+console.log(`[prerender] wrote ${written} more pages, llms.txt, sitemap.xml and the article feed (${modified})`);
