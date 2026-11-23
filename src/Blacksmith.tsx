@@ -368,6 +368,9 @@ export const Blacksmith = () => {
                   onKeyDown={(e) => {
                     if (e.key === "Enter" && !e.shiftKey) {
                       e.preventDefault();
+                      // Enter that confirms a Japanese, Chinese or Korean IME candidate
+                      // must not send. keyCode 229 covers Safari, which clears isComposing early.
+                      if (e.nativeEvent.isComposing || e.keyCode === 229) return;
                       ask(draft);
                     }
                   }}
